@@ -1,42 +1,120 @@
-export type Difficulty = 'Easy' | 'Medium' | 'Hard';
+export type Difficulty = 'Easy' | 'Medium' | 'Hard' | 'Unspecified';
+export type ProgressStatus = 'Not Started' | 'Attempted' | 'Solved' | 'Needs Revision';
 
+export interface Roadmap {
+  id: string;
+  name: string;
+  slug: string;
+  source_name: string;
+  source_url: string;
+  topic_count: number;
+  problem_count: number;
+  is_active: boolean;
+}
+
+export interface RoadmapTopic {
+  id: string;
+  roadmap_id: string;
+  title: string;
+  slug: string;
+  description?: string;
+  topic_order: number;
+  subtopic_count?: number;
+  problem_count: number;
+  solved_count?: number;
+  completion_percentage?: number;
+}
+
+export interface Subtopic {
+  id: string;
+  topic_id: string;
+  title: string;
+  slug: string;
+  subtopic_order: number;
+  problem_count: number;
+}
+
+export interface A2ZProblem {
+  id: string;
+  title: string;
+  slug: string;
+  summary?: string;
+  difficulty: Difficulty;
+  external_platform?: string;
+  external_problem_url: string;
+  source_sheet?: string;
+  source_problem_id?: string;
+  problem_order: number;
+  tags: string[];
+  progress_status?: ProgressStatus;
+  subtopic_id?: string;
+  topic_id?: string;
+  related?: A2ZProblem[];
+}
+
+export interface StudentProblemProgress {
+  student_id: string;
+  problem_id: string;
+  status: ProgressStatus;
+  attempt_count: number;
+  successful_attempts: number;
+  last_attempted_at?: string;
+  solved_at?: string;
+}
+
+export interface ProgressSummary {
+  roadmap_id: string;
+  roadmap_name: string;
+  total_problems: number;
+  solved_problems: number;
+  attempted_problems: number;
+  pending_problems: number;
+  needs_revision: number;
+  completion_percentage: number;
+}
+
+export interface TopicProgressItem {
+  topic_id: string;
+  topic_name: string;
+  total_problems: number;
+  solved_problems: number;
+  completion_percentage: number;
+}
+
+export interface AnalyticsDifficultyItem {
+  difficulty: Difficulty;
+  total_problems: number;
+  solved_problems: number;
+  attempted_problems: number;
+  accuracy_rate: number;
+}
+
+export interface AnalyticsActivityDay {
+  date: string;
+  attempt_count: number;
+  solved_count: number;
+}
+
+// Legacy UI compatibility types
 export interface TestCase {
   id: string;
   input: string;
   expectedOutput: string;
   actualOutput?: string;
   passed?: boolean;
-  isHidden?: boolean;
 }
 
-export interface Example {
-  input: string;
-  output: string;
-  explanation?: string;
-}
-
-export interface Problem {
-  id: string;
-  title: string;
-  slug: string;
-  topicId: string;
-  difficulty: Difficulty;
+export interface Problem extends A2ZProblem {
   description: string;
   constraints: string[];
-  examples: Example[];
+  examples: { input: string; output: string; explanation?: string }[];
   hints: string[];
   starterCode: Record<string, string>;
   testCases: TestCase[];
   accuracyRate?: number;
-  solved?: boolean;
 }
 
-export interface Topic {
-  id: string;
-  title: string;
-  slug: string;
-  description: string;
-  difficulty: Difficulty;
+export interface Topic extends RoadmapTopic {
   estimatedHours: number;
   totalProblems: number;
   completedProblems: number;
@@ -61,12 +139,6 @@ export interface CodeExecutionResult {
   stderr?: string;
   passedTests: number;
   totalTests: number;
-  details?: {
-    testCaseId: string;
-    input: string;
-    expected: string;
-    received: string;
-  }[];
 }
 
 export type AssistantMode = 'hint' | 'explain' | 'debug';
@@ -80,7 +152,7 @@ export interface AssistantMessage {
   mode?: AssistantMode;
 }
 
-export type MistakeCategory = 
+export type MistakeCategory =
   | 'logical'
   | 'syntax'
   | 'time_complexity'
@@ -118,4 +190,3 @@ export interface AnalyticsSummary {
   difficultyDistribution: { name: string; count: number; color: string }[];
   monthlyProgress: { month: string; solved: number }[];
 }
-

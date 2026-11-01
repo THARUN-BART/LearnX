@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, LoginRequest } from '../types/auth.types';
 import authService from '../services/auth.service';
-import { TOKEN_KEY, USER_KEY } from '../utils/constants';
+import { TOKEN_KEY, USER_KEY, PROFILE_KEY } from '../utils/constants';
+import { profileCache } from '../utils/profileCache';
 
 interface AuthContextType {
   user: User | null;
@@ -34,12 +35,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Restore authentication state
     const token = localStorage.getItem(TOKEN_KEY);
     const storedUser = localStorage.getItem(USER_KEY);
+    const storedProfile = localStorage.getItem(PROFILE_KEY);
 
     if (token && storedUser) {
       try {
         const parsed = JSON.parse(storedUser);
+        let isOnboarded = Boolean(parsed.onboarding_completed ?? parsed.isOnboarded);
+        
+        // Also check stored profile
+        if (!isOnboarded && storedProfile) {
+          try {
+            const profile = JSON.parse(storedProfile);
+            if (profile.onboarding_completed || profile.college) {
+              isOnboarded = true;
+            }
+          } catch {}
+        }
+
         parsed.fullName = parsed.full_name || parsed.fullName;
-        parsed.isOnboarded = parsed.onboarding_completed ?? parsed.isOnboarded;
+        parsed.onboarding_completed = isOnboarded;
+        parsed.isOnboarded = isOnboarded;
         setUser(parsed);
       } catch (e) {
         localStorage.removeItem(TOKEN_KEY);
@@ -54,8 +69,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const response = await authService.login(data);
       const u = response.user;
+      const storedProfile = localStorage.getItem(PROFILE_KEY);
+      let isOnboarded = Boolean(u.onboarding_completed ?? u.isOnboarded);
+      if (!isOnboarded && storedProfile) {
+        try {
+          const profile = JSON.parse(storedProfile);
+          if (profile.onboarding_completed || profile.college) {
+            isOnboarded = true;
+          }
+        } catch {}
+      }
+
       u.fullName = u.full_name || u.fullName;
-      u.isOnboarded = u.onboarding_completed ?? u.isOnboarded;
+      u.onboarding_completed = isOnboarded;
+      u.isOnboarded = isOnboarded;
       setUser(u);
     } finally {
       setIsLoading(false);
@@ -85,7 +112,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const res = await authService.verifySignupOtp(data);
       const u = res.user;
       u.fullName = u.full_name || u.fullName;
-      u.isOnboarded = u.onboarding_completed ?? u.isOnboarded;
+      u.isOnboarded = Boolean(u.onboarding_completed ?? u.isOnboarded);
       setUser(u);
       localStorage.removeItem('learnx_pending_email');
       setPendingEmail(null);
@@ -96,19 +123,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = () => {
     authService.logout();
+    profileCache.clear();
     setUser(null);
   };
 
   const updateLocalUser = (updatedProps: Partial<User>) => {
-    if (!user) return;
-    const updated = {
-      ...user,
-      ...updatedProps,
-      fullName: updatedProps.full_name || updatedProps.fullName || user.fullName,
-      isOnboarded: updatedProps.onboarding_completed ?? updatedProps.isOnboarded ?? user.isOnboarded
-    };
-    setUser(updated);
-    localStorage.setItem(USER_KEY, JSON.stringify(updated));
+    setUser((prevUser) => {
+      const base = prevUser || (localStorage.getItem(USER_KEY) ? JSON.parse(localStorage.getItem(USER_KEY)!) : {
+        id: 'usr_default',
+        email: 'student@gmail.com',
+        full_name: 'Student Name'
+      });
+
+      const updated = {
+        ...base,
+        ...updatedProps,
+        full_name: updatedProps.full_name || updatedProps.fullName || base.full_name || base.fullName,
+        fullName: updatedProps.full_name || updatedProps.fullName || base.full_name || base.fullName,
+        onboarding_completed: updatedProps.onboarding_completed ?? updatedProps.isOnboarded ?? base.onboarding_completed ?? true,
+        isOnboarded: updatedProps.onboarding_completed ?? updatedProps.isOnboarded ?? base.isOnboarded ?? true
+      };
+
+      localStorage.setItem(USER_KEY, JSON.stringify(updated));
+      return updated;
+    });
   };
 
   return (

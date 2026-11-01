@@ -2,6 +2,7 @@ import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { Loader2 } from 'lucide-react';
+import { USER_KEY, PROFILE_KEY } from '../utils/constants';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -17,9 +18,9 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#08080D] flex flex-col items-center justify-center gap-3 text-[#9292A3]">
+      <div className="min-h-screen bg-[#07070B] flex flex-col items-center justify-center gap-3 text-[#8E8EA0]">
         <Loader2 className="w-8 h-8 animate-spin text-[#8B5CF6]" />
-        <span className="text-sm font-mono tracking-wide">Restoring secure session...</span>
+        <span className="text-xs font-mono tracking-wide">Restoring secure session...</span>
       </div>
     );
   }
@@ -28,10 +29,25 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  const isOnboarded = Boolean(user?.onboarding_completed ?? user?.isOnboarded);
+  // Resilient check across user state, localStorage user, and localStorage profile
+  let isOnboarded = Boolean(user?.onboarding_completed ?? user?.isOnboarded);
+  if (!isOnboarded) {
+    try {
+      const storedUser = localStorage.getItem(USER_KEY);
+      if (storedUser) {
+        const u = JSON.parse(storedUser);
+        if (u.onboarding_completed || u.isOnboarded) isOnboarded = true;
+      }
+      const storedProfile = localStorage.getItem(PROFILE_KEY);
+      if (storedProfile) {
+        const p = JSON.parse(storedProfile);
+        if (p.onboarding_completed || p.college) isOnboarded = true;
+      }
+    } catch {}
+  }
 
-  // If user hasn't onboarded yet and is attempting to access a route that requires onboarding
-  if (requiresOnboarded && user && !isOnboarded && location.pathname !== '/onboarding') {
+  // If attempting to access an onboarding-dependent route and user is genuinely not onboarded
+  if (requiresOnboarded && !isOnboarded && location.pathname !== '/onboarding') {
     return <Navigate to="/onboarding" replace />;
   }
 
@@ -39,4 +55,3 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 };
 
 export default ProtectedRoute;
-

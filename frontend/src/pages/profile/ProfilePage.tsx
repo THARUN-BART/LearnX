@@ -123,7 +123,7 @@ export const ProfilePage: React.FC = () => {
         <Card className="p-6 space-y-4">
           <div className="flex items-center gap-2 pb-2 border-b border-[#232336] text-[#A78BFA] font-mono text-xs font-bold">
             <GraduationCap className="w-4 h-4 text-[#8B5CF6]" />
-            <span>Academic Credentials (PostgreSQL)</span>
+            <span>Academic Credentials </span>
           </div>
 
           <div className="space-y-4 text-xs">
