@@ -1,0 +1,87 @@
+package config
+
+import (
+	"os"
+	"strconv"
+	"time"
+
+	"github.com/THARUN-BART/LearnX/backend/internal/crypto"
+	"github.com/joho/godotenv"
+)
+
+type Config struct {
+	OTPServiceBaseURL       string
+	OTPAppName              string
+	OTPTimeout              time.Duration
+	OTPCooldown             time.Duration
+	MaxOTPAttemptsPerWindow int
+
+	SupabaseURL            string
+	SupabaseAnonKey        string
+	SupabaseServiceRoleKey string
+	SupabaseDBURL          string
+	SupabaseJWTSecret      string
+
+	ServerPort string
+	ServerEnv  string
+	ClientURL  string
+
+	EncryptionKey            []byte
+	PendingSignupExpiry      time.Duration
+	PasswordResetTokenExpiry time.Duration
+}
+
+// Load loads configuration from environment variables and an optional .env file.
+func Load() (*Config, error) {
+	// Attempt to load .env file if it exists, ignore error if missing
+	_ = godotenv.Load()
+
+	cfg := &Config{
+		OTPServiceBaseURL:       getEnv("OTP_SERVICE_BASE_URL", "https://otp-latest-0k73.onrender.com"),
+		OTPAppName:              getEnv("OTP_APP_NAME", "LearnX"),
+		OTPTimeout:              time.Duration(getEnvAsInt("OTP_TIMEOUT_SECONDS", 15)) * time.Second,
+		OTPCooldown:             time.Duration(getEnvAsInt("OTP_COOLDOWN_SECONDS", 60)) * time.Second,
+		MaxOTPAttemptsPerWindow: getEnvAsInt("OTP_MAX_ATTEMPTS", 5),
+
+		SupabaseURL:            getEnv("SUPABASE_URL", ""),
+		SupabaseAnonKey:        getEnv("SUPABASE_ANON_KEY", ""),
+		SupabaseServiceRoleKey: getEnv("SUPABASE_SERVICE_ROLE_KEY", ""),
+		SupabaseDBURL:          getEnv("SUPABASE_DB_URL", ""),
+		SupabaseJWTSecret:      getEnv("SUPABASE_JWT_SECRET", ""),
+
+		ServerPort: getEnv("SERVER_PORT", "8080"),
+		ServerEnv:  getEnv("SERVER_ENV", "development"),
+		ClientURL:  getEnv("CLIENT_URL", "http://localhost:3000"),
+
+		PendingSignupExpiry:      time.Duration(getEnvAsInt("SIGNUP_EXPIRY_MINUTES", 10)) * time.Minute,
+		PasswordResetTokenExpiry: time.Duration(getEnvAsInt("RESET_TOKEN_EXPIRY_MINUTES", 15)) * time.Minute,
+	}
+
+	rawKey := getEnv("ENCRYPTION_KEY", "")
+	if rawKey == "" {
+		if cfg.SupabaseServiceRoleKey != "" {
+			rawKey = cfg.SupabaseServiceRoleKey
+		} else {
+			rawKey = "learnx-default-fallback-encryption-key-for-dev"
+		}
+	}
+	cfg.EncryptionKey = crypto.DeriveKey(rawKey)
+
+	return cfg, nil
+}
+
+func getEnv(key, defaultVal string) string {
+	if val, ok := os.LookupEnv(key); ok && val != "" {
+		return val
+	}
+	return defaultVal
+}
+
+func getEnvAsInt(key string, defaultVal int) int {
+	if valStr, ok := os.LookupEnv(key); ok {
+		if val, err := strconv.Atoi(valStr); err == nil {
+			return val
+		}
+	}
+	return defaultVal
+}
