@@ -71,14 +71,14 @@ class ProgressService {
       return response.data.summary || response.data.data || response.data;
     } catch {
       return {
-        roadmap_id: 'c3e1a6b0-2c4f-4d9a-9b11-4f0c8e1a2b33',
+        roadmap_id: '',
         roadmap_name: "Striver's A2Z DSA Sheet",
         total_problems: 402,
-        solved_problems: 18,
-        attempted_problems: 7,
-        pending_problems: 377,
-        needs_revision: 2,
-        completion_percentage: 4.47
+        solved_problems: 0,
+        attempted_problems: 0,
+        pending_problems: 402,
+        needs_revision: 0,
+        completion_percentage: 0
       };
     }
   }

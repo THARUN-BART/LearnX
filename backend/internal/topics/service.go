@@ -33,8 +33,9 @@ func (s *service) ListSubtopics(ctx context.Context, topicID string) ([]model.Su
 	if topicID == "" {
 		return nil, model.ErrInvalidInput
 	}
-	if _, err := s.repo.Get(ctx, topicID); err != nil {
+	topic, err := s.repo.Get(ctx, topicID)
+	if err != nil {
 		return nil, err
 	}
-	return s.repo.ListSubtopics(ctx, topicID)
+	return s.repo.ListSubtopics(ctx, topic.ID)
 }

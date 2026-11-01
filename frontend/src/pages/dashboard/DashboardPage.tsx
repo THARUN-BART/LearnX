@@ -29,7 +29,8 @@ import { useAuth } from '../../hooks/useAuth';
 import { useProfile } from '../../hooks/useProfile';
 import { analyticsService } from '../../services/analytics.service';
 import { learningService } from '../../services/learning.service';
-import { AnalyticsSummary, Problem } from '../../types/learning.types';
+import { roadmapService } from '../../services/roadmap.service';
+import { AnalyticsSummary, Problem, Topic, MistakeRecord } from '../../types/learning.types';
 import Card from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
@@ -41,17 +42,28 @@ export const DashboardPage: React.FC = () => {
 
   const [analytics, setAnalytics] = useState<AnalyticsSummary | null>(null);
   const [recommendedProblems, setRecommendedProblems] = useState<Problem[]>([]);
+  const [activeTopic, setActiveTopic] = useState<Topic | null>(null);
+  const [latestMistake, setLatestMistake] = useState<MistakeRecord | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const loadDashboardData = async () => {
       try {
-        const [stats, problems] = await Promise.all([
+        const [stats, problems, topics, mistakes] = await Promise.all([
           analyticsService.getAnalytics(),
-          learningService.getProblems()
+          learningService.getProblems(),
+          roadmapService.getRoadmap(),
+          analyticsService.getMistakes()
         ]);
         setAnalytics(stats);
-        setRecommendedProblems(problems.slice(0, 3));
+        setRecommendedProblems((Array.isArray(problems) ? problems : []).slice(0, 3));
+        if (Array.isArray(topics) && topics.length > 0) {
+          const current = topics.find((t) => t.status === 'in_progress') || topics[0];
+          setActiveTopic(current);
+        }
+        if (Array.isArray(mistakes) && mistakes.length > 0) {
+          setLatestMistake(mistakes[0]);
+        }
       } catch (e) {
         console.error(e);
       } finally {
@@ -63,11 +75,15 @@ export const DashboardPage: React.FC = () => {
 
   const studentName = user?.fullName || user?.full_name || 'Student';
 
-  // Generate simulated 20-week activity heatmap blocks
+  // Map 20 weeks of activity from real weeklyActivity (last week mapped to real data, rest neutral)
   const activityWeeks = Array.from({ length: 20 }, (_, w) => {
+    const isCurrentWeek = w === 19;
     return Array.from({ length: 7 }, (_, d) => {
-      const activeProb = Math.random();
-      const level = activeProb > 0.7 ? 3 : activeProb > 0.4 ? 2 : activeProb > 0.2 ? 1 : 0;
+      let level = 0;
+      if (isCurrentWeek && analytics?.weeklyActivity?.[d]) {
+        const solved = analytics.weeklyActivity[d].solved;
+        level = solved >= 3 ? 3 : solved >= 1 ? 2 : 0;
+      }
       return { week: w, day: d, level };
     });
   });
@@ -135,9 +151,11 @@ export const DashboardPage: React.FC = () => {
             <CheckCircle2 className="w-4 h-4 text-emerald-400" />
           </div>
           <div className="text-2xl sm:text-3xl font-bold text-[#F4F4F6]">
-            {analytics?.totalSolved || profile?.problemsSolved || 47}
+            {analytics?.totalSolved ?? profile?.problemsSolved ?? 0}
           </div>
-          <span className="text-[11px] text-emerald-400 block">+6 this week</span>
+          <span className="text-[11px] text-emerald-400 block">
+            {(analytics?.totalSolved ?? 0) > 0 ? `${analytics?.totalSolved} verified solutions` : 'Ready to start'}
+          </span>
         </div>
 
         {/* Metric 2 */}
@@ -147,9 +165,11 @@ export const DashboardPage: React.FC = () => {
             <Flame className="w-4 h-4 text-amber-400" />
           </div>
           <div className="text-2xl sm:text-3xl font-bold text-amber-400">
-            {analytics?.streakDays || profile?.streakDays || 14}d
+            {analytics?.streakDays ?? profile?.streakDays ?? 0}d
           </div>
-          <span className="text-[11px] text-[#8E8EA0] block">Top 5% consistency</span>
+          <span className="text-[11px] text-[#8E8EA0] block">
+            {(analytics?.streakDays ?? 0) > 0 ? `${analytics?.streakDays} day active streak` : 'Daily streak ready'}
+          </span>
         </div>
 
         {/* Metric 3 */}
@@ -159,9 +179,9 @@ export const DashboardPage: React.FC = () => {
             <Clock className="w-4 h-4 text-[#818CF8]" />
           </div>
           <div className="text-2xl sm:text-3xl font-bold text-[#818CF8]">
-            {analytics?.hoursSpent || profile?.practiceHours || 38}h
+            {analytics?.hoursSpent ?? profile?.practiceHours ?? 0}h
           </div>
-          <span className="text-[11px] text-[#8E8EA0] block">1.8h / daily avg</span>
+          <span className="text-[11px] text-[#8E8EA0] block">Active compilation runtime</span>
         </div>
 
         {/* Metric 4 */}
@@ -171,9 +191,11 @@ export const DashboardPage: React.FC = () => {
             <TrendingUp className="w-4 h-4 text-[#A78BFA]" />
           </div>
           <div className="text-2xl sm:text-3xl font-bold text-[#A78BFA]">
-            {profile?.overallProgress || 42}%
+            {analytics?.totalSolved ? Math.min(100, Math.round((analytics.totalSolved / 402) * 100)) : (profile?.overallProgress ?? 0)}%
           </div>
-          <span className="text-[11px] text-emerald-400 block">3 / 16 Pillars Mastered</span>
+          <span className="text-[11px] text-emerald-400 block">
+            {analytics?.totalSolved ?? 0} / 402 Solved
+          </span>
         </div>
       </div>
 
@@ -284,7 +306,7 @@ export const DashboardPage: React.FC = () => {
                 Active Pillar Module
               </span>
               <button
-                onClick={() => navigate('/roadmap/arrays')}
+                onClick={() => navigate(`/roadmap/${activeTopic?.slug || activeTopic?.id || 'learn-the-basics'}`)}
                 className="text-xs text-[#8B5CF6] hover:text-[#A78BFA] flex items-center gap-1 font-mono transition-colors"
               >
                 <span>Inspect Curriculum</span>
@@ -294,20 +316,25 @@ export const DashboardPage: React.FC = () => {
 
             <div>
               <h3 className="text-xl font-bold text-[#F4F4F6] font-mono">
-                Arrays, Sliders & Two-Pointers
+                {activeTopic?.title || 'Learn the basics'}
               </h3>
               <p className="text-xs text-[#8E8EA0] mt-1">
-                Contiguous memory layout, sliding window bounds, Kadane’s maximum subarray routine, and fast-slow pointer logic.
+                {activeTopic?.description || 'Things to know in C++/Java/Python or any language, basic math, recursion, hashing.'}
               </p>
             </div>
 
             <div className="space-y-1.5 font-mono text-xs">
               <div className="flex justify-between">
                 <span className="text-[#8E8EA0]">Pillar Completion Rate</span>
-                <span className="text-[#A78BFA] font-bold">18 / 24 Problems (75%)</span>
+                <span className="text-[#A78BFA] font-bold">
+                  {activeTopic?.completedProblems || 0} / {activeTopic?.totalProblems || 31} Problems ({Math.round(((activeTopic?.completedProblems || 0) / (activeTopic?.totalProblems || 1)) * 100)}%)
+                </span>
               </div>
               <div className="w-full bg-[#181824] h-2 rounded-full overflow-hidden border border-[#1C1C28]">
-                <div className="bg-[#8B5CF6] h-full w-[75%] rounded-full" />
+                <div
+                  className="bg-[#8B5CF6] h-full rounded-full transition-all duration-300"
+                  style={{ width: `${Math.min(100, Math.round(((activeTopic?.completedProblems || 0) / (activeTopic?.totalProblems || 1)) * 100))}%` }}
+                />
               </div>
             </div>
           </div>
@@ -326,20 +353,21 @@ export const DashboardPage: React.FC = () => {
             </div>
 
             <h4 className="text-sm font-bold text-[#F4F4F6] font-mono">
-              Avoid Off-by-one Edge Slips
+              {latestMistake?.categoryLabel || 'Diagnostic Telemetry Ready'}
             </h4>
 
             <p className="text-xs text-[#8E8EA0] leading-relaxed">
-              In your last 5 submissions, 40% of panics were caused by loop inclusive bounds (`high = mid` instead of `high = mid - 1`).
+              {latestMistake?.explanation ||
+                'Submit solutions in the Practice Arena to trigger automated test suite diagnostics, asymptotic profiling, and edge case failure mode analysis.'}
             </p>
 
             <Button
               variant="outline"
               size="sm"
               className="w-full text-xs font-mono"
-              onClick={() => navigate('/analysis')}
+              onClick={() => navigate(latestMistake ? '/analysis' : '/practice')}
             >
-              Inspect Diagnostics
+              {latestMistake ? 'Inspect Diagnostics' : 'Start Practice Session'}
             </Button>
           </div>
 

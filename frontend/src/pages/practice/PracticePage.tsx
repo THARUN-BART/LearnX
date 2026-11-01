@@ -22,6 +22,7 @@ import {
 import { SAMPLE_PROBLEMS, PROGRAMMING_LANGUAGES } from '../../utils/constants';
 import { Problem, CodeExecutionResult } from '../../types/learning.types';
 import codingService from '../../services/coding.service';
+import learningService from '../../services/learning.service';
 import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
 import { toast } from 'sonner';
@@ -37,7 +38,7 @@ export const PracticePage: React.FC = () => {
 
   // Editor states
   const [selectedLanguage, setSelectedLanguage] = useState<string>('python');
-  const [code, setCode] = useState<string>(() => problem.starterCode['python'] || '');
+  const [code, setCode] = useState<string>(() => problem.starterCode?.['python'] || '');
   const [activeTab, setActiveTab] = useState<'description' | 'hints'>('description');
   const [activeBottomTab, setActiveBottomTab] = useState<'testcases' | 'console'>('testcases');
   const [selectedTestCaseIndex, setSelectedTestCaseIndex] = useState<number>(0);
@@ -46,23 +47,60 @@ export const PracticePage: React.FC = () => {
   // Execution states
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [executionResult, setExecutionResult] = useState<CodeExecutionResult | null>(null);
+  const [allProblems, setAllProblems] = useState<Problem[]>([]);
 
-  // When problem or language changes, update starter code
+  // Fetch real problems list from API for selector
   useEffect(() => {
-    const currentProb =
-      SAMPLE_PROBLEMS.find((p) => p.id === problemId || p.slug === problemId) || SAMPLE_PROBLEMS[0];
-    setProblem(currentProb);
-    setCode(currentProb.starterCode[selectedLanguage.toLowerCase()] || currentProb.starterCode['python'] || '');
-    setExecutionResult(null);
-  }, [problemId, selectedLanguage]);
+    const fetchAllProblems = async () => {
+      const list = await learningService.getProblems();
+      if (Array.isArray(list) && list.length > 0) {
+        setAllProblems(list);
+        if (!problemId) {
+          setProblem(list[0]);
+          setCode(list[0].starterCode?.[selectedLanguage.toLowerCase()] || list[0].starterCode?.['python'] || '');
+        }
+      }
+    };
+    fetchAllProblems();
+  }, [problemId]);
+
+  // Fetch problem from API when problemId changes
+  useEffect(() => {
+    let isMounted = true;
+    const fetchProblem = async () => {
+      if (!problemId) return;
+      const prob = await learningService.getProblemById(problemId);
+      if (prob && isMounted) {
+        setProblem(prob);
+        const starter =
+          prob.starterCode?.[selectedLanguage.toLowerCase()] ||
+          prob.starterCode?.['python'] ||
+          '';
+        setCode(starter);
+        setExecutionResult(null);
+      }
+    };
+    fetchProblem();
+    return () => {
+      isMounted = false;
+    };
+  }, [problemId]);
 
   const handleLanguageChange = (lang: string) => {
     setSelectedLanguage(lang);
-    setCode(problem.starterCode[lang.toLowerCase()] || '');
+    const starter =
+      problem.starterCode?.[lang.toLowerCase()] ||
+      problem.starterCode?.['python'] ||
+      '';
+    setCode(starter);
   };
 
   const handleResetCode = () => {
-    setCode(problem.starterCode[selectedLanguage.toLowerCase()] || '');
+    const starter =
+      problem.starterCode?.[selectedLanguage.toLowerCase()] ||
+      problem.starterCode?.['python'] ||
+      '';
+    setCode(starter);
     toast.info('Starter code reset');
   };
 
@@ -142,9 +180,9 @@ export const PracticePage: React.FC = () => {
           <select
             value={problem.id}
             onChange={(e) => navigate(`/practice/${e.target.value}`)}
-            className="bg-[#12121B] text-[#F4F4F6] text-xs font-mono font-semibold px-3 py-1.5 rounded-lg border border-[#1C1C28] outline-none cursor-pointer"
+            className="bg-[#12121B] text-[#F4F4F6] text-xs font-mono font-semibold px-3 py-1.5 rounded-lg border border-[#1C1C28] outline-none cursor-pointer max-w-[220px] truncate"
           >
-            {SAMPLE_PROBLEMS.map((p) => (
+            {(allProblems.length > 0 ? allProblems : [problem]).map((p) => (
               <option key={p.id} value={p.id}>
                 {p.title} ({p.difficulty})
               </option>

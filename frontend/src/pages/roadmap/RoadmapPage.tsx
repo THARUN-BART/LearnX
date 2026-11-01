@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   CheckCircle2,
-  Lock,
   Play,
   Clock,
   Code2,
@@ -91,22 +90,20 @@ export const RoadmapPage: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredTopics.map((topic, index) => {
           const isCompleted = topic.status === 'completed';
-          const isInProgress = topic.status === 'in_progress';
-          const isLocked = topic.status === 'locked';
-
-          const percent = Math.round((topic.completedProblems / topic.totalProblems) * 100);
+          const isInProgress = topic.status === 'in_progress' || !isCompleted;
+          const totalProbs = topic.totalProblems || topic.problem_count || 1;
+          const completedProbs = topic.completedProblems || topic.solved_count || 0;
+          const percent = Math.min(100, Math.round((completedProbs / totalProbs) * 100));
 
           return (
             <Card
               key={topic.id}
               onClick={() => {
-                if (!isLocked) navigate(`/roadmap/${topic.slug || topic.id}`);
+                navigate(`/roadmap/${topic.slug || topic.id}`);
               }}
-              className={`p-6 flex flex-col justify-between transition-all duration-200 ${
-                isLocked
-                  ? 'opacity-60 cursor-not-allowed bg-[#12121A]'
-                  : 'hover:border-[#8B5CF6]/50 hover:bg-[#1A1A28] cursor-pointer'
-              } ${isInProgress ? 'border-[#8B5CF6]/40 glow-purple' : ''}`}
+              className={`p-6 flex flex-col justify-between transition-all duration-200 hover:border-[#8B5CF6]/50 hover:bg-[#1A1A28] cursor-pointer ${
+                isInProgress ? 'border-[#8B5CF6]/40 glow-purple' : ''
+              }`}
             >
               <div className="space-y-3">
                 {/* Status pill & Difficulty */}
@@ -134,14 +131,9 @@ export const RoadmapPage: React.FC = () => {
                       Done
                     </Badge>
                   )}
-                  {isInProgress && (
+                  {!isCompleted && (
                     <Badge variant="purple" size="sm" icon={<Sparkles className="w-3 h-3" />}>
                       In Progress
-                    </Badge>
-                  )}
-                  {isLocked && (
-                    <Badge variant="outline" size="sm" icon={<Lock className="w-3 h-3" />}>
-                      Locked
                     </Badge>
                   )}
                 </div>
@@ -158,7 +150,7 @@ export const RoadmapPage: React.FC = () => {
 
                 {/* Subtopic tags */}
                 <div className="flex flex-wrap gap-1.5 pt-1">
-                  {topic.subtopics.slice(0, 2).map((sub, i) => (
+                  {(topic.subtopics || []).slice(0, 2).map((sub, i) => (
                     <span
                       key={i}
                       className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#101019] text-[#9292A3] border border-[#232336]"
@@ -166,9 +158,9 @@ export const RoadmapPage: React.FC = () => {
                       {sub}
                     </span>
                   ))}
-                  {topic.subtopics.length > 2 && (
+                  {(topic.subtopics || []).length > 2 && (
                     <span className="text-[10px] font-mono text-[#65657B] px-1 py-0.5">
-                      +{topic.subtopics.length - 2}
+                      +{(topic.subtopics || []).length - 2}
                     </span>
                   )}
                 </div>
@@ -178,14 +170,14 @@ export const RoadmapPage: React.FC = () => {
               <div className="pt-5 mt-4 border-t border-[#232336] space-y-2">
                 <div className="flex justify-between text-xs font-mono">
                   <span className="text-[#9292A3]">
-                    {topic.completedProblems} / {topic.totalProblems} Solved
+                    {completedProbs} / {totalProbs} Solved
                   </span>
                   <span className="text-[#F5F5F7] font-semibold">{percent}%</span>
                 </div>
                 <div className="w-full bg-[#101019] h-1.5 rounded-full overflow-hidden">
                   <div
                     className={`h-full transition-all duration-300 ${
-                      isCompleted ? 'bg-emerald-500' : isInProgress ? 'bg-[#8B5CF6]' : 'bg-[#373752]'
+                      isCompleted ? 'bg-emerald-500' : 'bg-[#8B5CF6]'
                     }`}
                     style={{ width: `${percent}%` }}
                   />

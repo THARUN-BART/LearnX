@@ -105,6 +105,7 @@ export interface TestCase {
 }
 
 export interface Problem extends A2ZProblem {
+  topicId?: string;
   description: string;
   constraints: string[];
   examples: { input: string; output: string; explanation?: string }[];
@@ -115,6 +116,7 @@ export interface Problem extends A2ZProblem {
 }
 
 export interface Topic extends RoadmapTopic {
+  difficulty: Difficulty;
   estimatedHours: number;
   totalProblems: number;
   completedProblems: number;

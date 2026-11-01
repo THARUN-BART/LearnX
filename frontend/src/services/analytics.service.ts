@@ -1,150 +1,220 @@
 import apiClient from './api';
-import { AnalyticsSummary, MistakeRecord } from '../types/learning.types';
+import { AnalyticsSummary, MistakeRecord, MistakeCategory } from '../types/learning.types';
 
-export const MOCK_MISTAKES: MistakeRecord[] = [
-  {
-    id: 'mst-1',
-    problemId: 'prob-two-sum',
-    problemTitle: 'Two Sum',
-    topic: 'Arrays & Hashing',
-    category: 'edge_cases',
-    categoryLabel: 'Edge Case Neglect',
-    frequency: 3,
-    date: '2026-10-28',
-    failedCodeSnippet: `seen = {}
-for i, num in enumerate(nums):
-    seen[num] = i  # Overwrote before checking complement!
-    if target - num in seen:
-        return [seen[target - num], i]`,
-    explanation: 'Overwriting the dictionary key with the current index before testing for the complement caused identical elements to pair with themselves.',
-    whyFailed: 'Failed on testcase nums=[3,3], target=6. The code returned [0, 0] instead of [0, 1].',
-    suggestedCorrection: 'Check `if target - num in seen` before inserting `num` into the hash table.',
-    recommendedTopicId: 'hashing',
-    recommendedTopicTitle: 'Hashing & Frequency Maps'
-  },
-  {
-    id: 'mst-2',
-    problemId: 'prob-max-subarray',
-    problemTitle: 'Maximum Subarray',
-    topic: 'Arrays',
-    category: 'time_complexity',
-    categoryLabel: 'Time Limit Exceeded (O(N^3))',
-    frequency: 2,
-    date: '2026-10-25',
-    failedCodeSnippet: `max_sum = -float('inf')
-for i in range(len(nums)):
-    for j in range(i, len(nums)):
-        max_sum = max(max_sum, sum(nums[i:j+1]))`,
-    explanation: 'Nested loops calculating slice sums resulted in O(N^3) time complexity, timing out on 10^5 elements.',
-    whyFailed: 'Exceeded 2000ms limit on large arrays.',
-    suggestedCorrection: 'Use Kadanes single-pass algorithm to achieve optimal O(N) time and O(1) space.',
-    recommendedTopicId: 'arrays',
-    recommendedTopicTitle: 'Prefix Sums & Dynamic Kadane'
-  },
-  {
-    id: 'mst-3',
-    problemId: 'prob-valid-parentheses',
-    problemTitle: 'Valid Parentheses',
-    topic: 'Stacks and Queues',
-    category: 'logical',
-    categoryLabel: 'Logical Stack Underflow',
-    frequency: 4,
-    date: '2026-10-22',
-    failedCodeSnippet: `stack = []
-for c in s:
-    if c == ')':
-        top = stack.pop() # Error when stack is empty!
-        if top != '(': return False`,
-    explanation: 'Popping from an empty stack when input starts with a closing bracket raises an IndexError / panic.',
-    whyFailed: 'Crashed on string s = "]" or ")(',
-    suggestedCorrection: 'Always guard stack operations: `if not stack: return False` before invoking `.pop()`.',
-    recommendedTopicId: 'stacks-queues',
-    recommendedTopicTitle: 'Monotonic Stacks & Invariants'
-  },
-  {
-    id: 'mst-4',
-    problemId: 'prob-binary-search',
-    problemTitle: 'Search in Rotated Sorted Array',
-    topic: 'Searching and Sorting',
-    category: 'algorithm_selection',
-    categoryLabel: 'Incorrect Pivot Logic',
-    frequency: 3,
-    date: '2026-10-18',
-    failedCodeSnippet: `mid = (low + high) // 2
-if nums[mid] == target: return mid
-if nums[low] <= nums[mid]:
-    # Incomplete boundary condition
-    if nums[low] <= target < nums[mid]: high = mid - 1
-    else: low = mid + 1`,
-    explanation: 'Boundary inequality missed strict monotonic half checking when duplicates or non-strict bounds occurred.',
-    whyFailed: 'Infinite loop when low == high - 1.',
-    suggestedCorrection: 'Verify whether the left half or right half is strictly sorted before testing inclusion.',
-    recommendedTopicId: 'searching-sorting',
-    recommendedTopicTitle: 'Binary Search On Answer Spaces'
-  }
-];
-
-export const MOCK_ANALYTICS: AnalyticsSummary = {
-  totalSolved: 64,
-  easySolved: 32,
-  mediumSolved: 26,
-  hardSolved: 6,
-  streakDays: 14,
-  hoursSpent: 48,
-  accuracyRate: 79.4,
-  weeklyActivity: [
-    { day: 'Mon', solved: 4, hours: 2.5 },
-    { day: 'Tue', solved: 7, hours: 3.8 },
-    { day: 'Wed', solved: 5, hours: 2.1 },
-    { day: 'Thu', solved: 9, hours: 4.5 },
-    { day: 'Fri', solved: 6, hours: 3.0 },
-    { day: 'Sat', solved: 11, hours: 5.2 },
-    { day: 'Sun', solved: 8, hours: 4.0 }
-  ],
-  topicProficiency: [
-    { topic: 'Arrays', score: 85, total: 100 },
-    { topic: 'Strings', score: 78, total: 100 },
-    { topic: 'Sorting', score: 72, total: 100 },
-    { topic: 'Linked Lists', score: 68, total: 100 },
-    { topic: 'Stacks & Queues', score: 82, total: 100 },
-    { topic: 'Hashing', score: 90, total: 100 },
-    { topic: 'Trees', score: 55, total: 100 },
-    { topic: 'DP', score: 35, total: 100 }
-  ],
-  difficultyDistribution: [
-    { name: 'Easy', count: 32, color: '#22C55E' },
-    { name: 'Medium', count: 26, color: '#F59E0B' },
-    { name: 'Hard', count: 6, color: '#EF4444' }
-  ],
-  monthlyProgress: [
-    { month: 'Jun', solved: 12 },
-    { month: 'Jul', solved: 22 },
-    { month: 'Aug', solved: 35 },
-    { month: 'Sep', solved: 48 },
-    { month: 'Oct', solved: 64 }
-  ]
-};
+const DAYS_OF_WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 class AnalyticsService {
+  /**
+   * Fetches real live analytics from the backend:
+   * - /api/v1/student/progress/summary (real student counts and difficulty breakdown)
+   * - /api/v1/student/analytics/activity (real daily activity points)
+   * - /api/v1/student/analytics/topics (real topic proficiency)
+   */
   async getAnalytics(): Promise<AnalyticsSummary> {
     try {
-      const response = await apiClient.get('/api/v1/analytics/dashboard');
-      return response.data.data || response.data;
+      const [summaryRes, activityRes, topicsRes] = await Promise.allSettled([
+        apiClient.get('/api/v1/student/progress/summary'),
+        apiClient.get('/api/v1/student/analytics/activity?days=7'),
+        apiClient.get('/api/v1/student/analytics/topics')
+      ]);
+
+      const summaryData = summaryRes.status === 'fulfilled' ? summaryRes.value.data?.summary || summaryRes.value.data : null;
+      const activityData = activityRes.status === 'fulfilled' ? activityRes.value.data?.activity || activityRes.value.data : null;
+      const topicsData = topicsRes.status === 'fulfilled' ? topicsRes.value.data?.topics || topicsRes.value.data : [];
+
+      const overview = summaryData?.overview || {};
+      const diffStats: any[] = summaryData?.difficulty || [];
+
+      const totalSolved = overview.solved_problems ?? 0;
+      const attempted = overview.attempted_problems ?? totalSolved;
+
+      // Extract real counts per difficulty from database
+      const easyStats = diffStats.find((d: any) => d.difficulty === 'Easy') || {};
+      const mediumStats = diffStats.find((d: any) => d.difficulty === 'Medium') || {};
+      const hardStats = diffStats.find((d: any) => d.difficulty === 'Hard') || {};
+
+      const easySolved = easyStats.solved ?? 0;
+      const mediumSolved = mediumStats.solved ?? 0;
+      const hardSolved = hardStats.solved ?? 0;
+
+      const easyTotal = easyStats.total ?? 120;
+      const mediumTotal = mediumStats.total ?? 200;
+      const hardTotal = hardStats.total ?? 82;
+
+      // Calculate real accuracy
+      const accuracyRate =
+        attempted > 0
+          ? Math.min(100, Math.round((totalSolved / attempted) * 1000) / 10)
+          : (totalSolved > 0 ? 100 : 0);
+
+      // Real 7-day weekly activity from database
+      const rawPoints: any[] = Array.isArray(activityData?.activity)
+        ? activityData.activity
+        : Array.isArray(activityData)
+        ? activityData
+        : [];
+
+      // Map last 7 days dynamically
+      const weeklyActivity = DAYS_OF_WEEK.map((dayName, index) => {
+        const point = rawPoints.find((p: any) => {
+          if (!p.date) return false;
+          const d = new Date(p.date);
+          return d.getDay() === index;
+        });
+        const solved = point?.solved_count ?? 0;
+        const attempts = point?.attempt_count ?? solved;
+        const hours = Math.round(attempts * 0.3 * 10) / 10;
+        return {
+          day: dayName,
+          solved,
+          hours
+        };
+      });
+
+      // Calculate real streak from activity points
+      let streakDays = 0;
+      const sortedPoints = [...rawPoints].sort((a: any, b: any) =>
+        (b.date || '').localeCompare(a.date || '')
+      );
+      for (const pt of sortedPoints) {
+        if ((pt.solved_count || 0) > 0 || (pt.attempt_count || 0) > 0) {
+          streakDays++;
+        } else {
+          break;
+        }
+      }
+
+      // Real topic proficiency from database
+      const topicProficiency = (Array.isArray(topicsData) ? topicsData : [])
+        .slice(0, 10)
+        .map((t: any) => ({
+          topic: t.topic_name || t.name || 'Topic',
+          score: Math.min(100, Math.round(t.completion_percentage ?? ((t.solved_problems || 0) / (t.total_problems || 1)) * 100)),
+          total: t.total_problems ?? 10
+        }));
+
+      // Real difficulty distribution from sheet
+      const difficultyDistribution = [
+        { name: 'Easy', count: easyTotal, color: '#22C55E' },
+        { name: 'Medium', count: mediumTotal, color: '#F59E0B' },
+        { name: 'Hard', count: hardTotal, color: '#EF4444' }
+      ];
+
+      // Estimated real runtime: ~20 mins per attempted problem
+      const hoursSpent = Math.max(0, Math.round((attempted * 0.35) * 10) / 10);
+
+      const monthlyProgress = [
+        { month: 'Current', solved: totalSolved }
+      ];
+
+      return {
+        totalSolved,
+        easySolved,
+        mediumSolved,
+        hardSolved,
+        streakDays,
+        hoursSpent,
+        accuracyRate,
+        weeklyActivity,
+        topicProficiency,
+        difficultyDistribution,
+        monthlyProgress
+      };
     } catch {
-      return MOCK_ANALYTICS;
+      // Default clean real zeros if not logged in or endpoint uncontactable
+      return {
+        totalSolved: 0,
+        easySolved: 0,
+        mediumSolved: 0,
+        hardSolved: 0,
+        streakDays: 0,
+        hoursSpent: 0,
+        accuracyRate: 0,
+        weeklyActivity: DAYS_OF_WEEK.map((day) => ({ day, solved: 0, hours: 0 })),
+        topicProficiency: [],
+        difficultyDistribution: [
+          { name: 'Easy', count: 120, color: '#22C55E' },
+          { name: 'Medium', count: 200, color: '#F59E0B' },
+          { name: 'Hard', count: 82, color: '#EF4444' }
+        ],
+        monthlyProgress: [{ month: 'Current', solved: 0 }]
+      };
     }
   }
 
+  /**
+   * Fetches real student mistakes from actual failed submissions.
+   */
   async getMistakes(): Promise<MistakeRecord[]> {
     try {
-      const response = await apiClient.get('/api/v1/analytics/mistakes');
-      return response.data.data || response.data;
+      // Fetch the student's actual submission history
+      const res = await apiClient.get('/api/v1/student/submissions', {
+        params: { limit: 50 }
+      });
+
+      const submissions =
+        res.data?.data?.submissions ||
+        res.data?.submissions ||
+        (Array.isArray(res.data) ? res.data : []);
+
+      if (!Array.isArray(submissions) || submissions.length === 0) {
+        return [];
+      }
+
+      // Filter for failed attempts
+      const failed = submissions.filter(
+        (s: any) =>
+          s.status &&
+          s.status !== 'Accepted' &&
+          s.status !== 'Queued' &&
+          s.status !== 'Processing'
+      );
+
+      return failed.map((s: any, idx: number) => {
+        let category: MistakeCategory = 'logical';
+        let categoryLabel = 'Logical Flow Error';
+
+        const statusLower = (s.status || '').toLowerCase();
+        if (statusLower.includes('time limit')) {
+          category = 'time_complexity';
+          categoryLabel = 'Time Limit Exceeded';
+        } else if (statusLower.includes('memory limit')) {
+          category = 'space_complexity';
+          categoryLabel = 'Memory Limit Exceeded';
+        } else if (statusLower.includes('compilation')) {
+          category = 'syntax';
+          categoryLabel = 'Compilation / Syntax Error';
+        } else if (statusLower.includes('wrong answer')) {
+          category = 'edge_cases';
+          categoryLabel = 'Edge Case Mismatch';
+        }
+
+        const dateStr = s.submitted_at
+          ? new Date(s.submitted_at).toISOString().split('T')[0]
+          : new Date().toISOString().split('T')[0];
+
+        return {
+          id: s.id || `mistake-${idx}`,
+          problemId: s.problem_id || '',
+          problemTitle: s.problem_title || 'Problem Solution',
+          topic: s.topic_name || 'DSA Curriculum',
+          category,
+          categoryLabel,
+          frequency: 1,
+          date: dateStr,
+          failedCodeSnippet: s.source_code || '',
+          explanation: s.error_message || `Execution terminated with ${s.status}. Passed ${s.passed_test_cases || 0} of ${s.total_test_cases || 0} test cases.`,
+          whyFailed: s.error_message || `Test evaluation failed: status ${s.status}`,
+          suggestedCorrection: 'Review boundary conditions and verify solution against sample and edge test cases.',
+          recommendedTopicId: s.topic_id || '',
+          recommendedTopicTitle: s.topic_name || 'Data Structures & Algorithms'
+        };
+      });
     } catch {
-      return MOCK_MISTAKES;
+      return [];
     }
   }
 }
 
 export const analyticsService = new AnalyticsService();
 export default analyticsService;
-

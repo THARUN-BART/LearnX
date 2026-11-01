@@ -85,8 +85,12 @@ export const AnalyticsPage: React.FC = () => {
 
         <div className="p-5 rounded-2xl bg-[#0D0D14] border border-[#1C1C28] space-y-1">
           <span className="text-xs text-[#5A5A6E]">AVG_SOLVE_DURATION</span>
-          <div className="text-3xl font-bold text-[#818CF8]">18.4m</div>
-          <span className="text-[11px] text-[#8E8EA0]">P50 Medium latency</span>
+          <div className="text-3xl font-bold text-[#818CF8]">
+            {stats.totalSolved > 0 ? `${Math.round((stats.hoursSpent * 60) / stats.totalSolved)}m` : '0m'}
+          </div>
+          <span className="text-[11px] text-[#8E8EA0]">
+            {stats.totalSolved > 0 ? 'Average solve duration' : 'No recorded sessions'}
+          </span>
         </div>
 
         <div className="p-5 rounded-2xl bg-[#0D0D14] border border-[#1C1C28] space-y-1">
@@ -124,24 +128,30 @@ export const AnalyticsPage: React.FC = () => {
             </span>
           </div>
 
-          <div className="h-64 w-full pt-2">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={stats.topicProficiency} layout="vertical">
-                <XAxis type="number" domain={[0, 100]} stroke="#5A5A6E" fontSize={11} />
-                <YAxis dataKey="topic" type="category" stroke="#8E8EA0" fontSize={11} width={80} />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: '#0D0D14',
-                    border: '1px solid #2B2B3C',
-                    borderRadius: '0.75rem',
-                    color: '#F4F4F6',
-                    fontSize: '11px',
-                    fontFamily: 'JetBrains Mono, monospace'
-                  }}
-                />
-                <Bar dataKey="score" fill="#8B5CF6" radius={[0, 4, 4, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+          <div className="h-64 w-full pt-2 flex items-center justify-center">
+            {stats.topicProficiency.length === 0 ? (
+              <span className="text-xs text-[#5A5A6E] font-mono">
+                No topic activity recorded yet. Start solving problems to populate competency scores.
+              </span>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={stats.topicProficiency} layout="vertical">
+                  <XAxis type="number" domain={[0, 100]} stroke="#5A5A6E" fontSize={11} />
+                  <YAxis dataKey="topic" type="category" stroke="#8E8EA0" fontSize={11} width={80} />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#0D0D14',
+                      border: '1px solid #2B2B3C',
+                      borderRadius: '0.75rem',
+                      color: '#F4F4F6',
+                      fontSize: '11px',
+                      fontFamily: 'JetBrains Mono, monospace'
+                    }}
+                  />
+                  <Bar dataKey="score" fill="#8B5CF6" radius={[0, 4, 4, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
           </div>
         </div>
 

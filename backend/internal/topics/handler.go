@@ -19,7 +19,7 @@ func NewHandler(service Service) *Handler {
 
 func (h *Handler) Get(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "topic_id")
-	if !httputil.IsUUID(id) {
+	if id == "" {
 		httputil.RespondError(w, http.StatusBadRequest, "invalid topic_id")
 		return
 	}
@@ -36,7 +36,7 @@ func (h *Handler) Get(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) ListSubtopics(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "topic_id")
-	if !httputil.IsUUID(id) {
+	if id == "" {
 		httputil.RespondError(w, http.StatusBadRequest, "invalid topic_id")
 		return
 	}

@@ -28,6 +28,11 @@ func NewMemoryRepository(db *model.Memory) *MemoryRepository {
 func (r *MemoryRepository) Get(ctx context.Context, id string) (*model.Topic, error) {
 	item, ok := r.DB.GetTopic(id)
 	if !ok {
+		for _, t := range r.DB.Topics {
+			if t.Slug == id {
+				return t, nil
+			}
+		}
 		return nil, model.ErrNotFound
 	}
 	return item, nil
@@ -64,7 +69,8 @@ func (r *PostgresRepository) Get(ctx context.Context, id string) (*model.Topic, 
 		       (SELECT COUNT(*) FROM subtopics s WHERE s.topic_id = t.id),
 		       (SELECT COUNT(*) FROM problems p WHERE p.topic_id = t.id AND p.is_active)
 		FROM topics t
-		WHERE t.id = $1;
+		WHERE t.id::text = $1 OR t.slug = $1
+		LIMIT 1;
 	`, id).Scan(&item.ID, &item.RoadmapID, &item.Name, &item.Slug, &item.Description, &item.TopicOrder, &item.CreatedAt, &item.UpdatedAt, &item.SubtopicCount, &item.ProblemCount)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {

@@ -53,12 +53,19 @@ export const MistakeAnalysisPage: React.FC = () => {
     return m.category === selectedCategory;
   });
 
-  const categoryChartData = [
-    { name: 'Edge Cases', value: 40, color: '#F59E0B' },
-    { name: 'Time Complexity', value: 25, color: '#EF4444' },
-    { name: 'Logical Flow', value: 20, color: '#8B5CF6' },
-    { name: 'Algorithm Choice', value: 15, color: '#6366F1' }
-  ];
+  const edgeCount = mistakes.filter((m) => m.category === 'edge_cases').length;
+  const timeCount = mistakes.filter((m) => m.category === 'time_complexity').length;
+  const logicCount = mistakes.filter((m) => m.category === 'logical' || m.category === 'syntax').length;
+  const algoCount = mistakes.filter((m) => m.category === 'algorithm_selection' || m.category === 'space_complexity').length;
+
+  const rawChartData = [
+    { name: 'Edge Cases', value: edgeCount, color: '#F59E0B' },
+    { name: 'Time Complexity', value: timeCount, color: '#EF4444' },
+    { name: 'Logical Flow', value: logicCount, color: '#8B5CF6' },
+    { name: 'Algorithm Choice', value: algoCount, color: '#6366F1' }
+  ].filter((item) => item.value > 0);
+
+  const categoryChartData = rawChartData.length > 0 ? rawChartData : [{ name: 'Clean Runs', value: 1, color: '#22C55E' }];
 
   return (
     <div className="space-y-8 font-mono">
@@ -154,7 +161,19 @@ export const MistakeAnalysisPage: React.FC = () => {
 
       {/* DETAILED MISTAKE FORENSIC CARDS */}
       <div className="space-y-4">
-        {filteredMistakes.map((record) => (
+        {filteredMistakes.length === 0 ? (
+          <div className="p-12 text-center rounded-2xl bg-[#0D0D14] border border-[#1C1C28] space-y-3">
+            <ShieldCheck className="w-8 h-8 text-emerald-400 mx-auto" />
+            <h3 className="text-sm font-bold text-[#F4F4F6]">No Failure Modes Detected</h3>
+            <p className="text-xs text-[#8E8EA0] max-w-md mx-auto">
+              Your recent coding submissions passed cleanly or no errors have been recorded yet. Submit solutions in the Practice Arena to track debugging telemetry.
+            </p>
+            <Button size="sm" onClick={() => navigate('/practice')} className="text-xs">
+              Open Practice Arena
+            </Button>
+          </div>
+        ) : (
+          filteredMistakes.map((record) => (
           <div
             key={record.id}
             className="p-6 rounded-2xl bg-[#0D0D14] border border-[#1C1C28] space-y-4 hover:border-[#2D2D3E] transition-all"
@@ -233,7 +252,7 @@ export const MistakeAnalysisPage: React.FC = () => {
               </Button>
             </div>
           </div>
-        ))}
+        )))}
       </div>
     </div>
   );

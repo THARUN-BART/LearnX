@@ -15,7 +15,9 @@ import {
   Command,
   X
 } from 'lucide-react';
-import { DSA_TOPICS, SAMPLE_PROBLEMS } from '../../utils/constants';
+import roadmapService from '../../services/roadmap.service';
+import learningService from '../../services/learning.service';
+import { Topic, Problem } from '../../types/learning.types';
 
 interface CommandPaletteProps {
   isOpen: boolean;
@@ -26,11 +28,26 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [topics, setTopics] = useState<Topic[]>([]);
+  const [problems, setProblems] = useState<Problem[]>([]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const loadRealData = async () => {
+      const [tList, pList] = await Promise.all([
+        roadmapService.getRoadmap(),
+        learningService.getProblems()
+      ]);
+      if (Array.isArray(tList)) setTopics(tList);
+      if (Array.isArray(pList)) setProblems(pList);
+    };
+    loadRealData();
+  }, [isOpen]);
 
   // Quick navigation destinations
   const navigationItems = [
     { label: 'Overview Dashboard', category: 'Navigation', icon: BarChart3, path: '/dashboard' },
-    { label: 'DSA Roadmap (16 Topics)', category: 'Navigation', icon: Map, path: '/roadmap' },
+    { label: 'DSA Roadmap', category: 'Navigation', icon: Map, path: '/roadmap' },
     { label: 'Practice Arena & Compiler', category: 'Navigation', icon: Code2, path: '/practice' },
     { label: 'AI Coding Mentor', category: 'Navigation', icon: Bot, path: '/assistant' },
     { label: 'Mistake Diagnostics', category: 'Navigation', icon: AlertTriangle, path: '/analysis' },
@@ -39,15 +56,15 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
     { label: 'System Settings', category: 'Navigation', icon: Settings, path: '/settings' },
   ];
 
-  // Map topics and problems into searchable items
-  const topicItems = DSA_TOPICS.map((t) => ({
+  // Map real topics and problems into searchable items
+  const topicItems = topics.map((t) => ({
     label: `Roadmap: ${t.title}`,
     category: 'Curriculum Pillar',
     icon: Map,
     path: `/roadmap/${t.slug || t.id}`
   }));
 
-  const problemItems = SAMPLE_PROBLEMS.map((p) => ({
+  const problemItems = problems.map((p) => ({
     label: `Solve: ${p.title} (${p.difficulty})`,
     category: 'Coding Challenge',
     icon: Code2,

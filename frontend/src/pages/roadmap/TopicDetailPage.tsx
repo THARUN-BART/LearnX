@@ -32,8 +32,8 @@ export const TopicDetailPage: React.FC = () => {
       const data = await roadmapService.getTopicById(topicId);
       setTopic(data);
 
-      const probList = await learningService.getProblems(data?.id);
-      setProblems(probList);
+      const probList = await learningService.getProblems(data?.id || topicId);
+      setProblems(Array.isArray(probList) ? probList : []);
       setLoading(false);
     };
     loadTopic();
@@ -47,7 +47,11 @@ export const TopicDetailPage: React.FC = () => {
     );
   }
 
-  const percent = Math.round((topic.completedProblems / topic.totalProblems) * 100);
+  const totalProbs = topic.totalProblems || topic.problem_count || 1;
+  const completedProbs = topic.completedProblems || topic.solved_count || 0;
+  const percent = Math.min(100, Math.round((completedProbs / totalProbs) * 100));
+  const prereqs = topic.prerequisites || [];
+  const subtopicsList = topic.subtopics || [];
 
   return (
     <div className="space-y-8 max-w-5xl mx-auto">
@@ -82,7 +86,7 @@ export const TopicDetailPage: React.FC = () => {
             </Badge>
           </div>
           <span className="text-xs font-mono text-[#A78BFA] bg-[#8B5CF6]/10 px-3 py-1 rounded-full border border-[#8B5CF6]/20">
-            {topic.completedProblems} / {topic.totalProblems} Solved ({percent}%)
+            {completedProbs} / {totalProbs} Solved ({percent}%)
           </span>
         </div>
 
@@ -95,10 +99,10 @@ export const TopicDetailPage: React.FC = () => {
         </p>
 
         {/* Prerequisites */}
-        {topic.prerequisites.length > 0 && (
+        {prereqs.length > 0 && (
           <div className="flex items-center gap-2 pt-2 text-xs text-[#65657B]">
             <span className="font-semibold text-[#9292A3]">Prerequisites:</span>
-            {topic.prerequisites.map((p, i) => (
+            {prereqs.map((p, i) => (
               <span key={i} className="px-2 py-0.5 rounded bg-[#101019] text-[#9292A3] border border-[#232336] font-mono text-[11px]">
                 {p}
               </span>
@@ -177,7 +181,7 @@ export const TopicDetailPage: React.FC = () => {
               Key Subtopics Checklist
             </h4>
             <div className="space-y-2.5">
-              {topic.subtopics.map((sub, i) => (
+              {subtopicsList.map((sub, i) => (
                 <div key={i} className="flex items-center gap-2.5 text-xs text-[#9292A3]">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                   <span>{sub}</span>

@@ -101,6 +101,15 @@ func BuildRouter(
 			r.Get("/auth/callback", authHandler.OAuthCallback)
 		}
 
+		// Public educational catalog routes (curriculum browsing)
+		if options.dsa != nil {
+			if options.dsa.Roadmap != nil {
+				r.Get("/roadmap", options.dsa.Roadmap.List)
+				r.Get("/roadmap/{roadmap_id}", options.dsa.Roadmap.Get)
+				r.Get("/roadmap/{roadmap_id}/topics", options.dsa.Roadmap.ListTopics)
+			}
+		}
+
 		r.Group(func(r chi.Router) {
 			if authMiddleware != nil {
 				r.Use(authMiddleware.RequireAuth)
@@ -147,6 +156,11 @@ func registerDSARoutes(r chi.Router, dsa *DSAHandlers) {
 		r.Get("/roadmaps", dsa.Roadmap.List)
 		r.Get("/roadmaps/{roadmap_id}", dsa.Roadmap.Get)
 		r.Get("/roadmaps/{roadmap_id}/topics", dsa.Roadmap.ListTopics)
+
+		// Singular route aliases for seamless frontend compatibility
+		r.Get("/roadmap", dsa.Roadmap.List)
+		r.Get("/roadmap/{roadmap_id}", dsa.Roadmap.Get)
+		r.Get("/roadmap/{roadmap_id}/topics", dsa.Roadmap.ListTopics)
 	}
 	if dsa.Topics != nil {
 		r.Get("/topics/{topic_id}", dsa.Topics.Get)

@@ -100,7 +100,7 @@ func (r *PostgresRepository) List(ctx context.Context, filter model.ProblemFilte
 	}
 
 	if filter.TopicID != "" {
-		add("p.topic_id = $%d", filter.TopicID)
+		add("(p.topic_id::text = $%[1]d OR t.slug = $%[1]d)", filter.TopicID)
 	}
 	if filter.SubtopicID != "" {
 		add("p.subtopic_id = $%d", filter.SubtopicID)
