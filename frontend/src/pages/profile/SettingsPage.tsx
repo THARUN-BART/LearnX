@@ -44,34 +44,6 @@ export const SettingsPage: React.FC = () => {
         </p>
       </div>
 
-      {/* Backend API Configuration & Status Card */}
-      <Card className="p-6 space-y-4">
-        <div className="flex items-center justify-between pb-2 border-b border-[#232336]">
-          <div className="flex items-center gap-2 text-xs font-bold text-[#F5F5F7] font-mono">
-            <Server className="w-4 h-4 text-[#8B5CF6]" />
-            <span>Go REST Backend Integration Status</span>
-          </div>
-          <Badge variant="purple" size="sm">
-            Configured
-          </Badge>
-        </div>
-
-        <div className="space-y-3 text-xs">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 bg-[#101019] rounded-xl border border-[#232336]">
-            <div>
-              <span className="text-[#65657B] block font-mono text-[11px]">VITE_API_BASE_URL</span>
-              <span className="font-mono text-[#F5F5F7] text-xs font-semibold">{API_BASE_URL}</span>
-            </div>
-            <div className="flex items-center gap-1.5 text-emerald-400 font-mono text-[11px]">
-              <CheckCircle2 className="w-3.5 h-3.5" />
-              <span>Ready for Local Go Daemon</span>
-            </div>
-          </div>
-          <p className="text-[11px] text-[#65657B]">
-            All auth, code execution, and analytics requests automatically dispatch to this endpoint. If offline, the built-in development fallback safeguards your local session.
-          </p>
-        </div>
-      </Card>
 
       {/* Notification Preferences */}
       <Card className="p-6 space-y-4">

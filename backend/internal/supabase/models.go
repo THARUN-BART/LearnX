@@ -6,10 +6,10 @@ import (
 )
 
 var (
-	ErrUserAlreadyExists  = errors.New("user already registered")
-	ErrUserNotFound       = errors.New("user not found")
-	ErrInvalidCredentials = errors.New("invalid email or password")
-	ErrEmailNotConfirmed  = errors.New("email address has not been confirmed")
+	ErrUserAlreadyExists   = errors.New("user already registered")
+	ErrUserNotFound        = errors.New("user not found")
+	ErrInvalidCredentials  = errors.New("invalid email or password")
+	ErrEmailNotConfirmed   = errors.New("email address has not been confirmed")
 	ErrSupabaseUnavailable = errors.New("supabase auth service unavailable")
 )
 

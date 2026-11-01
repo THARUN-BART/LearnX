@@ -411,3 +411,139 @@ Allows students to update their profile information.
 | 12 | `onboarding_completed` | `BOOLEAN NOT NULL DEFAULT FALSE` | Flag indicating onboarding status |
 | 13 | `created_at` | `TIMESTAMPTZ NOT NULL DEFAULT NOW()` | Record creation timestamp |
 | 14 | `updated_at` | `TIMESTAMPTZ NOT NULL DEFAULT NOW()` | Record last updated timestamp |
+
+---
+
+## 4. DSA Roadmap, Problems, Progress, and Analytics
+
+All DSA routes require `Authorization: Bearer <access_token>`. Catalogue writes are not exposed over HTTP; import the official sheet with `go run ./cmd/import-a2z`. Problem records store titles, order, difficulty, tags, and canonical practice URLs only.
+
+The live TakeUForward A2Z syllabus currently uses official section names from the sheet (Beginner Problems, Sorting, Arrays, Hashing, Binary Search, Recursion, Linked-List, Bit Manipulation, Greedy Algorithms, Sliding Window / 2 Pointer, Stack / Queues, Binary Trees, Binary Search Trees, Heaps, Graphs, Dynamic Programming, Tries, Strings (Advanced Algo), Maths). Counts are taken from the imported rows, never hardcoded.
+
+### 4.1 List roadmaps
+
+`GET /api/v1/roadmaps`
+
+```json
+{
+  "success": true,
+  "roadmaps": [
+    {
+      "id": "c3e1a6b0-2c4f-4d9a-9b11-4f0c8e1a2b33",
+      "name": "Striver's A2Z DSA Sheet",
+      "slug": "strivers-a2z-dsa-sheet",
+      "source_name": "TakeUForward",
+      "source_url": "https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/",
+      "topic_count": 19,
+      "problem_count": 402,
+      "is_active": true
+    }
+  ]
+}
+```
+
+### 4.2 Roadmap topics and subtopics
+
+```text
+GET /api/v1/roadmaps/{roadmap_id}
+GET /api/v1/roadmaps/{roadmap_id}/topics
+GET /api/v1/topics/{topic_id}
+GET /api/v1/topics/{topic_id}/subtopics
+```
+
+Topics and subtopics are returned in official sheet order (`topic_order`, `subtopic_order`).
+
+### 4.3 Problems
+
+```text
+GET /api/v1/problems?difficulty=Easy&topic_id=<uuid>&status=Solved&page=1&limit=20&sort=problem_order
+GET /api/v1/problems/search?q=two-sum
+GET /api/v1/problems/{problem_id}
+GET /api/v1/subtopics/{subtopic_id}/problems
+```
+
+Example list response:
+
+```json
+{
+  "success": true,
+  "problems": [
+    {
+      "id": "9c1e2a44-1111-4aaa-8bbb-0123456789ab",
+      "title": "Pattern 1",
+      "slug": "pattern-1",
+      "summary": "Practice problem from Striver's A2Z DSA Sheet (Beginner Problems — Patterns). Open the canonical takeuforward URL to view the problem statement.",
+      "difficulty": "Unspecified",
+      "external_platform": "takeuforward",
+      "external_problem_url": "https://takeuforward.org/practice/dsa/pattern-1?category=patterns&source=strivers-a2z-dsa-sheet",
+      "source_sheet": "strivers-a2z-dsa-sheet",
+      "source_problem_id": "a2z-401",
+      "problem_order": 1,
+      "tags": ["basic", "Beginner Problems", "Patterns"],
+      "progress_status": "Not Started"
+    }
+  ],
+  "pagination": {"page": 1, "limit": 20, "total": 402, "total_pages": 21}
+}
+```
+
+`GET /api/v1/problems/{problem_id}` also returns `related` problems from the same subtopic.
+
+### 4.4 Student progress
+
+Progress is keyed by `(student_id, problem_id)`. Authenticated requests always use the JWT subject; one student cannot read or write another student's rows.
+
+```text
+GET /api/v1/student/progress
+GET /api/v1/student/progress/problems/{problem_id}
+POST /api/v1/student/progress/problems/{problem_id}/attempt
+PATCH /api/v1/student/progress/problems/{problem_id}
+```
+
+Mark solved:
+
+```json
+{"status": "Solved"}
+```
+
+Reset (permitted for the owning student):
+
+```json
+{"status": "Not Started", "reset": true}
+```
+
+Statuses: `Not Started`, `Attempted`, `Solved`, `Needs Revision`.
+
+### 4.5 Analytics
+
+```text
+GET /api/v1/student/progress/summary
+GET /api/v1/student/progress/topics
+GET /api/v1/student/analytics/overview
+GET /api/v1/student/analytics/topics
+GET /api/v1/student/analytics/difficulty
+GET /api/v1/student/analytics/activity?days=30
+```
+
+Example overview:
+
+```json
+{
+  "success": true,
+  "overview": {
+    "roadmap_id": "c3e1a6b0-2c4f-4d9a-9b11-4f0c8e1a2b33",
+    "roadmap_name": "Striver's A2Z DSA Sheet",
+    "total_problems": 402,
+    "solved_problems": 12,
+    "attempted_problems": 5,
+    "pending_problems": 385,
+    "needs_revision": 0,
+    "completion_percentage": 2.985
+  }
+}
+```
+
+Difficulty analytics include Easy/Medium/Hard solved counts and accuracy (`successful_attempts / total_attempts`) computed from stored progress, not hardcoded sheet totals.
+
+Machine-readable spec: [`openapi.yaml`](./openapi.yaml).
+

@@ -1,6 +1,6 @@
-# LearnX Backend – Supabase Authentication + Custom OTP Integration
+# LearnX Backend – Auth, Profiles, and Striver A2Z DSA Roadmap
 
-High-performance, secure Go authentication backend for LearnX integrating Supabase Auth, PostgreSQL, and an external OTP service.
+High-performance Go REST backend for LearnX. It reuses the existing Supabase Auth + PostgreSQL stack and adds a DSA roadmap, central problem catalogue, per-student progress, and analytics seeded from Striver's A2Z DSA Sheet (TakeUForward).
 
 ## Features
 
@@ -12,43 +12,46 @@ High-performance, secure Go authentication backend for LearnX integrating Supaba
 - **Complete Student Profile Model (14 Fields):** `id`, `full_name`, `email`, `college`, `course`, `department`, `current_year`, `preferred_language`, `learning_goal`, `dsa_level`, `avatar_url`, `onboarding_completed`, `created_at`, `updated_at`.
 - **Sensitive Credential Encryption at Rest:** Passwords pending OTP verification are encrypted with AES-256-GCM.
 - **Dedicated Folders:** Schemas in `schema/` and all test suites in `tests/`.
+- **Striver A2Z DSA catalogue:** Official sections, problem names, order, and canonical practice URLs. No editorials or solutions are stored.
+- **Student progress isolation:** Attempted / Solved / Needs Revision records are scoped to the authenticated student, including Supabase RLS policies.
+- **Roadmap analytics:** Overall, topic-wise, and difficulty stats are calculated from database rows.
 
 ## Project Structure
 
 ```text
-LearnX/
+backend/
 ├── cmd/
-│   └── server/
-│       └── main.go           # Server entry point
-├── schema/                   # Dedicated SQL schema directory
+│   ├── migrate/main.go       # Apply PostgreSQL schema
+│   └── import-a2z/main.go    # Upsert Striver A2Z catalogue
+├── data/
+│   ├── strivers-a2z-sheet.json         # Full official metadata seed
+│   └── strivers-a2z-sheet.sample.json  # Truncated sample for tests
+├── schema/
 │   ├── 001_create_profiles.sql
 │   ├── 002_create_pending_signups.sql
 │   ├── 003_create_password_resets.sql
-│   └── schema.sql            # Complete unified schema
-├── tests/                    # Dedicated test suites directory
-│   ├── auth_test.go          # Signup, password match, login, forgot pass
-│   ├── crypto_test.go        # AES-256-GCM, SHA-256, tokens
-│   ├── onboarding_test.go    # Student onboarding validations & fields
-│   ├── otp_test.go           # External OTP client & cooldown service
-│   ├── profile_test.go       # Student profile retrieval & update
-│   ├── ratelimit_test.go     # Token bucket IP rate limiter
-│   └── router_test.go        # End-to-end HTTP integration test
+│   ├── 004_create_roadmaps.sql
+│   ├── 005_create_topics.sql
+│   ├── 006_create_subtopics.sql
+│   ├── 007_create_problems.sql
+│   ├── 008_create_student_progress.sql
+│   ├── 009_rls_dsa.sql
+│   └── schema.sql
+├── tests/
 ├── internal/
-│   ├── auth/                 # Signup, login, password reset service & handler
-│   ├── config/               # Environment & configuration loading
-│   ├── crypto/               # AES-256-GCM encryption, hashing, tokens
-│   ├── database/             # PostgreSQL pgxpool & schema migration
-│   ├── middleware/           # Auth JWT, rate limit, CORS, recovery, logging
-│   ├── otp/                  # External OTP client, rate limiting & models
-│   ├── profile/              # Student profile & onboarding service & handler
-│   ├── server/               # Router configuration & HTTP routes
-│   └── supabase/             # Supabase GoTrue Admin & Auth client
+│   ├── auth/
+│   ├── roadmap/
+│   ├── topics/
+│   ├── problems/
+│   ├── progress/
+│   ├── analytics/
+│   ├── importer/
+│   ├── dsa/
+│   └── server/
 ├── docs/
-│   └── API.md                # Full API specification & field definitions
-├── .env.example              # Environment variables template
-├── go.mod
-├── go.sum
-└── main.go                   # Root entry point
+│   ├── API.md
+│   └── openapi.yaml
+└── main.go
 ```
 
 ## Getting Started
@@ -73,17 +76,48 @@ go test -v ./tests/...
 
 ```bash
 go run main.go
-# or
-go run cmd/server/main.go
 ```
 
-The server will start on port `8080`.
+The server starts on port `8080`. Without `SUPABASE_DB_URL` it uses an in-memory store and loads `data/strivers-a2z-sheet.json` when present.
 
-Test the health check:
 ```bash
 curl http://localhost:8080/health
 ```
 
-### 4. API Documentation
+### 4. Import Striver's A2Z DSA Sheet
 
-Detailed endpoint schemas, request/response payloads, and security guidelines are documented in [`docs/API.md`](docs/API.md).
+Apply schema (also runs on server start when the database is reachable):
+
+```bash
+go run ./cmd/migrate
+```
+
+Import or re-import the official catalogue. The command runs in a transaction, upserts by `(source_sheet, source_problem_id)`, and never deletes student progress:
+
+```bash
+go run ./cmd/import-a2z -file data/strivers-a2z-sheet.json
+```
+
+Source attribution is stored on the roadmap (`TakeUForward` + official sheet URL). Refresh the seed from TakeUForward's public syllabus if the sheet changes; do not scrape paywalled editorials.
+
+### 5. Example authenticated calls
+
+```bash
+TOKEN="<supabase_access_token>"
+
+curl -H "Authorization: Bearer $TOKEN" http://localhost:8080/api/v1/roadmaps
+curl -H "Authorization: Bearer $TOKEN" "http://localhost:8080/api/v1/problems?difficulty=Easy&page=1&limit=20&sort=problem_order"
+curl -H "Authorization: Bearer $TOKEN" "http://localhost:8080/api/v1/problems/search?q=two-sum"
+curl -X POST -H "Authorization: Bearer $TOKEN" http://localhost:8080/api/v1/student/progress/problems/<problem_id>/attempt
+curl -X PATCH -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+  -d '{"status":"Solved"}' \
+  http://localhost:8080/api/v1/student/progress/problems/<problem_id>
+curl -H "Authorization: Bearer $TOKEN" http://localhost:8080/api/v1/student/analytics/overview
+```
+
+### 6. API Documentation
+
+- [`docs/API.md`](docs/API.md) – request/response examples
+- [`docs/openapi.yaml`](docs/openapi.yaml) – OpenAPI 3 spec
+
+Catalogue HTTP APIs are read-only for students. Shared roadmap/problem rows are readable by authenticated users; only the service-role import path mutates them. Student progress is protected with JWT verification, parameterized SQL, pagination caps (`limit` max 100), and the existing IP rate limiter.

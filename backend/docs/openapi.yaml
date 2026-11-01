@@ -1,0 +1,204 @@
+openapi: 3.0.3
+info:
+  title: LearnX Backend API
+  version: 1.1.0
+  description: Authentication plus Striver A2Z DSA roadmap, problem catalogue, student progress, and analytics.
+servers:
+  - url: http://localhost:8080
+paths:
+  /health:
+    get:
+      summary: Liveness probe
+      responses:
+        "200":
+          description: Service is running
+  /api/v1/roadmaps:
+    get:
+      security: [{bearerAuth: []}]
+      summary: List active DSA roadmaps
+      responses:
+        "200":
+          description: Roadmap catalogue
+  /api/v1/roadmaps/{roadmap_id}:
+    get:
+      security: [{bearerAuth: []}]
+      parameters:
+        - in: path
+          name: roadmap_id
+          required: true
+          schema: {type: string}
+      responses:
+        "200": {description: Roadmap details}
+  /api/v1/roadmaps/{roadmap_id}/topics:
+    get:
+      security: [{bearerAuth: []}]
+      parameters:
+        - in: path
+          name: roadmap_id
+          required: true
+          schema: {type: string}
+      responses:
+        "200": {description: Ordered topics}
+  /api/v1/topics/{topic_id}:
+    get:
+      security: [{bearerAuth: []}]
+      parameters:
+        - in: path
+          name: topic_id
+          required: true
+          schema: {type: string, format: uuid}
+      responses:
+        "200": {description: Topic details}
+  /api/v1/topics/{topic_id}/subtopics:
+    get:
+      security: [{bearerAuth: []}]
+      parameters:
+        - in: path
+          name: topic_id
+          required: true
+          schema: {type: string, format: uuid}
+      responses:
+        "200": {description: Ordered subtopics}
+  /api/v1/problems:
+    get:
+      security: [{bearerAuth: []}]
+      summary: List or filter problems
+      parameters:
+        - in: query
+          name: q
+          schema: {type: string}
+        - in: query
+          name: difficulty
+          schema: {type: string, enum: [Easy, Medium, Hard, Unspecified]}
+        - in: query
+          name: topic_id
+          schema: {type: string, format: uuid}
+        - in: query
+          name: subtopic_id
+          schema: {type: string, format: uuid}
+        - in: query
+          name: status
+          schema: {type: string, enum: [Not Started, Attempted, Solved, Needs Revision]}
+        - in: query
+          name: page
+          schema: {type: integer, default: 1}
+        - in: query
+          name: limit
+          schema: {type: integer, default: 20, maximum: 100}
+        - in: query
+          name: sort
+          schema: {type: string, enum: [problem_order, title]}
+      responses:
+        "200": {description: Paginated problems}
+  /api/v1/problems/search:
+    get:
+      security: [{bearerAuth: []}]
+      parameters:
+        - in: query
+          name: q
+          required: true
+          schema: {type: string, example: two-sum}
+      responses:
+        "200": {description: Search hits}
+  /api/v1/problems/{problem_id}:
+    get:
+      security: [{bearerAuth: []}]
+      parameters:
+        - in: path
+          name: problem_id
+          required: true
+          schema: {type: string}
+      responses:
+        "200": {description: Problem plus related items}
+  /api/v1/subtopics/{subtopic_id}/problems:
+    get:
+      security: [{bearerAuth: []}]
+      parameters:
+        - in: path
+          name: subtopic_id
+          required: true
+          schema: {type: string, format: uuid}
+      responses:
+        "200": {description: Problems in a subtopic}
+  /api/v1/student/progress:
+    get:
+      security: [{bearerAuth: []}]
+      responses:
+        "200": {description: Current student progress rows}
+  /api/v1/student/progress/summary:
+    get:
+      security: [{bearerAuth: []}]
+      responses:
+        "200": {description: Roadmap progress summary}
+  /api/v1/student/progress/topics:
+    get:
+      security: [{bearerAuth: []}]
+      responses:
+        "200": {description: Topic-wise progress}
+  /api/v1/student/progress/problems/{problem_id}:
+    get:
+      security: [{bearerAuth: []}]
+      parameters:
+        - in: path
+          name: problem_id
+          required: true
+          schema: {type: string}
+      responses:
+        "200": {description: Single problem progress}
+  /api/v1/student/progress/problems/{problem_id}/attempt:
+    post:
+      security: [{bearerAuth: []}]
+      parameters:
+        - in: path
+          name: problem_id
+          required: true
+          schema: {type: string}
+      responses:
+        "200": {description: Marked attempted}
+  /api/v1/student/progress/problems/{problem_id}:
+    patch:
+      security: [{bearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [Not Started, Attempted, Solved, Needs Revision]
+                reset:
+                  type: boolean
+      responses:
+        "200": {description: Progress updated}
+  /api/v1/student/analytics/overview:
+    get:
+      security: [{bearerAuth: []}]
+      responses:
+        "200": {description: Overall progress}
+  /api/v1/student/analytics/topics:
+    get:
+      security: [{bearerAuth: []}]
+      responses:
+        "200": {description: Topic analytics}
+  /api/v1/student/analytics/difficulty:
+    get:
+      security: [{bearerAuth: []}]
+      responses:
+        "200": {description: Difficulty analytics}
+  /api/v1/student/analytics/activity:
+    get:
+      security: [{bearerAuth: []}]
+      parameters:
+        - in: query
+          name: days
+          schema: {type: integer, default: 30, maximum: 90}
+      responses:
+        "200": {description: Recent activity}
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

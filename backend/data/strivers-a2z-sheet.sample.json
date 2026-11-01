@@ -1,0 +1,190 @@
+{
+  "attribution": {
+    "sheet": "Striver's A2Z DSA Sheet",
+    "author": "Raj Vikramaditya (Striver)",
+    "organization": "TakeUForward",
+    "source_url": "https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/",
+    "license_note": "Problem statements, editorials, and videos remain the property of TakeUForward and the destination platforms. This file stores catalogue metadata (names, order, links) for educational progress tracking only.",
+    "generated_from": "Public TakeUForward syllabus payload (reproduced as metadata, not editorial content).",
+    "generated_at": "2026-09-20",
+    "problem_count": 402,
+    "note": "Truncated sample for local tests and documentation. Use strivers-a2z-sheet.json for a full import."
+  },
+  "roadmap": {
+    "name": "Striver's A2Z DSA Sheet",
+    "slug": "strivers-a2z-dsa-sheet",
+    "description": "Official Striver's A2Z DSA Sheet from TakeUForward. Catalogue metadata only: titles, ordering, difficulty, and canonical practice URLs. No editorials or solutions are stored.",
+    "source_name": "TakeUForward",
+    "source_url": "https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/"
+  },
+  "topics": [
+    {
+      "name": "Beginner Problems",
+      "slug": "beginner-problems",
+      "description": "Official A2Z section: Beginner Problems",
+      "topic_order": 1,
+      "subtopics": [
+        {
+          "name": "Patterns",
+          "slug": "patterns",
+          "description": "Beginner Problems / Patterns",
+          "subtopic_order": 1,
+          "problems": [
+            {
+              "title": "Pattern 1",
+              "slug": "pattern-1",
+              "summary": "Practice problem from Striver's A2Z DSA Sheet (Beginner Problems \u2014 Patterns). Open the canonical takeuforward URL to view the problem statement.",
+              "difficulty": "Unspecified",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/pattern-1?category=patterns&source=strivers-a2z-dsa-sheet",
+              "source_sheet": "strivers-a2z-dsa-sheet",
+              "source_problem_id": "a2z-401",
+              "problem_order": 1,
+              "tags": [
+                "basic",
+                "Beginner Problems",
+                "Patterns"
+              ]
+            },
+            {
+              "title": "Pattern 2",
+              "slug": "pattern-2",
+              "summary": "Practice problem from Striver's A2Z DSA Sheet (Beginner Problems \u2014 Patterns). Open the canonical takeuforward URL to view the problem statement.",
+              "difficulty": "Unspecified",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/pattern-2?category=patterns&source=strivers-a2z-dsa-sheet",
+              "source_sheet": "strivers-a2z-dsa-sheet",
+              "source_problem_id": "a2z-412",
+              "problem_order": 2,
+              "tags": [
+                "basic",
+                "Beginner Problems",
+                "Patterns"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Basic Maths",
+          "slug": "basic-maths",
+          "description": "Beginner Problems / Basic Maths",
+          "subtopic_order": 2,
+          "problems": [
+            {
+              "title": "Count all Digits of a Number",
+              "slug": "count-all-digits-of-a-number",
+              "summary": "Practice problem from Striver's A2Z DSA Sheet (Beginner Problems \u2014 Basic Maths). Open the canonical gfg URL to view the problem statement.",
+              "difficulty": "Easy",
+              "external_platform": "gfg",
+              "external_problem_url": "https://www.geeksforgeeks.org/problems/count-total-digits-in-a-number/1",
+              "source_sheet": "strivers-a2z-dsa-sheet",
+              "source_problem_id": "a2z-367",
+              "problem_order": 23,
+              "tags": [
+                "basic",
+                "Beginner Problems",
+                "Basic Maths"
+              ]
+            },
+            {
+              "title": "Count number of odd digits in a number",
+              "slug": "count-number-of-odd-digits-in-a-number",
+              "summary": "Practice problem from Striver's A2Z DSA Sheet (Beginner Problems \u2014 Basic Maths). Open the canonical takeuforward URL to view the problem statement.",
+              "difficulty": "Unspecified",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/count-number-of-odd-digits-in-a-number?category=basic-maths&source=strivers-a2z-dsa-sheet",
+              "source_sheet": "strivers-a2z-dsa-sheet",
+              "source_problem_id": "a2z-368",
+              "problem_order": 24,
+              "tags": [
+                "basic",
+                "Beginner Problems",
+                "Basic Maths"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Basic Arrays",
+          "slug": "basic-arrays",
+          "description": "Beginner Problems / Basic Arrays",
+          "subtopic_order": 3,
+          "problems": [
+            {
+              "title": "Sum of Array Elements",
+              "slug": "sum-of-array-elements",
+              "summary": "Practice problem from Striver's A2Z DSA Sheet (Beginner Problems \u2014 Basic Arrays). Open the canonical gfg URL to view the problem statement.",
+              "difficulty": "Unspecified",
+              "external_platform": "gfg",
+              "external_problem_url": "https://www.geeksforgeeks.org/problems/sum-all-array-elements/1",
+              "source_sheet": "strivers-a2z-dsa-sheet",
+              "source_problem_id": "a2z-343",
+              "problem_order": 36,
+              "tags": [
+                "basic",
+                "Beginner Problems",
+                "Basic Arrays"
+              ]
+            },
+            {
+              "title": "Count of odd numbers in Array",
+              "slug": "count-of-odd-numbers-in-array",
+              "summary": "Practice problem from Striver's A2Z DSA Sheet (Beginner Problems \u2014 Basic Arrays). Open the canonical takeuforward URL to view the problem statement.",
+              "difficulty": "Unspecified",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/count-of-odd-numbers-in-array?category=basic-arrays&source=strivers-a2z-dsa-sheet",
+              "source_sheet": "strivers-a2z-dsa-sheet",
+              "source_problem_id": "a2z-341",
+              "problem_order": 37,
+              "tags": [
+                "basic",
+                "Beginner Problems",
+                "Basic Arrays"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Basic Hashing",
+          "slug": "basic-hashing",
+          "description": "Beginner Problems / Basic Hashing",
+          "subtopic_order": 4,
+          "problems": [
+            {
+              "title": "Highest Occurring Element in an Array",
+              "slug": "highest-occurring-element-in-an-array",
+              "summary": "Practice problem from Striver's A2Z DSA Sheet (Beginner Problems \u2014 Basic Hashing). Open the canonical leetcode URL to view the problem statement.",
+              "difficulty": "Medium",
+              "external_platform": "leetcode",
+              "external_problem_url": "https://leetcode.com/problems/frequency-of-the-most-frequent-element/",
+              "source_sheet": "strivers-a2z-dsa-sheet",
+              "source_problem_id": "a2z-344",
+              "problem_order": 40,
+              "tags": [
+                "core",
+                "Beginner Problems",
+                "Basic Hashing"
+              ]
+            },
+            {
+              "title": "Second Highest Occurring Element",
+              "slug": "second-highest-occurring-element",
+              "summary": "Practice problem from Striver's A2Z DSA Sheet (Beginner Problems \u2014 Basic Hashing). Open the canonical takeuforward URL to view the problem statement.",
+              "difficulty": "Unspecified",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/second-highest-occurring-element?category=basic-hashing&source=strivers-a2z-dsa-sheet",
+              "source_sheet": "strivers-a2z-dsa-sheet",
+              "source_problem_id": "a2z-345",
+              "problem_order": 41,
+              "tags": [
+                "basic",
+                "Beginner Problems",
+                "Basic Hashing"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

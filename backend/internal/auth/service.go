@@ -198,11 +198,18 @@ func (s *authService) VerifySignupOTP(ctx context.Context, req VerifySignupOTPRe
 	sbUser, err := s.supabaseClient.AdminCreateUser(ctx, adminReq)
 	if err != nil {
 		if errors.Is(err, supabase.ErrUserAlreadyExists) {
-			_ = s.repo.DeletePendingSignup(ctx, cleanEmail)
-			return nil, ErrUserAlreadyExists
+			s.logger.Info("user already registered in Supabase Auth, syncing existing account credentials", slog.String("email", cleanEmail))
+			existingUser, getErr := s.supabaseClient.AdminGetUserByEmail(ctx, cleanEmail)
+			if getErr != nil || existingUser == nil {
+				_ = s.repo.DeletePendingSignup(ctx, cleanEmail)
+				return nil, ErrUserAlreadyExists
+			}
+			sbUser = existingUser
+			_ = s.supabaseClient.AdminUpdateUserPassword(ctx, existingUser.ID, plainPassword)
+		} else {
+			s.logger.Error("supabase user creation failed", slog.String("error", err.Error()))
+			return nil, fmt.Errorf("failed to create user account: %w", err)
 		}
-		s.logger.Error("supabase user creation failed", slog.String("error", err.Error()))
-		return nil, fmt.Errorf("failed to create user account: %w", err)
 	}
 
 	// 5. Create initial student profile
@@ -279,8 +286,10 @@ func (s *authService) Login(ctx context.Context, req LoginRequest) (*AuthRespons
 	if err == nil && prof != nil {
 		fullName = prof.FullName
 		onboardingCompleted = prof.OnboardingCompleted
-	} else if metaName, ok := tokenResp.User.UserMetadata["full_name"].(string); ok && metaName != "" {
-		fullName = metaName
+	} else {
+		if metaName, ok := tokenResp.User.UserMetadata["full_name"].(string); ok && metaName != "" {
+			fullName = metaName
+		}
 		_ = s.repo.CreateProfile(ctx, &profile.Profile{
 			ID:                  tokenResp.User.ID,
 			Email:               cleanEmail,

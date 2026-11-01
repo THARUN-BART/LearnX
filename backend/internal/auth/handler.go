@@ -189,7 +189,11 @@ func mapAuthError(w http.ResponseWriter, err error) {
 	case errors.Is(err, otp.ErrTooManyAttempts):
 		respondError(w, http.StatusTooManyRequests, "too many failed verification attempts, please request a new OTP")
 	case errors.Is(err, otp.ErrOTPVerificationFailed):
-		respondError(w, http.StatusBadRequest, "invalid or expired OTP code")
+		msg := err.Error()
+		if idx := strings.LastIndex(msg, ": "); idx != -1 {
+			msg = msg[idx+2:]
+		}
+		respondError(w, http.StatusBadRequest, msg)
 	case errors.Is(err, ErrPendingSignupNotFound):
 		respondError(w, http.StatusBadRequest, "no pending signup found or OTP has expired, please sign up again")
 	case errors.Is(err, ErrInvalidResetToken):

@@ -13,9 +13,9 @@ import (
 )
 
 var (
-	ErrInvalidKeySize    = errors.New("crypto: invalid key size, must be 32 bytes for AES-256")
+	ErrInvalidKeySize     = errors.New("crypto: invalid key size, must be 32 bytes for AES-256")
 	ErrCiphertextTooShort = errors.New("crypto: ciphertext too short")
-	ErrDecryptionFailed  = errors.New("crypto: decryption failed")
+	ErrDecryptionFailed   = errors.New("crypto: decryption failed")
 )
 
 // DeriveKey derives a deterministic 32-byte key from a secret string using SHA-256.
