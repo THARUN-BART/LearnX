@@ -12,6 +12,8 @@ import (
 	"github.com/THARUN-BART/LearnX/backend/internal/profile"
 	"github.com/THARUN-BART/LearnX/backend/internal/progress"
 	"github.com/THARUN-BART/LearnX/backend/internal/roadmap"
+	"github.com/THARUN-BART/LearnX/backend/internal/submissions"
+	"github.com/THARUN-BART/LearnX/backend/internal/testcases"
 	"github.com/THARUN-BART/LearnX/backend/internal/topics"
 	"github.com/go-chi/chi/v5"
 )
@@ -24,15 +26,27 @@ type DSAHandlers struct {
 	Analytics *analytics.Handler
 }
 
+type SubmissionHandlers struct {
+	Submissions *submissions.Handler
+	TestCases   *testcases.Handler
+}
+
 type RouterOption func(*routerOptions)
 
 type routerOptions struct {
-	dsa *DSAHandlers
+	dsa         *DSAHandlers
+	submissions *SubmissionHandlers
 }
 
 func WithDSA(handlers *DSAHandlers) RouterOption {
 	return func(opts *routerOptions) {
 		opts.dsa = handlers
+	}
+}
+
+func WithSubmissions(handlers *SubmissionHandlers) RouterOption {
+	return func(opts *routerOptions) {
+		opts.submissions = handlers
 	}
 }
 
@@ -101,10 +115,31 @@ func BuildRouter(
 			if options.dsa != nil {
 				registerDSARoutes(r, options.dsa)
 			}
+
+			if options.submissions != nil {
+				registerSubmissionRoutes(r, options.submissions)
+			}
 		})
 	})
 
 	return r
+}
+
+func registerSubmissionRoutes(r chi.Router, s *SubmissionHandlers) {
+	if s.Submissions != nil {
+		r.Post("/submissions", s.Submissions.Submit)
+		r.Get("/submissions/{submission_id}", s.Submissions.GetStatus)
+		r.Get("/submissions/{submission_id}/result", s.Submissions.GetResult)
+		r.Post("/submissions/{submission_id}/retry", s.Submissions.Retry)
+
+		r.Get("/student/submissions", s.Submissions.ListStudentSubmissions)
+		r.Get("/problems/{problem_id}/submissions", s.Submissions.ListProblemSubmissions)
+		r.Get("/problems/{problem_id}/submissions/latest", s.Submissions.GetLatestProblemSubmission)
+	}
+	if s.TestCases != nil {
+		r.Get("/problems/{problem_id}/testcases/sample", s.TestCases.GetSampleTestCases)
+		r.Post("/admin/problems/{problem_id}/testcases", s.TestCases.CreateTestCase)
+	}
 }
 
 func registerDSARoutes(r chi.Router, dsa *DSAHandlers) {

@@ -121,3 +121,64 @@ curl -H "Authorization: Bearer $TOKEN" http://localhost:8080/api/v1/student/anal
 - [`docs/openapi.yaml`](docs/openapi.yaml) – OpenAPI 3 spec
 
 Catalogue HTTP APIs are read-only for students. Shared roadmap/problem rows are readable by authenticated users; only the service-role import path mutates them. Student progress is protected with JWT verification, parameterized SQL, pagination caps (`limit` max 100), and the existing IP rate limiter.
+
+
+### 7. Problem Submission & Code Assessment Engine
+
+The submission engine executes student code asynchronously against authorized test cases in an isolated sandbox (Judge0 API or mock runner).
+
+#### Execution Provider Configuration
+
+Set the following environment variables in `.env`:
+
+```env
+# Code Execution Sandbox
+JUDGE0_API_URL=http://localhost:2358          # Or https://judge0-ce.p.rapidapi.com
+JUDGE0_API_KEY=                               # RapidAPI key or Judge0 auth token
+JUDGE0_API_HOST=                              # RapidAPI host if using RapidAPI
+EXECUTION_TIMEOUT_SECONDS=15
+SUBMISSION_WORKER_CONCURRENCY=4
+SUBMISSION_QUEUE_SIZE=1000
+EXECUTION_PROVIDER=judge0                     # 'judge0' or 'mock' for local testing
+```
+
+#### Supported Languages
+- C (`c`)
+- C++ (`cpp`)
+- Java (`java`)
+- Python (`python`)
+- Go (`go`)
+
+#### Submission Flow & Lifecycle
+1. Student submits code via `POST /api/v1/submissions`.
+2. Backend validates request (Auth JWT, valid Problem ID, supported language, source code <= 64KB).
+3. Submission record is created with initial status `Queued` (HTTP 202 Accepted).
+4. Worker pool consumes the job, transitions status to `Processing`, and executes code against test cases.
+5. Whitespace-normalized comparator classifies result (`Accepted`, `Wrong Answer`, `Compilation Error`, `Runtime Error`, `Time Limit Exceeded`, `Memory Limit Exceeded`, `Internal Error`).
+6. Individual test results are recorded (hidden test case data is secured and never leaked).
+7. Student progress in `student_problem_progress` is automatically updated:
+   - Total attempts incremented.
+   - If Accepted, successful attempts incremented and problem marked `Solved`.
+   - Subsequent failed attempts preserve the `Solved` status.
+
+#### Example Submission Calls
+
+```bash
+# 1. Submit code
+curl -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+  -d '{
+    "problem_id": "<problem_id>",
+    "language": "cpp",
+    "source_code": "#include <iostream>\nint main(){ std::cout << 42; return 0; }"
+  }' \
+  http://localhost:8080/api/v1/submissions
+
+# 2. Check submission status
+curl -H "Authorization: Bearer $TOKEN" http://localhost:8080/api/v1/submissions/<submission_id>
+
+# 3. View detailed result (hidden inputs/outputs are scrubbed)
+curl -H "Authorization: Bearer $TOKEN" http://localhost:8080/api/v1/submissions/<submission_id>/result
+
+# 4. View student submission history
+curl -H "Authorization: Bearer $TOKEN" "http://localhost:8080/api/v1/student/submissions?limit=20&page=1"
+```

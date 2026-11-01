@@ -29,6 +29,14 @@ type Config struct {
 	EncryptionKey            []byte
 	PendingSignupExpiry      time.Duration
 	PasswordResetTokenExpiry time.Duration
+
+	Judge0APIURL                string
+	Judge0APIKey                string
+	Judge0APIHost               string
+	ExecutionTimeout            time.Duration
+	SubmissionWorkerConcurrency int
+	SubmissionQueueSize         int
+	ExecutionProvider           string
 }
 
 // Load loads configuration from environment variables and an optional .env file.
@@ -55,6 +63,14 @@ func Load() (*Config, error) {
 
 		PendingSignupExpiry:      time.Duration(getEnvAsInt("SIGNUP_EXPIRY_MINUTES", 10)) * time.Minute,
 		PasswordResetTokenExpiry: time.Duration(getEnvAsInt("RESET_TOKEN_EXPIRY_MINUTES", 15)) * time.Minute,
+
+		Judge0APIURL:                getEnv("JUDGE0_API_URL", "http://localhost:2358"),
+		Judge0APIKey:                getEnv("JUDGE0_API_KEY", ""),
+		Judge0APIHost:               getEnv("JUDGE0_API_HOST", ""),
+		ExecutionTimeout:            time.Duration(getEnvAsInt("EXECUTION_TIMEOUT_SECONDS", 15)) * time.Second,
+		SubmissionWorkerConcurrency: getEnvAsInt("SUBMISSION_WORKER_CONCURRENCY", 4),
+		SubmissionQueueSize:         getEnvAsInt("SUBMISSION_QUEUE_SIZE", 1000),
+		ExecutionProvider:           getEnv("EXECUTION_PROVIDER", "judge0"),
 	}
 
 	rawKey := getEnv("ENCRYPTION_KEY", "")

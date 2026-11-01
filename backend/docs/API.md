@@ -547,3 +547,143 @@ Difficulty analytics include Easy/Medium/Hard solved counts and accuracy (`succe
 
 Machine-readable spec: [`openapi.yaml`](./openapi.yaml).
 
+
+## 5. Problem Submission & Code Assessment Engine
+
+### 5.1 Submission Lifecycle
+
+```text
+Student Submits Code
+        │
+        ▼
+POST /api/v1/submissions (Validation: Auth, Problem, Lang, Source <= 64KB)
+        │
+        ▼
+Record created with status 'Queued' (HTTP 202 Accepted)
+        │
+        ▼
+Background Worker picks job -> status: 'Processing'
+        │
+        ▼
+Sandbox Execution (Judge0 or isolated runner) against problem Test Cases
+        │
+        ▼
+Whitespace-Normalized Comparator & Classification
+        │
+        ▼
+Store Submission Test Results (hidden test cases protected)
+        │
+        ▼
+Update Submissions Record ('Accepted', 'Wrong Answer', 'Compilation Error', etc.)
+        │
+        ▼
+Update Student Progress (status='Solved' if Accepted, else 'Attempted'; attempts incremented)
+```
+
+### 5.2 Endpoints
+
+#### Submit Code
+`POST /api/v1/submissions`
+
+Headers: `Authorization: Bearer <supabase_jwt>`
+
+Request:
+```json
+{
+  "problem_id": "c71a399f-7e04-4340-9774-8aa43e4fcda3",
+  "language": "cpp",
+  "source_code": "#include <iostream>\nusing namespace std;\nint main() { cout << \"0 1\"; return 0; }"
+}
+```
+
+Response (HTTP 202 Accepted):
+```json
+{
+  "success": true,
+  "data": {
+    "submission_id": "40d47191-d9f0-4909-89fb-1192ad0bd68e",
+    "problem_id": "c71a399f-7e04-4340-9774-8aa43e4fcda3",
+    "status": "Queued",
+    "language": "cpp",
+    "test_cases": { "total": 0, "passed": 0, "failed": 0 },
+    "execution_time_ms": 0,
+    "memory_used_kb": 0,
+    "submitted_at": "2026-11-01T23:00:00Z"
+  }
+}
+```
+
+#### Get Submission Status
+`GET /api/v1/submissions/{submission_id}`
+
+Response (HTTP 200 OK):
+```json
+{
+  "success": true,
+  "data": {
+    "submission_id": "40d47191-d9f0-4909-89fb-1192ad0bd68e",
+    "problem_id": "c71a399f-7e04-4340-9774-8aa43e4fcda3",
+    "status": "Accepted",
+    "language": "cpp",
+    "test_cases": { "total": 4, "passed": 4, "failed": 0 },
+    "execution_time_ms": 15,
+    "memory_used_kb": 1280,
+    "submitted_at": "2026-11-01T23:00:00Z",
+    "completed_at": "2026-11-01T23:00:01Z"
+  }
+}
+```
+
+#### Get Detailed Assessment Result
+`GET /api/v1/submissions/{submission_id}/result`
+
+Security: Hidden test cases (`is_hidden: true`) have their inputs, expected outputs, and actual stdout strictly sanitized to prevent test-data leaking.
+
+Response (HTTP 200 OK):
+```json
+{
+  "success": true,
+  "data": {
+    "submission_id": "40d47191-d9f0-4909-89fb-1192ad0bd68e",
+    "problem_id": "c71a399f-7e04-4340-9774-8aa43e4fcda3",
+    "status": "Accepted",
+    "language": "cpp",
+    "test_cases": { "total": 2, "passed": 2, "failed": 0 },
+    "execution_time_ms": 15,
+    "memory_used_kb": 1280,
+    "submitted_at": "2026-11-01T23:00:00Z",
+    "completed_at": "2026-11-01T23:00:01Z",
+    "results": [
+      {
+        "test_case_order": 1,
+        "status": "Accepted",
+        "execution_time_ms": 12,
+        "memory_used_kb": 1200,
+        "is_hidden": false,
+        "actual_output": "0 1"
+      },
+      {
+        "test_case_order": 2,
+        "status": "Accepted",
+        "execution_time_ms": 15,
+        "memory_used_kb": 1280,
+        "is_hidden": true
+      }
+    ]
+  }
+}
+```
+
+#### Retry Submission
+`POST /api/v1/submissions/{submission_id}/retry`
+
+#### Get Student Submissions (History)
+`GET /api/v1/student/submissions?problem_id={id}&status={status}&page=1&limit=20`
+
+#### Get Problem Submissions
+`GET /api/v1/problems/{problem_id}/submissions`
+`GET /api/v1/problems/{problem_id}/submissions/latest`
+
+#### Test Cases Management
+- `GET /api/v1/problems/{problem_id}/testcases/sample`: Returns sample (non-hidden) test cases.
+- `POST /api/v1/admin/problems/{problem_id}/testcases`: Creates a new test case.

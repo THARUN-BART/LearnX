@@ -8,20 +8,26 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
+	"github.com/THARUN-BART/LearnX/backend/internal/assessment"
 	"github.com/THARUN-BART/LearnX/backend/internal/auth"
 	"github.com/THARUN-BART/LearnX/backend/internal/config"
 	"github.com/THARUN-BART/LearnX/backend/internal/database"
 	"github.com/THARUN-BART/LearnX/backend/internal/dsa"
 	"github.com/THARUN-BART/LearnX/backend/internal/dsa/model"
+	"github.com/THARUN-BART/LearnX/backend/internal/execution"
 	"github.com/THARUN-BART/LearnX/backend/internal/importer"
 	"github.com/THARUN-BART/LearnX/backend/internal/middleware"
 	"github.com/THARUN-BART/LearnX/backend/internal/otp"
 	"github.com/THARUN-BART/LearnX/backend/internal/profile"
 	"github.com/THARUN-BART/LearnX/backend/internal/server"
+	"github.com/THARUN-BART/LearnX/backend/internal/submissions"
 	"github.com/THARUN-BART/LearnX/backend/internal/supabase"
+	"github.com/THARUN-BART/LearnX/backend/internal/testcases"
+	"github.com/THARUN-BART/LearnX/backend/internal/workers"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -50,6 +56,8 @@ func main() {
 	var authRepo auth.Repository
 	var profileRepo profile.Repository
 	var dsaRepos dsa.Repositories
+	var submissionsRepo submissions.Repository
+	var testCasesRepo testcases.Repository
 	var pool *pgxpool.Pool
 
 	if cfg.SupabaseDBURL != "" {
@@ -59,6 +67,8 @@ func main() {
 			authRepo = auth.NewMemoryRepository()
 			profileRepo = profile.NewMemoryRepository()
 			dsaRepos = loadMemoryDSA()
+			submissionsRepo = submissions.NewMemoryRepository()
+			testCasesRepo = testcases.NewMemoryRepository()
 		} else {
 			pool = connected
 			defer pool.Close()
@@ -68,12 +78,16 @@ func main() {
 			authRepo = auth.NewPostgresRepository(pool)
 			profileRepo = profile.NewPostgresRepository(pool)
 			dsaRepos = dsa.NewPostgresRepositories(pool)
+			submissionsRepo = submissions.NewPostgresRepository(pool)
+			testCasesRepo = testcases.NewPostgresRepository(pool)
 		}
 	} else {
 		slog.Warn("SUPABASE_DB_URL not configured: using in-memory store for development/testing")
 		authRepo = auth.NewMemoryRepository()
 		profileRepo = profile.NewMemoryRepository()
 		dsaRepos = loadMemoryDSA()
+		submissionsRepo = submissions.NewMemoryRepository()
+		testCasesRepo = testcases.NewMemoryRepository()
 	}
 
 	otpClient, err := otp.NewClient(cfg.OTPServiceBaseURL, cfg.OTPAppName, cfg.OTPTimeout)
@@ -101,8 +115,64 @@ func main() {
 	authMiddleware := middleware.NewAuthMiddleware(supabaseClient, cfg.SupabaseJWTSecret)
 	rateLimiter := middleware.NewRateLimiter(60, 1*time.Minute)
 
+	var execClient execution.Client
+	switch strings.ToLower(cfg.ExecutionProvider) {
+	case "local":
+		slog.Info("using local native compiler execution provider (gcc, g++, python3, go, java)")
+		execClient = execution.NewLocalRunner()
+	case "wandbox":
+		slog.Info("using free cloud Wandbox execution provider (zero setup, zero auth)")
+		execClient = execution.NewWandboxClient(cfg.ExecutionTimeout)
+	case "mock":
+		slog.Info("using mock execution provider for offline development")
+		execClient = execution.NewMockExecutionClient()
+	default:
+		slog.Info("using Judge0 sandbox execution provider", slog.String("url", cfg.Judge0APIURL))
+		execClient = execution.NewJudge0Client(execution.Judge0Config{
+			BaseURL: cfg.Judge0APIURL,
+			APIKey:  cfg.Judge0APIKey,
+			APIHost: cfg.Judge0APIHost,
+			Timeout: cfg.ExecutionTimeout,
+			Logger:  logger,
+		})
+	}
+
+	assessmentEngine := assessment.NewEngine(execClient, logger)
+	jobQueue := workers.NewChannelJobQueue(cfg.SubmissionQueueSize)
+
+	workerPool := workers.NewWorkerPool(
+		jobQueue,
+		submissionsRepo,
+		testCasesRepo,
+		dsaRepos.Progress,
+		assessmentEngine,
+		cfg.SubmissionWorkerConcurrency,
+		logger,
+	)
+	workerPool.Start()
+	defer workerPool.Stop()
+
+	testCasesService := testcases.NewService(testCasesRepo)
+	testCasesHandler := testcases.NewHandler(testCasesService)
+
+	submissionsService := submissions.NewService(submissionsRepo, dsaRepos.Problems, jobQueue)
+	submissionsHandler := submissions.NewHandler(submissionsService)
+
+	submissionHandlers := &server.SubmissionHandlers{
+		Submissions: submissionsHandler,
+		TestCases:   testCasesHandler,
+	}
+
 	dsaHandlers := dsa.NewHandlers(dsaRepos)
-	router := server.BuildRouter(cfg, authHandler, profileHandler, authMiddleware, rateLimiter, server.WithDSA(dsaHandlers))
+	router := server.BuildRouter(
+		cfg,
+		authHandler,
+		profileHandler,
+		authMiddleware,
+		rateLimiter,
+		server.WithDSA(dsaHandlers),
+		server.WithSubmissions(submissionHandlers),
+	)
 
 	httpServer := &http.Server{
 		Addr:         ":" + cfg.ServerPort,

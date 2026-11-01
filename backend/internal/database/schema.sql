@@ -287,3 +287,98 @@ BEGIN
             WITH CHECK (student_id = auth.uid());
     END IF;
 END $$;
+
+
+-- ============================================================================
+-- Problem Submission & Code Assessment Tables (010, 011, 012, 013)
+-- ============================================================================
+
+CREATE TABLE IF NOT EXISTS submissions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    student_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    problem_id UUID NOT NULL REFERENCES problems(id) ON DELETE CASCADE,
+    language VARCHAR(32) NOT NULL,
+    source_code TEXT NOT NULL,
+    status VARCHAR(32) NOT NULL DEFAULT 'Queued'
+        CHECK (status IN ('Queued', 'Processing', 'Accepted', 'Wrong Answer', 'Compilation Error', 'Runtime Error', 'Time Limit Exceeded', 'Memory Limit Exceeded', 'Internal Error')),
+    execution_time_ms INTEGER DEFAULT 0,
+    memory_used_kb INTEGER DEFAULT 0,
+    total_test_cases INTEGER DEFAULT 0,
+    passed_test_cases INTEGER DEFAULT 0,
+    failed_test_cases INTEGER DEFAULT 0,
+    error_message TEXT DEFAULT '',
+    execution_provider VARCHAR(64) DEFAULT 'judge0',
+    provider_submission_id TEXT DEFAULT '',
+    submitted_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    completed_at TIMESTAMPTZ
+);
+
+CREATE INDEX IF NOT EXISTS idx_submissions_student_id ON submissions(student_id);
+CREATE INDEX IF NOT EXISTS idx_submissions_problem_id ON submissions(problem_id);
+CREATE INDEX IF NOT EXISTS idx_submissions_status ON submissions(status);
+CREATE INDEX IF NOT EXISTS idx_submissions_submitted_at ON submissions(submitted_at DESC);
+CREATE INDEX IF NOT EXISTS idx_submissions_student_problem ON submissions(student_id, problem_id);
+
+CREATE TABLE IF NOT EXISTS test_cases (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    problem_id UUID NOT NULL REFERENCES problems(id) ON DELETE CASCADE,
+    input_data TEXT NOT NULL DEFAULT '',
+    expected_output TEXT NOT NULL DEFAULT '',
+    is_hidden BOOLEAN NOT NULL DEFAULT false,
+    test_order INTEGER NOT NULL DEFAULT 1,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_test_cases_problem_id ON test_cases(problem_id);
+CREATE INDEX IF NOT EXISTS idx_test_cases_order ON test_cases(problem_id, test_order ASC);
+CREATE INDEX IF NOT EXISTS idx_test_cases_is_hidden ON test_cases(problem_id, is_hidden);
+
+CREATE TABLE IF NOT EXISTS submission_test_results (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    submission_id UUID NOT NULL REFERENCES submissions(id) ON DELETE CASCADE,
+    test_case_id UUID NOT NULL REFERENCES test_cases(id) ON DELETE CASCADE,
+    status VARCHAR(32) NOT NULL,
+    execution_time_ms INTEGER DEFAULT 0,
+    memory_used_kb INTEGER DEFAULT 0,
+    actual_output TEXT DEFAULT '',
+    error_message TEXT DEFAULT '',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_submission_test_results_submission_id ON submission_test_results(submission_id);
+CREATE INDEX IF NOT EXISTS idx_submission_test_results_test_case_id ON submission_test_results(test_case_id);
+
+ALTER TABLE submissions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE test_cases ENABLE ROW LEVEL SECURITY;
+ALTER TABLE submission_test_results ENABLE ROW LEVEL SECURITY;
+
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'submissions' AND policyname = 'students_select_own_submissions') THEN
+        CREATE POLICY students_select_own_submissions ON submissions
+            FOR SELECT TO authenticated
+            USING (student_id = auth.uid());
+    END IF;
+
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'submissions' AND policyname = 'students_insert_own_submissions') THEN
+        CREATE POLICY students_insert_own_submissions ON submissions
+            FOR INSERT TO authenticated
+            WITH CHECK (student_id = auth.uid());
+    END IF;
+
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'test_cases' AND policyname = 'authenticated_select_sample_test_cases') THEN
+        CREATE POLICY authenticated_select_sample_test_cases ON test_cases
+            FOR SELECT TO authenticated
+            USING (is_hidden = false);
+    END IF;
+
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'submission_test_results' AND policyname = 'students_select_own_test_results') THEN
+        CREATE POLICY students_select_own_test_results ON submission_test_results
+            FOR SELECT TO authenticated
+            USING (
+                submission_id IN (
+                    SELECT id FROM submissions WHERE student_id = auth.uid()
+                )
+            );
+    END IF;
+END $$;

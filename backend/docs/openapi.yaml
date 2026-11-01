@@ -196,6 +196,152 @@ paths:
           schema: {type: integer, default: 30, maximum: 90}
       responses:
         "200": {description: Recent activity}
+  /api/v1/submissions:
+    post:
+      security: [{bearerAuth: []}]
+      summary: Submit solution for code assessment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [problem_id, language, source_code]
+              properties:
+                problem_id: {type: string, format: uuid}
+                language: {type: string, enum: [c, cpp, java, python, go]}
+                source_code: {type: string}
+      responses:
+        "202":
+          description: Submission queued for background assessment
+        "400":
+          description: Invalid request or unsupported language
+  /api/v1/submissions/{submission_id}:
+    get:
+      security: [{bearerAuth: []}]
+      summary: Retrieve submission status and execution metrics
+      parameters:
+        - in: path
+          name: submission_id
+          required: true
+          schema: {type: string}
+      responses:
+        "200":
+          description: Submission summary
+        "403":
+          description: Unauthorized access to another student's submission
+        "404":
+          description: Submission not found
+  /api/v1/submissions/{submission_id}/result:
+    get:
+      security: [{bearerAuth: []}]
+      summary: Retrieve detailed assessment result (with hidden test data sanitized)
+      parameters:
+        - in: path
+          name: submission_id
+          required: true
+          schema: {type: string}
+      responses:
+        "200":
+          description: Detailed test-case execution results
+  /api/v1/submissions/{submission_id}/retry:
+    post:
+      security: [{bearerAuth: []}]
+      summary: Re-queue a failed or interrupted submission
+      parameters:
+        - in: path
+          name: submission_id
+          required: true
+          schema: {type: string}
+      responses:
+        "200":
+          description: Submission re-queued
+  /api/v1/student/submissions:
+    get:
+      security: [{bearerAuth: []}]
+      summary: Get authenticated student submission history
+      parameters:
+        - in: query
+          name: problem_id
+          schema: {type: string}
+        - in: query
+          name: status
+          schema: {type: string}
+        - in: query
+          name: page
+          schema: {type: integer, default: 1}
+        - in: query
+          name: limit
+          schema: {type: integer, default: 20}
+      responses:
+        "200":
+          description: Paginated submissions list
+  /api/v1/problems/{problem_id}/submissions:
+    get:
+      security: [{bearerAuth: []}]
+      summary: Get submissions for a specific problem
+      parameters:
+        - in: path
+          name: problem_id
+          required: true
+          schema: {type: string}
+        - in: query
+          name: page
+          schema: {type: integer, default: 1}
+        - in: query
+          name: limit
+          schema: {type: integer, default: 20}
+      responses:
+        "200":
+          description: Problem submissions list
+  /api/v1/problems/{problem_id}/submissions/latest:
+    get:
+      security: [{bearerAuth: []}]
+      summary: Get the latest submission for a problem
+      parameters:
+        - in: path
+          name: problem_id
+          required: true
+          schema: {type: string}
+      responses:
+        "200":
+          description: Latest problem submission summary
+  /api/v1/problems/{problem_id}/testcases/sample:
+    get:
+      security: [{bearerAuth: []}]
+      summary: Retrieve sample (non-hidden) test cases for a problem
+      parameters:
+        - in: path
+          name: problem_id
+          required: true
+          schema: {type: string}
+      responses:
+        "200":
+          description: List of sample test cases
+  /api/v1/admin/problems/{problem_id}/testcases:
+    post:
+      security: [{bearerAuth: []}]
+      summary: Create a test case (admin operation)
+      parameters:
+        - in: path
+          name: problem_id
+          required: true
+          schema: {type: string}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [input_data, expected_output]
+              properties:
+                input_data: {type: string}
+                expected_output: {type: string}
+                is_hidden: {type: boolean, default: false}
+                test_order: {type: integer, default: 1}
+      responses:
+        "201":
+          description: Test case created
 components:
   securitySchemes:
     bearerAuth:
