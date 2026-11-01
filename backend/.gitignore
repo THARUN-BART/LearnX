@@ -1,0 +1,34 @@
+# Environment Variables (Keep secrets strictly private)
+.env
+.env.*
+*.env
+!.env.example
+
+# Compiled Binaries and Output
+bin/
+dist/
+server
+backend
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test and Coverage Outputs
+*.test
+*.out
+coverage.txt
+coverage.html
+profile.out
+
+# IDE and Editor Configuration
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Operating System Files
+.DS_Store
+Thumbs.db
