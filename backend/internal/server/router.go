@@ -115,14 +115,46 @@ func BuildRouter(
 			r.Get("/auth/callback", authHandler.OAuthCallback)
 		}
 
-		// Public educational catalog routes (curriculum browsing)
-		if options.dsa != nil {
-			if options.dsa.Roadmap != nil {
+		// Public & Guest-accessible educational catalog routes (with OptionalAuth for token enrichment)
+		r.Group(func(r chi.Router) {
+			if authMiddleware != nil {
+				r.Use(authMiddleware.OptionalAuth)
+			}
+
+			// Public roadmap browsing (singular alias for seamless guest access)
+			if options.dsa != nil && options.dsa.Roadmap != nil {
 				r.Get("/roadmap", options.dsa.Roadmap.List)
 				r.Get("/roadmap/{roadmap_id}", options.dsa.Roadmap.Get)
 				r.Get("/roadmap/{roadmap_id}/topics", options.dsa.Roadmap.ListTopics)
 			}
-		}
+
+			// Public topics and problems catalog
+			if options.dsa != nil {
+				if options.dsa.Topics != nil {
+					r.Get("/topics/{topic_id}", options.dsa.Topics.Get)
+					r.Get("/topics/{topic_id}/subtopics", options.dsa.Topics.ListSubtopics)
+				}
+				if options.dsa.Problems != nil {
+					r.Get("/problems/search", options.dsa.Problems.Search)
+					r.Get("/problems", options.dsa.Problems.List)
+					r.Get("/problems/{problem_id}", options.dsa.Problems.Get)
+					r.Get("/subtopics/{subtopic_id}/problems", options.dsa.Problems.ListBySubtopic)
+				}
+			}
+
+			// Public sample testcases for problem preview
+			if options.submissions != nil && options.submissions.TestCases != nil {
+				r.Get("/problems/{problem_id}/testcases/sample", options.submissions.TestCases.GetSampleTestCases)
+			}
+
+			// Guest-capable AI Tutor endpoints (supports both authenticated students & guests)
+			if options.intelligence != nil && options.intelligence.AITutor != nil {
+				r.Post("/ai/walkthrough", options.intelligence.AITutor.WalkthroughCode)
+				r.Post("/ai/dry-run", options.intelligence.AITutor.GenerateDryRun)
+				r.Post("/ai/complexity", options.intelligence.AITutor.AnalyzeComplexity)
+				r.Post("/ai/ask", options.intelligence.AITutor.AskTutor)
+			}
+		})
 
 		r.Group(func(r chi.Router) {
 			if authMiddleware != nil {
@@ -196,11 +228,6 @@ func registerDSARoutes(r chi.Router, dsa *DSAHandlers) {
 		r.Get("/roadmaps", dsa.Roadmap.List)
 		r.Get("/roadmaps/{roadmap_id}", dsa.Roadmap.Get)
 		r.Get("/roadmaps/{roadmap_id}/topics", dsa.Roadmap.ListTopics)
-
-		// Singular route aliases for seamless frontend compatibility
-		r.Get("/roadmap", dsa.Roadmap.List)
-		r.Get("/roadmap/{roadmap_id}", dsa.Roadmap.Get)
-		r.Get("/roadmap/{roadmap_id}/topics", dsa.Roadmap.ListTopics)
 	}
 	if dsa.Topics != nil {
 		r.Get("/topics/{topic_id}", dsa.Topics.Get)

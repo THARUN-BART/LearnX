@@ -1,6 +1,6 @@
 import apiClient from './api';
 import { Topic } from '../types/learning.types';
-import { DSA_TOPICS } from '../utils/constants';
+import { DSA_TOPICS, TOKEN_KEY } from '../utils/constants';
 
 class RoadmapService {
   /**
@@ -9,12 +9,20 @@ class RoadmapService {
    */
   async getRoadmap(): Promise<Topic[]> {
     try {
-      // 1. Fetch available roadmaps (try authenticated, fallback to public alias)
+      // 1. Fetch available roadmaps (use authenticated route if logged in, otherwise public alias)
       let roadmaps: any[] = [];
-      try {
-        const roadmapsRes = await apiClient.get('/api/v1/roadmaps');
-        roadmaps = roadmapsRes.data.roadmaps || roadmapsRes.data.data || [];
-      } catch {
+      const hasToken = typeof window !== 'undefined' && !!localStorage.getItem(TOKEN_KEY);
+
+      if (hasToken) {
+        try {
+          const roadmapsRes = await apiClient.get('/api/v1/roadmaps');
+          roadmaps = roadmapsRes.data.roadmaps || roadmapsRes.data.data || [];
+        } catch {
+          // Fallback to public route if token expired
+        }
+      }
+
+      if (!Array.isArray(roadmaps) || roadmaps.length === 0) {
         const fallbackRes = await apiClient.get('/api/v1/roadmap');
         roadmaps = fallbackRes.data.roadmaps || fallbackRes.data.data || [];
       }
@@ -28,10 +36,16 @@ class RoadmapService {
 
       // 2. Fetch topics under this roadmap
       let backendTopics: any[] = [];
-      try {
-        const topicsRes = await apiClient.get(`/api/v1/roadmaps/${activeRoadmap.id}/topics`);
-        backendTopics = topicsRes.data.topics || topicsRes.data.data || [];
-      } catch {
+      if (hasToken) {
+        try {
+          const topicsRes = await apiClient.get(`/api/v1/roadmaps/${activeRoadmap.id}/topics`);
+          backendTopics = topicsRes.data.topics || topicsRes.data.data || [];
+        } catch {
+          // Fallback to public route
+        }
+      }
+
+      if (!Array.isArray(backendTopics) || backendTopics.length === 0) {
         const fallbackRes = await apiClient.get(`/api/v1/roadmap/${activeRoadmap.id}/topics`);
         backendTopics = fallbackRes.data.topics || fallbackRes.data.data || [];
       }

@@ -26,11 +26,16 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
     if (error.response?.status === 401) {
-      // Clear token if expired or unauthorized
       const currentPath = window.location.pathname;
-      if (!currentPath.includes('/login') && !currentPath.includes('/signup')) {
-        localStorage.removeItem(TOKEN_KEY);
-        // Do not force reload if already on public pages
+      const reqUrl = error.config?.url || '';
+      const hadAuth = !!error.config?.headers?.Authorization;
+
+      // Only purge token if request actually carried an Authorization header and was rejected
+      // (avoid clearing when unauthenticated probing happens on catalog endpoints)
+      if (hadAuth && !currentPath.includes('/login') && !currentPath.includes('/signup')) {
+        if (!reqUrl.includes('/roadmaps')) {
+          localStorage.removeItem(TOKEN_KEY);
+        }
       }
     }
     return Promise.reject(error);

@@ -348,7 +348,8 @@ func (s *serviceImpl) AskTutor(ctx context.Context, studentID string, req AskReq
 			Title:            title,
 		}
 		if err := s.repo.CreateConversation(ctx, conv); err != nil {
-			return nil, err
+			s.logger.WarnContext(ctx, "failed to persist conversation, using ephemeral session", "error", err)
+			conv.ID = "ephemeral-session-" + time.Now().Format("20060102150405")
 		}
 	}
 
