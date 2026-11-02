@@ -9,7 +9,8 @@ import {
   Sparkles,
   ChevronRight,
   Activity,
-  Layers
+  Layers,
+  Compass,
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -24,7 +25,10 @@ import { useProfile } from '../../hooks/useProfile';
 import { analyticsService } from '../../services/analytics.service';
 import { learningService } from '../../services/learning.service';
 import { roadmapService } from '../../services/roadmap.service';
+import { learningPathService } from '../../services/learning-path.service';
 import { AnalyticsSummary, Problem, Topic, MistakeRecord } from '../../types/learning.types';
+import { LearningRecommendation } from '../../types/learning-path.types';
+import { RecommendedActionCard } from '../../components/learning-path/RecommendedActionCard';
 import Button from '../../components/ui/Button';
 import { PageSkeleton } from '../../components/ui/Skeleton';
 
@@ -37,6 +41,7 @@ export const DashboardPage: React.FC = () => {
   const [recommendedProblems, setRecommendedProblems] = useState<Problem[]>([]);
   const [activeTopic, setActiveTopic] = useState<Topic | null>(null);
   const [latestMistake, setLatestMistake] = useState<MistakeRecord | null>(null);
+  const [adaptiveNextAction, setAdaptiveNextAction] = useState<LearningRecommendation | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -44,12 +49,14 @@ export const DashboardPage: React.FC = () => {
 
     const loadCore = async () => {
       try {
-        const [stats, topics] = await Promise.all([
+        const [stats, topics, nextAction] = await Promise.all([
           analyticsService.getAnalytics(),
           roadmapService.getRoadmap(),
+          learningPathService.getNextAction().catch(() => null),
         ]);
         if (cancelled) return;
         setAnalytics(stats);
+        setAdaptiveNextAction(nextAction);
         if (Array.isArray(topics) && topics.length > 0) {
           const current =
             topics.find((t) => t.status === 'in_progress' && (t.completedProblems || 0) > 0) ||
@@ -155,6 +162,23 @@ export const DashboardPage: React.FC = () => {
             </Button>
           </div>
         </div>
+      </div>
+
+      {/* Adaptive Learning Path: Recommended Next Action */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 font-mono text-xs text-[#8E8EA0] uppercase tracking-wider font-semibold">
+            <Compass className="w-4 h-4 text-[#8B5CF6]" />
+            <span>AI Adaptive Path Engine</span>
+          </div>
+          <button
+            onClick={() => navigate('/dashboard/learning-path')}
+            className="text-xs text-[#8B5CF6] hover:text-[#A78BFA] flex items-center gap-1 font-mono"
+          >
+            Explore Full Roadmap <ChevronRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
+        <RecommendedActionCard recommendation={adaptiveNextAction} loading={loading} />
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

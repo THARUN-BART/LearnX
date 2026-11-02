@@ -27,6 +27,9 @@ type WorkerPool struct {
 		RecordSubmissionEvent(ctx context.Context, studentID string, problem *model.Problem, subID string, accepted bool, failedReason string) error
 		RecordMistakeEvent(ctx context.Context, studentID, problemID, submissionID, category, subtype, conceptKey string, confidence float64) error
 	}
+	pathService     interface {
+		Recalculate(ctx context.Context, studentID string)
+	}
 	problemsRepo    problems.Repository
 	engine          assessment.Engine
 	concurrency     int
@@ -46,6 +49,12 @@ func (p *WorkerPool) SetMemoryService(service interface {
 }, probRepo problems.Repository) {
 	p.memoryService = service
 	p.problemsRepo = probRepo
+}
+
+func (p *WorkerPool) SetPathService(service interface {
+	Recalculate(ctx context.Context, studentID string)
+}) {
+	p.pathService = service
 }
 
 func NewWorkerPool(
@@ -233,6 +242,11 @@ func (p *WorkerPool) processSubmission(submissionID string) {
 		}
 		isAccepted := sub.Status == execution.StatusAccepted
 		_ = p.memoryService.RecordSubmissionEvent(ctx, sub.StudentID, prob, sub.ID, isAccepted, sub.ErrorMessage)
+	}
+
+	// Trigger Adaptive Learning Path re-evaluation
+	if p.pathService != nil {
+		p.pathService.Recalculate(ctx, sub.StudentID)
 	}
 
 	p.logger.Info("submission completed",

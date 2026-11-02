@@ -22,6 +22,7 @@ import (
 	"github.com/THARUN-BART/LearnX/backend/internal/dsa/model"
 	"github.com/THARUN-BART/LearnX/backend/internal/execution"
 	"github.com/THARUN-BART/LearnX/backend/internal/learningmemory"
+	"github.com/THARUN-BART/LearnX/backend/internal/learningpath"
 	"github.com/THARUN-BART/LearnX/backend/internal/middleware"
 	"github.com/THARUN-BART/LearnX/backend/internal/mistakes"
 	"github.com/THARUN-BART/LearnX/backend/internal/otp"
@@ -67,6 +68,7 @@ func main() {
 	var mistakesRepo mistakes.Repository
 	var aiRepo aitutor.Repository
 	var memoryRepo learningmemory.Repository
+	var pathRepo learningpath.Repository
 
 	if cfg.SupabaseDBURL != "" {
 		pool, err := database.NewPool(ctx, cfg.SupabaseDBURL)
@@ -82,6 +84,7 @@ func main() {
 			mistakesRepo = mistakes.NewMemoryRepository()
 			aiRepo = aitutor.NewMemoryRepository()
 			memoryRepo = learningmemory.NewMemoryRepository()
+			pathRepo = learningpath.NewMemoryRepository()
 		} else {
 			defer pool.Close()
 			if err := database.Migrate(ctx, pool); err != nil {
@@ -95,6 +98,7 @@ func main() {
 			mistakesRepo = mistakes.NewPostgresRepository(pool)
 			aiRepo = aitutor.NewPostgresRepository(pool)
 			memoryRepo = learningmemory.NewPostgresRepository(pool)
+			pathRepo = learningpath.NewPostgresRepository(pool)
 		}
 	} else {
 		slog.Warn("SUPABASE_DB_URL not configured: using in-memory store for development/testing")
@@ -108,6 +112,7 @@ func main() {
 		mistakesRepo = mistakes.NewMemoryRepository()
 		aiRepo = aitutor.NewMemoryRepository()
 		memoryRepo = learningmemory.NewMemoryRepository()
+		pathRepo = learningpath.NewMemoryRepository()
 	}
 
 	// Code Execution Client
@@ -143,6 +148,10 @@ func main() {
 	memorySvc := learningmemory.NewService(memoryRepo, dsaRepos.Problems, logger)
 	memoryHandler := learningmemory.NewHandler(memorySvc)
 
+	// Initialize Adaptive Learning Path Engine
+	pathSvc := learningpath.NewService(pathRepo, memoryRepo, dsaRepos.Problems, dsaRepos.Topics, logger)
+	pathHandler := learningpath.NewHandler(pathSvc)
+
 	workerPool := workers.NewWorkerPool(
 		jobQueue,
 		submissionsRepo,
@@ -154,6 +163,7 @@ func main() {
 	)
 	workerPool.SetMistakesService(mistakesSvc)
 	workerPool.SetMemoryService(memorySvc, dsaRepos.Problems)
+	workerPool.SetPathService(pathSvc)
 	workerPool.Start()
 	defer workerPool.Stop()
 
@@ -221,6 +231,7 @@ func main() {
 		Pedagogy:       pedagogyHandler,
 		PersonC:        pedagogyHandler,
 		LearningMemory: memoryHandler,
+		LearningPath:   pathHandler,
 	}
 
 	// DSA Handlers

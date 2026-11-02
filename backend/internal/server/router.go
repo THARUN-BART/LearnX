@@ -9,6 +9,7 @@ import (
 	"github.com/THARUN-BART/LearnX/backend/internal/auth"
 	"github.com/THARUN-BART/LearnX/backend/internal/config"
 	"github.com/THARUN-BART/LearnX/backend/internal/learningmemory"
+	"github.com/THARUN-BART/LearnX/backend/internal/learningpath"
 	"github.com/THARUN-BART/LearnX/backend/internal/middleware"
 	"github.com/THARUN-BART/LearnX/backend/internal/mistakes"
 	"github.com/THARUN-BART/LearnX/backend/internal/pedagogy"
@@ -41,6 +42,7 @@ type IntelligenceHandlers struct {
 	Pedagogy       *pedagogy.Handler
 	PersonC        *pedagogy.Handler // Deprecated alias for backwards compatibility
 	LearningMemory *learningmemory.Handler
+	LearningPath   *learningpath.Handler
 }
 
 type RouterOption func(*routerOptions)
@@ -234,6 +236,15 @@ func registerIntelligenceRoutes(r chi.Router, intel *IntelligenceHandlers) {
 		r.Get("/student/learning-memory/history", intel.LearningMemory.GetHistory)
 		r.Get("/student/learning-memory/timeline", intel.LearningMemory.GetTimeline)
 		r.Get("/student/learning-memory/snapshots", intel.LearningMemory.GetSnapshots)
+	}
+
+	if intel.LearningPath != nil {
+		r.Get("/student/learning-path", intel.LearningPath.GetLearningPath)
+		r.Post("/student/learning-path/generate", intel.LearningPath.RecalculatePath)
+		r.Get("/student/learning-path/next-action", intel.LearningPath.GetNextAction)
+		r.Get("/student/learning-path/progress", intel.LearningPath.GetPathProgress)
+		r.Get("/student/learning-path/history", intel.LearningPath.GetHistory)
+		r.Post("/student/learning-path/recalculate", intel.LearningPath.RecalculatePath)
 	}
 }
 
