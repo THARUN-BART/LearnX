@@ -30,6 +30,7 @@ export interface Subtopic {
   topic_id: string;
   title: string;
   slug: string;
+  description?: string;
   subtopic_order: number;
   problem_count: number;
 }
@@ -133,8 +134,18 @@ export interface CodeExecutionRequest {
   customInput?: string;
 }
 
+export interface SubmissionTestResult {
+  test_case_order: number;
+  status: string;
+  execution_time_ms: number;
+  memory_used_kb: number;
+  is_hidden: boolean;
+  actual_output?: string;
+  error_message?: string;
+}
+
 export interface CodeExecutionResult {
-  status: 'Accepted' | 'Wrong Answer' | 'Time Limit Exceeded' | 'Compilation Error' | 'Runtime Error';
+  status: string;
   runtimeMs: number;
   memoryMb: number;
   stdout?: string;
@@ -143,6 +154,66 @@ export interface CodeExecutionResult {
   totalTests: number;
   submissionId?: string;
   diagnosis?: MistakeDiagnosis;
+  results?: SubmissionTestResult[];
+}
+
+export interface PedagogyAnalysis {
+  runner_result?: {
+    passed?: boolean;
+    error_type?: string;
+    output?: string;
+    traceback?: string;
+  };
+  diagnosis?: {
+    skill?: string;
+    misconception_id?: string;
+    misconception?: string;
+    confidence?: number;
+    evidence?: string;
+  };
+  hint?: {
+    hint_level?: string;
+    hint?: string;
+  };
+}
+
+export interface SubmissionHistoryItem {
+  id?: string;
+  submission_id?: string;
+  problem_id?: string;
+  problem_title?: string;
+  status: string;
+  language?: string;
+  execution_time_ms?: number;
+  memory_used_kb?: number;
+  submitted_at?: string;
+  source_code?: string;
+}
+
+export interface AIConversation {
+  id: string;
+  title: string;
+  problem_id?: string;
+  conversation_type?: string;
+  updated_at?: string;
+  created_at?: string;
+}
+
+export interface StudentMistakePattern {
+  id: string;
+  category: string;
+  subtype: string;
+  related_concept: string;
+  occurrence_count: number;
+  correction_status: 'active' | 'corrected';
+  last_occurrence_at: string;
+}
+
+export interface MistakeSummary {
+  total_mistakes: number;
+  category_counts: Record<string, number>;
+  recurring_patterns: StudentMistakePattern[];
+  needs_attention_concepts: string[];
 }
 
 export interface MistakeDiagnosis {
@@ -160,16 +231,6 @@ export interface MistakeDiagnosis {
   evidence: Record<string, any>;
   suggested_correction: string;
   created_at: string;
-}
-
-export interface StudentMistakePattern {
-  id: string;
-  category: string;
-  subtype: string;
-  related_concept: string;
-  occurrence_count: number;
-  correction_status: 'active' | 'corrected';
-  last_occurrence_at: string;
 }
 
 export interface ProgressiveHint {
@@ -224,6 +285,7 @@ export interface AssistantMessage {
   codeSnippet?: string;
   timestamp: string;
   mode?: AssistantMode;
+  conversationId?: string;
 }
 
 export type MistakeCategory =
@@ -253,6 +315,11 @@ export interface MistakeRecord {
 
 export interface AnalyticsSummary {
   totalSolved: number;
+  totalProblems: number;
+  attemptedProblems: number;
+  pendingProblems: number;
+  needsRevision: number;
+  completionPercentage: number;
   easySolved: number;
   mediumSolved: number;
   hardSolved: number;
@@ -260,7 +327,10 @@ export interface AnalyticsSummary {
   hoursSpent: number;
   accuracyRate: number;
   weeklyActivity: { day: string; solved: number; hours: number }[];
-  topicProficiency: { topic: string; score: number; total: number }[];
+  dailyActivity: { date: string; solved: number; attempts: number }[];
+  topicProficiency: { topic: string; topicId?: string; score: number; total: number; solved: number }[];
   difficultyDistribution: { name: string; count: number; color: string }[];
   monthlyProgress: { month: string; solved: number }[];
+  strongestTopic?: { topic: string; score: number };
+  weakestTopic?: { topic: string; score: number };
 }

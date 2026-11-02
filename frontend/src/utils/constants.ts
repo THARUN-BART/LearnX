@@ -6,7 +6,8 @@ export const REFRESH_TOKEN_KEY = 'learnx_refresh_token';
 export const USER_KEY = 'learnx_auth_user';
 export const PROFILE_KEY = 'learnx_student_profile';
 
-export const DEFAULT_ROADMAP_ID = 'c3e1a6b0-2c4f-4d9a-9b11-4f0c8e1a2b33';
+// Real roadmap ID from the live database (Striver's A2Z DSA Sheet)
+export const DEFAULT_ROADMAP_ID = '8396a6f4-760c-41e7-b78b-f343bed9b52c';
 
 // Official TakeUForward Striver's A2Z DSA Sheet 19 Sections
 export const DSA_TOPICS: Topic[] = [

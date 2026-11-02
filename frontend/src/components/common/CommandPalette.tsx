@@ -33,16 +33,24 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
 
   useEffect(() => {
     if (!isOpen) return;
-    const loadRealData = async () => {
-      const [tList, pList] = await Promise.all([
-        roadmapService.getRoadmap(),
-        learningService.getProblems()
-      ]);
+    roadmapService.getRoadmap().then((tList) => {
       if (Array.isArray(tList)) setTopics(tList);
-      if (Array.isArray(pList)) setProblems(pList);
-    };
-    loadRealData();
+    });
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const q = query.trim();
+    if (q.length < 2) {
+      setProblems([]);
+      return;
+    }
+    const timer = setTimeout(async () => {
+      const pList = await learningService.searchProblems(q, 12);
+      if (Array.isArray(pList)) setProblems(pList);
+    }, 250);
+    return () => clearTimeout(timer);
+  }, [isOpen, query]);
 
   // Quick navigation destinations
   const navigationItems = [

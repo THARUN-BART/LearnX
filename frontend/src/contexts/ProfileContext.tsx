@@ -79,7 +79,10 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({
       fetchingRef.current = true;
 
       // Only show the loader if we have nothing to show yet
-      if (!profile) setIsLoading(true);
+      setProfile((prev) => {
+        if (!prev) setIsLoading(true);
+        return prev;
+      });
       setError(null);
 
       try {
@@ -94,7 +97,7 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({
         fetchingRef.current = false;
       }
     },
-    [profile]
+    [] // no deps — stable reference, reads latest state via setter
   );
 
   // -------------------------------------------------------------------------

@@ -1,34 +1,84 @@
-import apiClient from './api';
-import { CodeExecutionRequest, CodeExecutionResult } from '../types/learning.types';
+import apiClient, { unwrap } from './api';
+import { CodeExecutionRequest, CodeExecutionResult, SubmissionHistoryItem } from '../types/learning.types';
+import { toJudgeLanguage } from '../utils/language';
+import { cacheInvalidate } from '../utils/apiCache';
 
-const MAX_POLL_ATTEMPTS = 30; // 30 * 350ms ≈ 10.5 seconds
-const POLL_INTERVAL_MS = 350;
+const MAX_POLL_ATTEMPTS = 40;
+const POLL_INTERVAL_MS = 400;
+
+function mapResult(resultData: any, submissionId: string, diagnosis?: any): CodeExecutionResult {
+  const passedTests = resultData.test_cases?.passed ?? resultData.passed_test_cases ?? 0;
+  const totalTests = resultData.test_cases?.total ?? resultData.total_test_cases ?? 0;
+  const executionTimeMs = resultData.execution_time_ms ?? 0;
+  const memoryKb = resultData.memory_used_kb ?? 0;
+
+  let stdout = '';
+  let stderr = resultData.error_message || '';
+  const results = Array.isArray(resultData.results) ? resultData.results : [];
+  if (results.length > 0) {
+    const firstVisible = results.find((r: any) => !r.is_hidden) || results[0];
+    stdout = firstVisible.actual_output || '';
+    if (!stderr && firstVisible.error_message) stderr = firstVisible.error_message;
+  }
+
+  return {
+    status: resultData.status || 'Runtime Error',
+    runtimeMs: executionTimeMs,
+    memoryMb: Math.round((memoryKb / 1024) * 10) / 10,
+    stdout,
+    stderr,
+    passedTests,
+    totalTests,
+    submissionId,
+    diagnosis,
+    results,
+  };
+}
 
 class CodingService {
-  /**
-   * Runs student code against test cases via the Problem Submission Engine.
-   */
   async runCode(req: CodeExecutionRequest): Promise<CodeExecutionResult> {
-    return this.executeSubmission(req, false);
+    return this.executeSubmission(req);
   }
 
-  /**
-   * Submits student code for official evaluation across all test cases.
-   */
   async submitCode(req: CodeExecutionRequest): Promise<CodeExecutionResult> {
-    return this.executeSubmission(req, true);
+    return this.executeSubmission(req);
   }
 
-  private async executeSubmission(
-    req: CodeExecutionRequest,
-    isFinalSubmit: boolean
-  ): Promise<CodeExecutionResult> {
+  async retrySubmission(submissionId: string): Promise<CodeExecutionResult> {
+    const submitRes = await apiClient.post(`/api/v1/submissions/${submissionId}/retry`);
+    const data = unwrap<any>(submitRes.data, 'data');
+    const newId = data?.submission_id || submissionId;
+    return this.pollUntilDone(newId);
+  }
+
+  async getProblemSubmissions(problemId: string): Promise<SubmissionHistoryItem[]> {
     try {
-      // 1. Dispatch code submission to the backend engine
+      const res = await apiClient.get(`/api/v1/problems/${problemId}/submissions`, {
+        params: { limit: 20 },
+      });
+      const list = unwrap<any>(res.data, 'data', 'submissions');
+      const items = list?.submissions ?? list;
+      return Array.isArray(items) ? items : [];
+    } catch {
+      return [];
+    }
+  }
+
+  async getLatestSubmission(problemId: string): Promise<SubmissionHistoryItem | null> {
+    try {
+      const res = await apiClient.get(`/api/v1/problems/${problemId}/submissions/latest`);
+      return unwrap<any>(res.data, 'data') ?? null;
+    } catch {
+      return null;
+    }
+  }
+
+  private async executeSubmission(req: CodeExecutionRequest): Promise<CodeExecutionResult> {
+    try {
       const submitRes = await apiClient.post('/api/v1/submissions', {
         problem_id: req.problemId,
-        language: req.language,
-        source_code: req.code
+        language: toJudgeLanguage(req.language),
+        source_code: req.code,
       });
 
       const submissionId =
@@ -40,78 +90,13 @@ class CodingService {
         throw new Error('Failed to obtain a submission ID from the execution engine.');
       }
 
-      // 2. Poll submission result until evaluation finishes
-      for (let attempt = 0; attempt < MAX_POLL_ATTEMPTS; attempt++) {
-        await new Promise((res) => setTimeout(res, POLL_INTERVAL_MS));
-
-        const resultRes = await apiClient.get(`/api/v1/submissions/${submissionId}/result`);
-        const resultData = resultRes.data?.data || resultRes.data;
-
-        if (!resultData) continue;
-
-        const status = resultData.status;
-
-        // Still evaluating in isolated worker sandbox
-        if (status === 'Queued' || status === 'Processing') {
-          continue;
-        }
-
-        // Assessment completed
-        const passedTests = resultData.test_cases?.passed ?? 0;
-        const totalTests = resultData.test_cases?.total ?? 0;
-        const executionTimeMs = resultData.execution_time_ms ?? 0;
-        const memoryKb = resultData.memory_used_kb ?? 0;
-
-        // Extract outputs from test case results
-        let stdout = '';
-        let stderr = resultData.error_message || '';
-
-        if (Array.isArray(resultData.results) && resultData.results.length > 0) {
-          const first = resultData.results[0];
-          stdout = first.actual_output || '';
-          if (!stderr && first.error_message) {
-            stderr = first.error_message;
-          }
-        }
-
-        // Attempt to fetch intelligent mistake diagnosis if execution failed
-        let diagnosis = undefined;
-        if (status !== 'Accepted') {
-          try {
-            const diagRes = await apiClient.get(`/api/v1/submissions/${submissionId}/diagnosis`);
-            if (diagRes.data?.data) {
-              diagnosis = diagRes.data.data;
-            }
-          } catch {
-            // Diagnosis may be queued or unanalyzed yet
-          }
-        }
-
-        return {
-          status: status as CodeExecutionResult['status'],
-          runtimeMs: executionTimeMs,
-          memoryMb: Math.round((memoryKb / 1024) * 10) / 10,
-          stdout,
-          stderr,
-          passedTests,
-          totalTests,
-          submissionId,
-          diagnosis
-        };
-      }
-
-      // Polling timeout
-      return {
-        status: 'Time Limit Exceeded',
-        runtimeMs: 10000,
-        memoryMb: 0,
-        stdout: '',
-        stderr: 'Code assessment timed out waiting for worker sandbox execution.',
-        passedTests: 0,
-        totalTests: 1
-      };
+      const result = await this.pollUntilDone(submissionId);
+      cacheInvalidate('problems');
+      cacheInvalidate('problem|');
+      cacheInvalidate('roadmap');
+      cacheInvalidate('analytics');
+      return result;
     } catch (err: any) {
-      // Graceful error classification
       const message = err.response?.data?.error || err.response?.data?.message || err.message;
 
       if (err.response?.status === 401) {
@@ -122,20 +107,7 @@ class CodingService {
           stdout: '',
           stderr: 'Authentication required: please log in to submit and evaluate code.',
           passedTests: 0,
-          totalTests: 1
-        };
-      }
-
-      if (!err.response || err.code === 'ERR_NETWORK') {
-        // Offline demo execution fallback
-        return {
-          status: 'Accepted',
-          runtimeMs: 42,
-          memoryMb: 12.8,
-          stdout: 'Execution verified locally (offline fallback mode).',
-          stderr: '',
-          passedTests: 2,
-          totalTests: 2
+          totalTests: 1,
         };
       }
 
@@ -146,9 +118,46 @@ class CodingService {
         stdout: '',
         stderr: message || 'Execution failed',
         passedTests: 0,
-        totalTests: 1
+        totalTests: 1,
       };
     }
+  }
+
+  private async pollUntilDone(submissionId: string): Promise<CodeExecutionResult> {
+    for (let attempt = 0; attempt < MAX_POLL_ATTEMPTS; attempt++) {
+      await new Promise((res) => setTimeout(res, POLL_INTERVAL_MS));
+
+      const statusRes = await apiClient.get(`/api/v1/submissions/${submissionId}`);
+      const statusData = unwrap<any>(statusRes.data, 'data');
+      const status = statusData?.status;
+      if (!status || status === 'Queued' || status === 'Processing') continue;
+
+      const resultRes = await apiClient.get(`/api/v1/submissions/${submissionId}/result`);
+      const resultData = unwrap<any>(resultRes.data, 'data') || statusData;
+
+      let diagnosis = undefined;
+      if (status !== 'Accepted') {
+        try {
+          const diagRes = await apiClient.get(`/api/v1/submissions/${submissionId}/diagnosis`);
+          diagnosis = unwrap<any>(diagRes.data, 'data');
+        } catch {
+          // Diagnosis may still be running
+        }
+      }
+
+      return mapResult(resultData, submissionId, diagnosis);
+    }
+
+    return {
+      status: 'Time Limit Exceeded',
+      runtimeMs: 16000,
+      memoryMb: 0,
+      stdout: '',
+      stderr: 'Code assessment timed out waiting for the sandbox worker.',
+      passedTests: 0,
+      totalTests: 1,
+      submissionId,
+    };
   }
 }
 

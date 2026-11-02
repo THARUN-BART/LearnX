@@ -7,17 +7,15 @@ import {
   Bot,
   AlertTriangle,
   BarChart3,
-  History,
   User,
   Settings,
   LogOut,
   Flame,
-  Terminal,
   Sparkles,
   X,
-  ChevronRight
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
+import { useProfile } from '../../hooks/useProfile';
 import { clsx } from 'clsx';
 
 interface SidebarProps {
@@ -27,16 +25,16 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) => {
   const { user, logout } = useAuth();
+  const { profile } = useProfile();
   const navigate = useNavigate();
 
   const navItems = [
-    { label: 'Overview', to: '/dashboard', icon: LayoutDashboard, badge: 'Active' },
-    { label: 'My Roadmap', to: '/roadmap', icon: Map, badge: '16' },
-    { label: 'Practice Arena', to: '/practice', icon: Code2, badge: 'IDE' },
-    { label: 'AI Assistant', to: '/assistant', icon: Bot, badge: 'PRO' },
-    { label: 'Mistake Analysis', to: '/analysis', icon: AlertTriangle },
-    { label: 'Performance', to: '/analytics', icon: BarChart3 },
-    { label: 'Activity History', to: '/analytics', icon: History },
+    { label: 'Overview',        to: '/dashboard', icon: LayoutDashboard, badge: 'Active' },
+    { label: 'My Roadmap',      to: '/roadmap',   icon: Map,             badge: '19' },
+    { label: 'Practice Arena',  to: '/practice',  icon: Code2,           badge: 'IDE' },
+    { label: 'AI Assistant',    to: '/assistant',  icon: Bot,             badge: 'PRO' },
+    { label: 'Mistake Analysis',to: '/analysis',   icon: AlertTriangle },
+    { label: 'Performance',     to: '/analytics',  icon: BarChart3 },
   ];
 
   const bottomNavItems = [
@@ -83,12 +81,19 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
             <div className="w-6 h-6 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
               <Flame className="w-3.5 h-3.5 animate-pulse" />
             </div>
-            <span className="text-xs font-mono font-semibold text-[#F4F4F6]">14 Days Active</span>
+            <span className="text-xs font-mono font-semibold text-[#F4F4F6]">
+              {profile?.streakDays ?? 0} Day{(profile?.streakDays ?? 0) !== 1 ? 's' : ''} Active
+            </span>
           </div>
-          <span className="text-[10px] font-mono text-emerald-400">Top 5%</span>
+          <span className="text-[10px] font-mono text-emerald-400">
+            {(profile?.streakDays ?? 0) >= 7 ? 'Top 5%' : 'Building'}
+          </span>
         </div>
         <div className="w-full bg-[#1C1C28] h-1 rounded-full overflow-hidden">
-          <div className="bg-gradient-to-r from-amber-500 to-[#8B5CF6] h-full w-[80%]" />
+          <div
+            className="bg-gradient-to-r from-amber-500 to-[#8B5CF6] h-full transition-all duration-500"
+            style={{ width: `${Math.min(100, Math.round(((profile?.streakDays ?? 0) / 30) * 100))}%` }}
+          />
         </div>
       </div>
 

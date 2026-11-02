@@ -7,78 +7,113 @@ import {
   Clock,
   Code2,
   Play,
-  Sparkles,
-  Layers,
-  ChevronRight
 } from 'lucide-react';
 import roadmapService from '../../services/roadmap.service';
 import learningService from '../../services/learning.service';
-import { Topic, Problem } from '../../types/learning.types';
+import { Topic, Problem, Subtopic } from '../../types/learning.types';
 import Card from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
+import { PageSkeleton } from '../../components/ui/Skeleton';
 
 export const TopicDetailPage: React.FC = () => {
   const { topicId } = useParams<{ topicId: string }>();
   const navigate = useNavigate();
 
   const [topic, setTopic] = useState<Topic | null>(null);
+  const [subtopics, setSubtopics] = useState<Subtopic[]>([]);
   const [problems, setProblems] = useState<Problem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const loadTopic = async () => {
       if (!topicId) return;
+      setLoading(true);
       const data = await roadmapService.getTopicById(topicId);
       setTopic(data);
-
-      const probList = await learningService.getProblems(data?.id || topicId);
+      if (!data) {
+        setLoading(false);
+        return;
+      }
+      const [probList, subList] = await Promise.all([
+        learningService.getProblems({ topicId: data.id, limit: 80 }),
+        roadmapService.getSubtopics(data.id),
+      ]);
       setProblems(Array.isArray(probList) ? probList : []);
+      setSubtopics(subList);
       setLoading(false);
     };
     loadTopic();
   }, [topicId]);
 
   if (loading || !topic) {
-    return (
-      <div className="py-20 text-center text-xs font-mono text-[#65657B]">
-        Loading curriculum topic details...
-      </div>
-    );
+    return <PageSkeleton rows={3} />;
   }
 
   const totalProbs = topic.totalProblems || topic.problem_count || 1;
   const completedProbs = topic.completedProblems || topic.solved_count || 0;
   const percent = Math.min(100, Math.round((completedProbs / totalProbs) * 100));
   const prereqs = topic.prerequisites || [];
-  const subtopicsList = topic.subtopics || [];
+
+  const grouped = subtopics.length
+    ? subtopics.map((sub) => ({
+        sub,
+        items: problems.filter((p) => p.subtopic_id === sub.id),
+      }))
+    : [{ sub: null, items: problems }];
+
+  const ungrouped = problems.filter(
+    (p) => subtopics.length && !subtopics.some((s) => s.id === p.subtopic_id)
+  );
+
+  const renderProblem = (prob: Problem) => (
+    <div
+      key={prob.id}
+      onClick={() => navigate(`/practice/${prob.id}`)}
+      className="p-4 rounded-xl bg-[#171722] hover:bg-[#1C1C2A] border border-[#232336] hover:border-[#8B5CF6]/50 transition-all flex items-center justify-between cursor-pointer group"
+    >
+      <div className="space-y-1 min-w-0">
+        <div className="text-sm font-bold text-[#F5F5F7] group-hover:text-[#A78BFA] truncate">
+          {prob.title}
+        </div>
+        <div className="flex items-center gap-2.5 text-xs">
+          <Badge
+            variant={prob.difficulty === 'Easy' ? 'easy' : prob.difficulty === 'Hard' ? 'hard' : 'medium'}
+            size="sm"
+          >
+            {prob.difficulty}
+          </Badge>
+          <span className="text-[#65657B] font-mono text-[11px]">{prob.progress_status || 'Not Started'}</span>
+        </div>
+      </div>
+      <Button
+        variant="secondary"
+        size="sm"
+        rightIcon={<Play className="w-3.5 h-3.5" />}
+        onClick={(e) => {
+          e.stopPropagation();
+          navigate(`/practice/${prob.id}`);
+        }}
+      >
+        Solve
+      </Button>
+    </div>
+  );
 
   return (
     <div className="space-y-8 max-w-5xl mx-auto">
-      {/* Top back navigation */}
-      <div>
-        <Link
-          to="/roadmap"
-          className="inline-flex items-center gap-1.5 text-xs text-[#9292A3] hover:text-[#F5F5F7] transition-colors font-mono"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Back to Roadmap</span>
-        </Link>
-      </div>
+      <Link
+        to="/roadmap"
+        className="inline-flex items-center gap-1.5 text-xs text-[#9292A3] hover:text-[#F5F5F7] font-mono"
+      >
+        <ArrowLeft className="w-3.5 h-3.5" />
+        Back to Roadmap
+      </Link>
 
-      {/* Hero Header */}
       <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-[#171722] via-[#1A1A28] to-[#101019] border border-[#232336] space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <Badge
-              variant={
-                topic.difficulty === 'Easy'
-                  ? 'easy'
-                  : topic.difficulty === 'Medium'
-                  ? 'medium'
-                  : 'hard'
-              }
-            >
+            <Badge variant={topic.difficulty === 'Easy' ? 'easy' : topic.difficulty === 'Hard' ? 'hard' : 'medium'}>
               {topic.difficulty}
             </Badge>
             <Badge variant="purple" icon={<Clock className="w-3 h-3" />}>
@@ -89,16 +124,8 @@ export const TopicDetailPage: React.FC = () => {
             {completedProbs} / {totalProbs} Solved ({percent}%)
           </span>
         </div>
-
-        <h1 className="text-2xl sm:text-4xl font-bold tracking-tight text-[#F5F5F7] font-mono">
-          {topic.title}
-        </h1>
-
-        <p className="text-sm text-[#9292A3] leading-relaxed max-w-3xl">
-          {topic.description}
-        </p>
-
-        {/* Prerequisites */}
+        <h1 className="text-2xl sm:text-4xl font-bold tracking-tight text-[#F5F5F7] font-mono">{topic.title}</h1>
+        <p className="text-sm text-[#9292A3] leading-relaxed max-w-3xl">{topic.description}</p>
         {prereqs.length > 0 && (
           <div className="flex items-center gap-2 pt-2 text-xs text-[#65657B]">
             <span className="font-semibold text-[#9292A3]">Prerequisites:</span>
@@ -111,77 +138,50 @@ export const TopicDetailPage: React.FC = () => {
         )}
       </div>
 
-      {/* Algorithmic Mental Model & Subtopics */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-8 space-y-6">
           <Card className="p-6 space-y-4">
             <div className="flex items-center gap-2 text-[#A78BFA] font-mono text-xs font-semibold">
               <BookOpen className="w-4 h-4 text-[#8B5CF6]" />
-              <span>Core Conceptual Mechanics</span>
+              Core Conceptual Mechanics
             </div>
-            <p className="text-sm text-[#F5F5F7] leading-relaxed font-sans">
-              {topic.explanation}
-            </p>
+            <p className="text-sm text-[#F5F5F7] leading-relaxed">{topic.explanation}</p>
           </Card>
 
-          {/* Practice Problems Section */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-base font-bold text-[#F5F5F7] font-mono flex items-center gap-2">
-                <Code2 className="w-4 h-4 text-[#8B5CF6]" />
-                <span>Pillar Practice Problems ({problems.length})</span>
-              </h3>
-            </div>
-
-            <div className="space-y-3">
-              {problems.map((prob) => (
-                <div
-                  key={prob.id}
-                  onClick={() => navigate(`/practice/${prob.id}`)}
-                  className="p-4 rounded-xl bg-[#171722] hover:bg-[#1C1C2A] border border-[#232336] hover:border-[#8B5CF6]/50 transition-all flex items-center justify-between cursor-pointer group"
-                >
-                  <div className="space-y-1">
-                    <div className="text-sm font-bold text-[#F5F5F7] group-hover:text-[#A78BFA] transition-colors">
-                      {prob.title}
-                    </div>
-                    <div className="flex items-center gap-2.5 text-xs">
-                      <Badge
-                        variant={prob.difficulty === 'Easy' ? 'easy' : 'medium'}
-                        size="sm"
-                      >
-                        {prob.difficulty}
-                      </Badge>
-                      <span className="text-[#65657B] font-mono text-[11px]">
-                        Pass Rate: {prob.accuracyRate}%
-                      </span>
-                    </div>
-                  </div>
-
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    rightIcon={<Play className="w-3.5 h-3.5" />}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      navigate(`/practice/${prob.id}`);
-                    }}
-                  >
-                    Solve
-                  </Button>
-                </div>
-              ))}
-            </div>
+          <div className="space-y-6">
+            <h3 className="text-base font-bold text-[#F5F5F7] font-mono flex items-center gap-2">
+              <Code2 className="w-4 h-4 text-[#8B5CF6]" />
+              Practice Problems ({problems.length})
+            </h3>
+            {grouped.map(({ sub, items }, idx) => (
+              <div key={sub?.id || `group-${idx}`} className="space-y-3">
+                {sub && (
+                  <h4 className="text-xs font-mono text-[#A78BFA] uppercase tracking-wider">
+                    {sub.title} · {items.length || sub.problem_count} problems
+                  </h4>
+                )}
+                {items.length === 0 && sub && (
+                  <p className="text-xs text-[#65657B] font-mono">No problems loaded for this subtopic yet.</p>
+                )}
+                {items.map(renderProblem)}
+              </div>
+            ))}
+            {ungrouped.length > 0 && (
+              <div className="space-y-3">
+                <h4 className="text-xs font-mono text-[#A78BFA] uppercase tracking-wider">Other</h4>
+                {ungrouped.map(renderProblem)}
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Right: Subtopics Checklist */}
         <div className="lg:col-span-4 space-y-6">
           <Card className="p-5 space-y-4">
             <h4 className="text-xs font-bold text-[#F5F5F7] uppercase tracking-wider font-mono">
               Key Subtopics Checklist
             </h4>
             <div className="space-y-2.5">
-              {subtopicsList.map((sub, i) => (
+              {(subtopics.length ? subtopics.map((s) => s.title) : topic.subtopics || []).map((sub, i) => (
                 <div key={i} className="flex items-center gap-2.5 text-xs text-[#9292A3]">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                   <span>{sub}</span>
@@ -196,4 +196,3 @@ export const TopicDetailPage: React.FC = () => {
 };
 
 export default TopicDetailPage;
-

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Bot,
   Send,
@@ -14,7 +14,7 @@ import {
   Cpu,
   Layers
 } from 'lucide-react';
-import { AssistantMessage, AssistantMode } from '../../types/learning.types';
+import { AIConversation, AssistantMessage, AssistantMode } from '../../types/learning.types';
 import aiService from '../../services/ai.service';
 import Button from '../../components/ui/Button';
 import { toast } from 'sonner';
@@ -34,6 +34,12 @@ export const AssistantPage: React.FC = () => {
   const [inputText, setInputText] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [conversationId, setConversationId] = useState<string | undefined>();
+  const [conversations, setConversations] = useState<AIConversation[]>([]);
+
+  useEffect(() => {
+    aiService.listConversations().then(setConversations).catch(() => undefined);
+  }, []);
 
   const suggestedPrompts = [
     { text: 'Explain the difference between Dynamic Programming and Memoization.', mode: 'explain' as AssistantMode },
@@ -61,12 +67,25 @@ export const AssistantPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await aiService.sendMessage(text, currentMode);
+      const response = await aiService.sendMessage(text, currentMode, {
+        conversationId,
+      });
+      if (response.conversationId) {
+        setConversationId(response.conversationId);
+      }
       setMessages((prev) => [...prev, response]);
     } catch {
       toast.error('Failed to receive AI response');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const loadConversation = async (id: string) => {
+    setConversationId(id);
+    const history = await aiService.getConversationMessages(id);
+    if (history.length) {
+      setMessages(history);
     }
   };
 
@@ -78,6 +97,7 @@ export const AssistantPage: React.FC = () => {
   };
 
   const handleNewConversation = () => {
+    setConversationId(undefined);
     setMessages([
       {
         id: 'new-init',
@@ -134,15 +154,33 @@ export const AssistantPage: React.FC = () => {
           </div>
         </div>
 
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={handleNewConversation}
-          leftIcon={<Plus className="w-3.5 h-3.5" />}
-          className="text-xs font-mono h-8"
-        >
-          New Session
-        </Button>
+        <div className="flex items-center gap-2">
+          {conversations.length > 0 && (
+            <select
+              value={conversationId || ''}
+              onChange={(e) => {
+                if (e.target.value) loadConversation(e.target.value);
+              }}
+              className="bg-[#12121B] text-[#F4F4F6] text-[11px] font-mono px-2 py-1.5 rounded-lg border border-[#1C1C28] max-w-[180px]"
+            >
+              <option value="">Past sessions</option>
+              {conversations.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.title || 'Conversation'}
+                </option>
+              ))}
+            </select>
+          )}
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={handleNewConversation}
+            leftIcon={<Plus className="w-3.5 h-3.5" />}
+            className="text-xs font-mono h-8"
+          >
+            New Session
+          </Button>
+        </div>
       </div>
 
       {/* Messages Scroll Area */}

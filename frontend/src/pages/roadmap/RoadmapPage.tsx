@@ -13,7 +13,7 @@ import { Topic, Difficulty } from '../../types/learning.types';
 import roadmapService from '../../services/roadmap.service';
 import Card from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
-import Button from '../../components/ui/Button';
+import { PageSkeleton } from '../../components/ui/Skeleton';
 
 export const RoadmapPage: React.FC = () => {
   const navigate = useNavigate();
@@ -38,6 +38,10 @@ export const RoadmapPage: React.FC = () => {
   const completedCount = topics.filter((t) => t.status === 'completed').length;
   const inProgressCount = topics.filter((t) => t.status === 'in_progress').length;
 
+  if (loading) {
+    return <PageSkeleton rows={3} />;
+  }
+
   return (
     <div className="space-y-8">
       {/* Header & Stats Banner */}
@@ -47,7 +51,7 @@ export const RoadmapPage: React.FC = () => {
             DSA Mastery Roadmap
           </h1>
           <p className="text-xs text-[#9292A3] mt-1">
-            Structured 16-pillar curriculum covering essential patterns for competitive programming and tech interviews.
+            Official Striver A2Z sheet — {topics.length} pillars with live progress from your account.
           </p>
         </div>
 
@@ -110,7 +114,7 @@ export const RoadmapPage: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-mono text-[#65657B] font-bold">
-                      #{String(index + 1).padStart(2, '0')}
+                      #{String(topic.topic_order || index + 1).padStart(2, '0')}
                     </span>
                     <Badge
                       variant={

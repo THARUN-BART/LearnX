@@ -1,74 +1,89 @@
-import apiClient from './api';
+import apiClient, { unwrap } from './api';
 import {
   StudentProblemProgress,
   ProgressSummary,
   TopicProgressItem,
-  ProgressStatus
+  ProgressStatus,
 } from '../types/learning.types';
+import { cacheInvalidate } from '../utils/apiCache';
+
+function mapProgress(raw: any): StudentProblemProgress {
+  return {
+    student_id: raw.student_id,
+    problem_id: raw.problem_id,
+    status: raw.status,
+    attempt_count: raw.total_attempts ?? raw.attempt_count ?? 0,
+    successful_attempts: raw.successful_attempts ?? 0,
+    last_attempted_at: raw.last_attempt_at ?? raw.last_attempted_at,
+    solved_at: raw.solved_at,
+  };
+}
 
 class ProgressService {
-  // GET /api/v1/student/progress
   async getAllProgress(): Promise<StudentProblemProgress[]> {
     try {
       const response = await apiClient.get('/api/v1/student/progress');
-      return response.data.progress || response.data.data || [];
+      const list = unwrap<any[]>(response.data, 'progress');
+      return (Array.isArray(list) ? list : []).map(mapProgress);
     } catch {
       return [];
     }
   }
 
-  // GET /api/v1/student/progress/problems/{problem_id}
   async getProblemProgress(problemId: string): Promise<StudentProblemProgress | null> {
     try {
       const response = await apiClient.get(`/api/v1/student/progress/problems/${problemId}`);
-      return response.data.progress || response.data.data || null;
+      const raw = unwrap<any>(response.data, 'progress');
+      return raw ? mapProgress(raw) : null;
     } catch {
       return null;
     }
   }
 
-  // POST /api/v1/student/progress/problems/{problem_id}/attempt
   async recordAttempt(problemId: string): Promise<void> {
     try {
       await apiClient.post(`/api/v1/student/progress/problems/${problemId}/attempt`);
-    } catch (e) {
-      console.warn('[ProgressService] Error recording attempt:', e);
+      cacheInvalidate('problems');
+      cacheInvalidate('roadmap');
+    } catch {
+      // non-blocking
     }
   }
 
-  // PATCH /api/v1/student/progress/problems/{problem_id}
   async updateProblemStatus(
     problemId: string,
     status: ProgressStatus,
     reset: boolean = false
   ): Promise<StudentProblemProgress> {
-    try {
-      const payload: { status: ProgressStatus; reset?: boolean } = { status };
-      if (reset) payload.reset = true;
-      const response = await apiClient.patch(
-        `/api/v1/student/progress/problems/${problemId}`,
-        payload
-      );
-      return response.data.progress || response.data;
-    } catch (err: any) {
-      // Local fallback for offline mode
-      const mock: StudentProblemProgress = {
-        student_id: 'usr_local',
-        problem_id: problemId,
-        status,
-        attempt_count: 1,
-        successful_attempts: status === 'Solved' ? 1 : 0,
-        solved_at: status === 'Solved' ? new Date().toISOString() : undefined
-      };
-      return mock;
-    }
+    const payload: { status: ProgressStatus; reset?: boolean } = { status };
+    if (reset) payload.reset = true;
+    const response = await apiClient.patch(
+      `/api/v1/student/progress/problems/${problemId}`,
+      payload
+    );
+    cacheInvalidate('problems');
+    cacheInvalidate('problem|');
+    cacheInvalidate('roadmap');
+    cacheInvalidate('analytics');
+    const raw = unwrap<any>(response.data, 'progress');
+    return mapProgress(raw || { problem_id: problemId, status });
   }
 
-  // GET /api/v1/student/progress/summary
   async getProgressSummary(): Promise<ProgressSummary> {
     try {
       const response = await apiClient.get('/api/v1/student/progress/summary');
-      return response.data.summary || response.data.data || response.data;
+      const summary = unwrap<any>(response.data, 'summary');
+      const overview = summary?.overview ?? summary;
+      return {
+        roadmap_id: overview.roadmap_id ?? '',
+        roadmap_name: overview.roadmap_name ?? "Striver's A2Z DSA Sheet",
+        total_problems: overview.total_problems ?? 0,
+        solved_problems: overview.solved_problems ?? 0,
+        attempted_problems: overview.attempted_problems ?? 0,
+        pending_problems: overview.pending_problems ?? 0,
+        needs_revision: overview.needs_revision ?? 0,
+        completion_percentage: overview.completion_percentage ?? 0,
+      };
     } catch {
       return {
         roadmap_id: '',
@@ -78,16 +93,16 @@ class ProgressService {
         attempted_problems: 0,
         pending_problems: 402,
         needs_revision: 0,
-        completion_percentage: 0
+        completion_percentage: 0,
       };
     }
   }
 
-  // GET /api/v1/student/progress/topics
   async getTopicProgress(): Promise<TopicProgressItem[]> {
     try {
       const response = await apiClient.get('/api/v1/student/progress/topics');
-      return response.data.topics || response.data.data || [];
+      const list = unwrap<any[]>(response.data, 'topics');
+      return Array.isArray(list) ? list : [];
     } catch {
       return [];
     }
@@ -96,4 +111,3 @@ class ProgressService {
 
 export const progressService = new ProgressService();
 export default progressService;
-

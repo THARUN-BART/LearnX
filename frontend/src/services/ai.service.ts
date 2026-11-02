@@ -1,181 +1,203 @@
-import apiClient from './api';
+import { aiClient, unwrap } from './api';
 import {
   AssistantMessage,
   AssistantMode,
   ProgressiveHint,
   DryRunResult,
   ComplexityResult,
-  ExplainMistakeResult
+  ExplainMistakeResult,
+  PedagogyAnalysis,
+  AIConversation,
 } from '../types/learning.types';
+import { toJudgeLanguage } from '../utils/language';
 
 class AIService {
-  /**
-   * Request a progressive scaffolding hint (levels 1-5).
-   */
   async getProgressiveHint(
     problemId: string,
     level: number,
     submissionId?: string
   ): Promise<ProgressiveHint> {
-    const res = await apiClient.post('/api/v1/ai/hint', {
+    const res = await aiClient.post('/api/v1/ai/hint', {
       problem_id: problemId,
       level,
-      submission_id: submissionId
+      submission_id: submissionId,
     });
-    return res.data?.data || res.data;
+    return unwrap<ProgressiveHint>(res.data, 'data');
   }
 
-  /**
-   * Retrieve all previously unlocked hints for a problem.
-   */
   async getUnlockedHints(problemId: string): Promise<ProgressiveHint[]> {
-    const res = await apiClient.get(`/api/v1/problems/${problemId}/hints`);
-    return res.data?.data || res.data || [];
+    const res = await aiClient.get(`/api/v1/problems/${problemId}/hints`);
+    const list = unwrap<any>(res.data, 'data');
+    return Array.isArray(list) ? list : [];
   }
 
-  /**
-   * Plain-English explanation of a diagnosed submission mistake.
-   */
   async explainMistake(submissionId: string): Promise<ExplainMistakeResult> {
-    const res = await apiClient.post('/api/v1/ai/explain-mistake', {
-      submission_id: submissionId
+    const res = await aiClient.post('/api/v1/ai/explain-mistake', {
+      submission_id: submissionId,
     });
-    return res.data?.data || res.data;
+    return unwrap<ExplainMistakeResult>(res.data, 'data');
   }
 
-  /**
-   * Comprehensive section-by-section code walkthrough.
-   */
-  async getWalkthrough(
-    problemId: string,
-    sourceCode?: string,
-    language?: string
-  ): Promise<any> {
-    const res = await apiClient.post('/api/v1/ai/walkthrough', {
+  async getWalkthrough(problemId: string, sourceCode?: string, language?: string): Promise<any> {
+    const res = await aiClient.post('/api/v1/ai/walkthrough', {
       problem_id: problemId,
       source_code: sourceCode,
-      language: language || 'cpp'
+      language: toJudgeLanguage(language),
     });
-    return res.data?.data || res.data;
+    return unwrap<any>(res.data, 'data');
   }
 
-  /**
-   * Step-by-step dry-run execution trace for visualization.
-   */
   async getDryRun(
     problemId: string,
     sourceCode?: string,
     language?: string,
     customInput?: string
   ): Promise<DryRunResult> {
-    const res = await apiClient.post('/api/v1/ai/dry-run', {
+    const res = await aiClient.post('/api/v1/ai/dry-run', {
       problem_id: problemId,
       source_code: sourceCode,
-      language: language || 'cpp',
-      custom_input: customInput
+      language: toJudgeLanguage(language),
+      custom_input: customInput,
+      test_case_input: customInput,
     });
-    return res.data?.data || res.data;
+    return unwrap<DryRunResult>(res.data, 'data');
   }
 
-  /**
-   * Analyze time & space complexity against optimal bounds.
-   */
   async getComplexity(
     problemId: string,
     sourceCode?: string,
     language?: string
   ): Promise<ComplexityResult> {
-    const res = await apiClient.post('/api/v1/ai/complexity', {
+    const res = await aiClient.post('/api/v1/ai/complexity', {
       problem_id: problemId,
       source_code: sourceCode,
-      language: language || 'cpp'
+      language: toJudgeLanguage(language),
     });
-    return res.data?.data || res.data;
+    return unwrap<ComplexityResult>(res.data, 'data');
   }
 
-  /**
-   * Conversational tutor query with context memory.
-   */
   async askTutor(
     question: string,
     problemId?: string,
     conversationId?: string
   ): Promise<{ conversationId: string; answer: string }> {
-    const res = await apiClient.post('/api/v1/ai/ask', {
+    const res = await aiClient.post('/api/v1/ai/ask', {
       question,
       problem_id: problemId,
-      conversation_id: conversationId
+      conversation_id: conversationId,
     });
-    const d = res.data?.data || res.data;
+    const d = unwrap<any>(res.data, 'data');
     return {
       conversationId: d.conversation_id,
-      answer: d.answer
+      answer: d.answer,
     };
   }
 
-  /**
-   * Submit student feedback on diagnosis accuracy.
-   */
+  async listConversations(): Promise<AIConversation[]> {
+    try {
+      const res = await aiClient.get('/api/v1/ai/conversations', { params: { limit: 20 } });
+      const list = unwrap<any[]>(res.data, 'data');
+      return Array.isArray(list) ? list : [];
+    } catch {
+      return [];
+    }
+  }
+
+  async getConversationMessages(conversationId: string): Promise<AssistantMessage[]> {
+    try {
+      const res = await aiClient.get(`/api/v1/ai/conversations/${conversationId}`);
+      const payload = unwrap<any>(res.data, 'data');
+      const list = Array.isArray(payload) ? payload : payload?.messages;
+      const messages = Array.isArray(list) ? list : [];
+      return messages.map((m: any) => ({
+        id: m.id || String(m.created_at),
+        role: m.role === 'user' ? 'user' : 'assistant',
+        content: m.message ?? m.content ?? '',
+        timestamp: m.created_at
+          ? new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          : '',
+      }));
+    } catch {
+      return [];
+    }
+  }
+
   async submitMistakeFeedback(
     diagnosisId: string,
     feedbackType: 'helpful' | 'unhelpful' | 'inaccurate' | 'too_vague',
     studentFeedback?: string
   ): Promise<void> {
-    await apiClient.post(`/api/v1/student/mistakes/${diagnosisId}/feedback`, {
+    await aiClient.post(`/api/v1/student/mistakes/${diagnosisId}/feedback`, {
       feedback_type: feedbackType,
-      student_feedback: studentFeedback || ''
+      student_feedback: studentFeedback || '',
     });
   }
 
-  /**
-   * Conversational interface for the Assistant page.
-   */
+  async analyzePedagogy(
+    studentCode: string,
+    testCode: string,
+    hintLevel: string = 'L1'
+  ): Promise<PedagogyAnalysis> {
+    const res = await aiClient.post('/api/v1/ai/pedagogy/analyze', {
+      student_code: studentCode,
+      test_code: testCode,
+      hint_level: hintLevel,
+      timeout: 3.0,
+    });
+    return unwrap<PedagogyAnalysis>(res.data, 'data');
+  }
+
   async sendMessage(
     message: string,
     mode: AssistantMode,
-    context?: { code?: string; problemTitle?: string; language?: string; problemId?: string; conversationId?: string }
-  ): Promise<AssistantMessage> {
-    try {
-      if (mode === 'explain' && context?.code) {
-        const wt = await this.getWalkthrough(context.problemId || 'general', context.code, context.language);
-        const reply = wt.overall_summary || 'Here is the breakdown of your code.';
-        return {
-          id: 'ai-msg-' + Date.now(),
-          role: 'assistant',
-          content: reply,
-          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          mode
-        };
-      }
-
-      // Default Socratic tutor query
-      const { answer } = await this.askTutor(message, context?.problemId, context?.conversationId);
+    context?: {
+      code?: string;
+      problemTitle?: string;
+      language?: string;
+      problemId?: string;
+      conversationId?: string;
+    }
+  ): Promise<AssistantMessage & { conversationId?: string }> {
+    if (mode === 'explain' && context?.code) {
+      const wt = await this.getWalkthrough(
+        context.problemId || 'general',
+        context.code,
+        context.language
+      );
+      const reply = wt.overall_summary || 'Here is the breakdown of your code.';
+      const extras = [
+        ...(wt.key_strengths || []).map((s: string) => `• Strength: ${s}`),
+        ...(wt.areas_to_improve || []).map((s: string) => `• Improve: ${s}`),
+      ].join('\n');
       return {
         id: 'ai-msg-' + Date.now(),
         role: 'assistant',
-        content: answer,
+        content: extras ? `${reply}\n\n${extras}` : reply,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        mode
-      };
-    } catch {
-      // Offline fallback
-      let reply = '';
-      if (mode === 'hint') {
-        reply = `**Algorithmic Hint for "${context?.problemTitle || 'current problem'}":**\n\n1. What is the bottleneck in the naive approach? Usually it's repeated scanning ($O(N^2)$), which can be turned into $O(1)$ lookups using an auxiliary hash table or a two-pointer technique.\n2. Invariant: Maintain previously visited elements in a hash set to detect complements immediately.`;
-      } else if (mode === 'explain') {
-        reply = `**Concept Explanation:**\n\nWhen optimizing this pattern, we trade auxiliary memory ($O(N)$ space) to achieve linear time ($O(N)$). Hash map lookups operate in expected $O(1)$ amortized time.`;
-      } else {
-        reply = `**Automated Debug Analysis:**\n\nEnsure array indices stay within $[0, N-1]$. Check loop boundaries and single-element inputs carefully.`;
-      }
-
-      return {
-        id: 'ai-msg-' + Date.now(),
-        role: 'assistant',
-        content: reply,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        mode
+        mode,
       };
     }
+
+    const prompt =
+      mode === 'hint'
+        ? `Give a Socratic hint (no full solution) for: ${message}`
+        : mode === 'debug'
+        ? `Debug this DSA issue without dumping a full rewrite: ${message}`
+        : message;
+
+    const { answer, conversationId } = await this.askTutor(
+      prompt,
+      context?.problemId,
+      context?.conversationId
+    );
+    return {
+      id: 'ai-msg-' + Date.now(),
+      role: 'assistant',
+      content: answer,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      mode,
+      conversationId,
+    };
   }
 }
 
