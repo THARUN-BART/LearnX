@@ -4,10 +4,12 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/THARUN-BART/LearnX/backend/internal/aitutor"
 	"github.com/THARUN-BART/LearnX/backend/internal/analytics"
 	"github.com/THARUN-BART/LearnX/backend/internal/auth"
 	"github.com/THARUN-BART/LearnX/backend/internal/config"
 	"github.com/THARUN-BART/LearnX/backend/internal/middleware"
+	"github.com/THARUN-BART/LearnX/backend/internal/mistakes"
 	"github.com/THARUN-BART/LearnX/backend/internal/problems"
 	"github.com/THARUN-BART/LearnX/backend/internal/profile"
 	"github.com/THARUN-BART/LearnX/backend/internal/progress"
@@ -31,11 +33,17 @@ type SubmissionHandlers struct {
 	TestCases   *testcases.Handler
 }
 
+type IntelligenceHandlers struct {
+	Mistakes *mistakes.Handler
+	AITutor  *aitutor.Handler
+}
+
 type RouterOption func(*routerOptions)
 
 type routerOptions struct {
-	dsa         *DSAHandlers
-	submissions *SubmissionHandlers
+	dsa          *DSAHandlers
+	submissions  *SubmissionHandlers
+	intelligence *IntelligenceHandlers
 }
 
 func WithDSA(handlers *DSAHandlers) RouterOption {
@@ -47,6 +55,12 @@ func WithDSA(handlers *DSAHandlers) RouterOption {
 func WithSubmissions(handlers *SubmissionHandlers) RouterOption {
 	return func(opts *routerOptions) {
 		opts.submissions = handlers
+	}
+}
+
+func WithIntelligence(handlers *IntelligenceHandlers) RouterOption {
+	return func(opts *routerOptions) {
+		opts.intelligence = handlers
 	}
 }
 
@@ -128,10 +142,36 @@ func BuildRouter(
 			if options.submissions != nil {
 				registerSubmissionRoutes(r, options.submissions)
 			}
+
+			if options.intelligence != nil {
+				registerIntelligenceRoutes(r, options.intelligence)
+			}
 		})
 	})
 
 	return r
+}
+
+func registerIntelligenceRoutes(r chi.Router, intel *IntelligenceHandlers) {
+	if intel.Mistakes != nil {
+		r.Get("/student/mistakes", intel.Mistakes.GetStudentMistakes)
+		r.Get("/student/mistakes/summary", intel.Mistakes.GetStudentMistakeSummary)
+		r.Get("/student/mistakes/patterns", intel.Mistakes.GetStudentPatterns)
+		r.Get("/submissions/{submission_id}/diagnosis", intel.Mistakes.GetSubmissionDiagnosis)
+		r.Post("/student/mistakes/{diagnosis_id}/feedback", intel.Mistakes.SubmitFeedback)
+	}
+
+	if intel.AITutor != nil {
+		r.Post("/ai/hint", intel.AITutor.RequestHint)
+		r.Get("/problems/{problem_id}/hints", intel.AITutor.GetUnlockedHints)
+		r.Post("/ai/explain-mistake", intel.AITutor.ExplainMistake)
+		r.Post("/ai/walkthrough", intel.AITutor.WalkthroughCode)
+		r.Post("/ai/dry-run", intel.AITutor.GenerateDryRun)
+		r.Post("/ai/complexity", intel.AITutor.AnalyzeComplexity)
+		r.Post("/ai/ask", intel.AITutor.AskTutor)
+		r.Get("/ai/conversations", intel.AITutor.ListConversations)
+		r.Get("/ai/conversations/{conversation_id}", intel.AITutor.GetConversationMessages)
+	}
 }
 
 func registerSubmissionRoutes(r chi.Router, s *SubmissionHandlers) {

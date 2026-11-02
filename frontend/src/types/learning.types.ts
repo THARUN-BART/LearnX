@@ -141,6 +141,78 @@ export interface CodeExecutionResult {
   stderr?: string;
   passedTests: number;
   totalTests: number;
+  submissionId?: string;
+  diagnosis?: MistakeDiagnosis;
+}
+
+export interface MistakeDiagnosis {
+  id: string;
+  student_id: string;
+  submission_id: string;
+  problem_id: string;
+  category: string;
+  subtype: string;
+  description: string;
+  related_concept: string;
+  detection_method: string;
+  confidence_level: 'High' | 'Medium' | 'Low' | 'Insufficient Evidence';
+  confidence_score: number;
+  evidence: Record<string, any>;
+  suggested_correction: string;
+  created_at: string;
+}
+
+export interface StudentMistakePattern {
+  id: string;
+  category: string;
+  subtype: string;
+  related_concept: string;
+  occurrence_count: number;
+  correction_status: 'active' | 'corrected';
+  last_occurrence_at: string;
+}
+
+export interface ProgressiveHint {
+  problem_id: string;
+  level: number;
+  title: string;
+  content: string;
+  guiding_question?: string;
+  next_level_available: boolean;
+  created_at?: string;
+}
+
+export interface DryRunStep {
+  step_number: number;
+  line_number: number;
+  action: string;
+  variables: Record<string, any>;
+  explanation: string;
+}
+
+export interface DryRunResult {
+  test_case_input: string;
+  steps: DryRunStep[];
+  final_output: string;
+}
+
+export interface ComplexityResult {
+  time_complexity: string;
+  time_explanation: string;
+  space_complexity: string;
+  space_explanation: string;
+  is_optimal: boolean;
+  optimisation_notes?: string;
+}
+
+export interface ExplainMistakeResult {
+  submission_id: string;
+  category: string;
+  subtype: string;
+  what_went_wrong: string;
+  why_it_happened: string;
+  how_to_fix: string;
+  related_dsa_concepts: string[];
 }
 
 export type AssistantMode = 'hint' | 'explain' | 'debug';

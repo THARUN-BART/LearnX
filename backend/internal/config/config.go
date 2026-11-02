@@ -37,6 +37,15 @@ type Config struct {
 	SubmissionWorkerConcurrency int
 	SubmissionQueueSize         int
 	ExecutionProvider           string
+
+	OpenAIAPIKey string
+	OpenAIBaseURL string
+	OpenAIModel  string
+	GeminiAPIKey string
+	GeminiBaseURL string
+	GeminiModel  string
+	AIProvider   string
+	AITimeout    time.Duration
 }
 
 // Load loads configuration from environment variables and an optional .env file.
@@ -71,6 +80,15 @@ func Load() (*Config, error) {
 		SubmissionWorkerConcurrency: getEnvAsInt("SUBMISSION_WORKER_CONCURRENCY", 4),
 		SubmissionQueueSize:         getEnvAsInt("SUBMISSION_QUEUE_SIZE", 1000),
 		ExecutionProvider:           getEnv("EXECUTION_PROVIDER", "judge0"),
+
+		OpenAIAPIKey:  getEnv("OPENAI_API_KEY", ""),
+		OpenAIBaseURL: getEnv("OPENAI_BASE_URL", "https://api.openai.com/v1"),
+		OpenAIModel:   getEnv("OPENAI_MODEL", "gpt-4o-mini"),
+		GeminiAPIKey:  getEnv("GEMINI_API_KEY", ""),
+		GeminiBaseURL: getEnv("GEMINI_BASE_URL", "https://generativelanguage.googleapis.com/v1beta"),
+		GeminiModel:   getEnv("GEMINI_MODEL", "gemini-1.5-flash"),
+		AIProvider:    getEnv("AI_PROVIDER", "gemini"),
+		AITimeout:     time.Duration(getEnvAsInt("AI_TIMEOUT_SECONDS", 30)) * time.Second,
 	}
 
 	rawKey := getEnv("ENCRYPTION_KEY", "")

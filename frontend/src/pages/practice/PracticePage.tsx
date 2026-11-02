@@ -17,12 +17,21 @@ import {
   Bot,
   Layers,
   ChevronDown,
-  Cpu
+  Cpu,
+  X
 } from 'lucide-react';
 import { SAMPLE_PROBLEMS, PROGRAMMING_LANGUAGES } from '../../utils/constants';
-import { Problem, CodeExecutionResult } from '../../types/learning.types';
+import {
+  Problem,
+  CodeExecutionResult,
+  ProgressiveHint,
+  DryRunResult,
+  ComplexityResult,
+  ExplainMistakeResult
+} from '../../types/learning.types';
 import codingService from '../../services/coding.service';
 import learningService from '../../services/learning.service';
+import aiService from '../../services/ai.service';
 import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
 import { toast } from 'sonner';
@@ -48,6 +57,24 @@ export const PracticePage: React.FC = () => {
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [executionResult, setExecutionResult] = useState<CodeExecutionResult | null>(null);
   const [allProblems, setAllProblems] = useState<Problem[]>([]);
+
+  // AI Tutor states
+  const [unlockedHints, setUnlockedHints] = useState<ProgressiveHint[]>([]);
+  const [isLoadingHint, setIsLoadingHint] = useState<boolean>(false);
+  const [aiModal, setAiModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    type: 'explain' | 'dryrun' | 'complexity';
+    loading: boolean;
+    explain?: ExplainMistakeResult;
+    dryRun?: DryRunResult;
+    complexity?: ComplexityResult;
+  }>({
+    isOpen: false,
+    title: '',
+    type: 'explain',
+    loading: false
+  });
 
   // Fetch real problems list from API for selector
   useEffect(() => {
@@ -78,6 +105,18 @@ export const PracticePage: React.FC = () => {
           '';
         setCode(starter);
         setExecutionResult(null);
+
+        // Fetch unlocked progressive hints
+        try {
+          const hints = await aiService.getUnlockedHints(prob.id);
+          if (Array.isArray(hints) && hints.length > 0) {
+            setUnlockedHints(hints);
+          } else {
+            setUnlockedHints([]);
+          }
+        } catch {
+          setUnlockedHints([]);
+        }
       }
     };
     fetchProblem();
@@ -107,6 +146,76 @@ export const PracticePage: React.FC = () => {
   const handleCopyCode = () => {
     navigator.clipboard.writeText(code);
     toast.success('Code copied to clipboard');
+  };
+
+  const handleUnlockNextHint = async () => {
+    const nextLevel = unlockedHints.length + 1;
+    if (nextLevel > 5) {
+      toast.info('All 5 progressive hint levels are already unlocked.');
+      return;
+    }
+    setIsLoadingHint(true);
+    try {
+      const hint = await aiService.getProgressiveHint(
+        problem.id,
+        nextLevel,
+        executionResult?.submissionId
+      );
+      setUnlockedHints((prev) => [...prev, hint]);
+      toast.success(`Unlocked Hint Level ${nextLevel}: ${hint.title}`);
+    } catch {
+      toast.error('Failed to unlock hint from AI Tutor');
+    } finally {
+      setIsLoadingHint(false);
+    }
+  };
+
+  const handleExplainMistake = async (submissionId: string) => {
+    setAiModal({
+      isOpen: true,
+      title: 'AI Root Cause Diagnosis',
+      type: 'explain',
+      loading: true
+    });
+    try {
+      const data = await aiService.explainMistake(submissionId);
+      setAiModal((prev) => ({ ...prev, loading: false, explain: data }));
+    } catch {
+      toast.error('Could not retrieve root cause explanation');
+      setAiModal((prev) => ({ ...prev, loading: false }));
+    }
+  };
+
+  const handleDryRun = async () => {
+    setAiModal({
+      isOpen: true,
+      title: 'Execution Trace & Dry Run',
+      type: 'dryrun',
+      loading: true
+    });
+    try {
+      const data = await aiService.getDryRun(problem.id, code, selectedLanguage);
+      setAiModal((prev) => ({ ...prev, loading: false, dryRun: data }));
+    } catch {
+      toast.error('Could not generate dry run trace');
+      setAiModal((prev) => ({ ...prev, loading: false }));
+    }
+  };
+
+  const handleComplexityCheck = async () => {
+    setAiModal({
+      isOpen: true,
+      title: 'Time & Space Complexity Audit',
+      type: 'complexity',
+      loading: true
+    });
+    try {
+      const data = await aiService.getComplexity(problem.id, code, selectedLanguage);
+      setAiModal((prev) => ({ ...prev, loading: false, complexity: data }));
+    } catch {
+      toast.error('Could not generate complexity audit');
+      setAiModal((prev) => ({ ...prev, loading: false }));
+    }
   };
 
   const handleRunCode = async () => {
@@ -349,21 +458,65 @@ export const PracticePage: React.FC = () => {
               </>
             ) : (
               <div className="space-y-4">
-                <div className="text-xs text-[#A78BFA] font-mono flex items-center gap-1.5">
-                  <Sparkles className="w-4 h-4 text-[#8B5CF6]" />
-                  <span>Cognitive Thinking Cues</span>
-                </div>
-                {problem.hints.map((hint, i) => (
-                  <div
-                    key={i}
-                    className="p-3.5 bg-[#12121B] rounded-xl border border-[#1C1C28] space-y-1"
-                  >
-                    <span className="text-xs font-bold text-[#F4F4F6] font-mono">
-                      Phase #{i + 1}
-                    </span>
-                    <p className="text-xs text-[#8E8EA0] pt-1 font-sans">{hint}</p>
+                <div className="flex items-center justify-between">
+                  <div className="text-xs text-[#A78BFA] font-mono flex items-center gap-1.5">
+                    <Sparkles className="w-4 h-4 text-[#8B5CF6]" />
+                    <span>Progressive AI Scaffolding</span>
                   </div>
-                ))}
+                  <span className="text-[10px] text-[#5A5A6E] font-mono">
+                    {unlockedHints.length} / 5 Levels
+                  </span>
+                </div>
+
+                {/* Unlocked progressive hints */}
+                {unlockedHints.length > 0 ? (
+                  unlockedHints.map((h, i) => (
+                    <div
+                      key={i}
+                      className="p-3.5 bg-[#12121B] rounded-xl border border-[#8B5CF6]/30 space-y-1.5"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-[#E9D5FF] font-mono flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-[#8B5CF6]" />
+                          Level {h.level}: {h.title}
+                        </span>
+                        <span className="text-[10px] text-[#A78BFA] bg-[#8B5CF6]/10 px-2 py-0.5 rounded font-mono">
+                          {h.level === 1 && 'Concept'}
+                          {h.level === 2 && 'Approach'}
+                          {h.level === 3 && 'Edge Cases'}
+                          {h.level === 4 && 'Blueprint'}
+                          {h.level === 5 && 'Full Code Fix'}
+                        </span>
+                      </div>
+                      <p className="text-xs text-[#D1D1DE] pt-1 font-sans whitespace-pre-wrap leading-relaxed">
+                        {h.content}
+                      </p>
+                      {h.guiding_question && (
+                        <div className="text-[11px] text-[#A78BFA] italic pt-1 border-t border-[#1C1C28]">
+                          🤔 {h.guiding_question}
+                        </div>
+                      )}
+                    </div>
+                  ))
+                ) : (
+                  <div className="p-3 bg-[#12121B] rounded-xl border border-[#1C1C28] text-xs text-[#8E8EA0] text-center py-4">
+                    No hints unlocked yet. LearnX uses Socratic progressive hints so you learn to derive the algorithm yourself without spoilers!
+                  </div>
+                )}
+
+                {/* Unlock next level button */}
+                {unlockedHints.length < 5 && (
+                  <Button
+                    onClick={handleUnlockNextHint}
+                    disabled={isLoadingHint}
+                    className="w-full text-xs font-mono py-2 bg-[#8B5CF6]/10 hover:bg-[#8B5CF6]/20 border border-[#8B5CF6]/40 text-[#E9D5FF]"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 mr-1.5 text-[#A78BFA]" />
+                    {isLoadingHint
+                      ? 'Generating Hint...'
+                      : `Unlock Next Hint (Level ${unlockedHints.length + 1})`}
+                  </Button>
+                )}
               </div>
             )}
           </div>
@@ -499,6 +652,54 @@ export const PracticePage: React.FC = () => {
                           {executionResult.stdout}
                         </div>
                       )}
+
+                      {/* Intelligent Mistake Diagnosis from Module A */}
+                      {executionResult.diagnosis && (
+                        <div className="mt-3 p-3.5 bg-[#17122B] border border-[#8B5CF6]/40 rounded-xl space-y-2">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <Sparkles className="w-4 h-4 text-[#A78BFA]" />
+                              <span className="font-bold text-xs text-[#E9D5FF] uppercase tracking-wider">
+                                Intelligent Diagnosis: {executionResult.diagnosis.category} / {executionResult.diagnosis.subtype}
+                              </span>
+                            </div>
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#8B5CF6]/20 text-[#A78BFA] border border-[#8B5CF6]/30">
+                              {executionResult.diagnosis.confidence_level} Confidence
+                            </span>
+                          </div>
+                          <p className="text-xs text-[#D1D1DE] leading-relaxed">
+                            {executionResult.diagnosis.description}
+                          </p>
+                          <div className="text-[11px] text-[#A78BFA]">
+                            <span className="text-[#8E8EA0]">DSA Concept:</span> {executionResult.diagnosis.related_concept}
+                          </div>
+                          <div className="text-[11px] text-[#34D399]">
+                            <span className="text-[#8E8EA0]">Suggested Fix:</span> {executionResult.diagnosis.suggested_correction}
+                          </div>
+
+                          {/* Quick AI Tutor Tools */}
+                          <div className="flex flex-wrap gap-2 pt-2 border-t border-[#8B5CF6]/20">
+                            <button
+                              onClick={() => handleExplainMistake(executionResult.submissionId || executionResult.diagnosis!.submission_id)}
+                              className="px-2.5 py-1 text-[11px] rounded-lg bg-[#8B5CF6]/20 hover:bg-[#8B5CF6]/30 text-[#E9D5FF] border border-[#8B5CF6]/40 flex items-center gap-1.5 cursor-pointer transition-all"
+                            >
+                              <Bot className="w-3.5 h-3.5 text-[#A78BFA]" /> Explain Root Cause
+                            </button>
+                            <button
+                              onClick={handleDryRun}
+                              className="px-2.5 py-1 text-[11px] rounded-lg bg-[#8B5CF6]/20 hover:bg-[#8B5CF6]/30 text-[#E9D5FF] border border-[#8B5CF6]/40 flex items-center gap-1.5 cursor-pointer transition-all"
+                            >
+                              <Play className="w-3.5 h-3.5 text-[#A78BFA]" /> Simulate Dry Run
+                            </button>
+                            <button
+                              onClick={handleComplexityCheck}
+                              className="px-2.5 py-1 text-[11px] rounded-lg bg-[#8B5CF6]/20 hover:bg-[#8B5CF6]/30 text-[#E9D5FF] border border-[#8B5CF6]/40 flex items-center gap-1.5 cursor-pointer transition-all"
+                            >
+                              <Cpu className="w-3.5 h-3.5 text-[#A78BFA]" /> Complexity Audit
+                            </button>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   ) : (
                     <div className="text-[#5A5A6E] italic">
@@ -511,6 +712,114 @@ export const PracticePage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* AI Tutor Intelligence Modal */}
+      {aiModal.isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+          <div className="bg-[#0D0D14] border border-[#8B5CF6]/30 rounded-2xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden shadow-2xl font-mono">
+            <div className="flex items-center justify-between px-5 py-3.5 border-b border-[#1C1C28] bg-[#12121B]">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-[#8B5CF6]" />
+                <h3 className="text-sm font-bold text-[#F4F4F6] font-mono">{aiModal.title}</h3>
+              </div>
+              <button
+                onClick={() => setAiModal((prev) => ({ ...prev, isOpen: false }))}
+                className="text-[#8E8EA0] hover:text-white p-1 rounded-lg cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="p-5 overflow-y-auto space-y-4 text-xs font-mono leading-relaxed">
+              {aiModal.loading ? (
+                <div className="py-12 flex flex-col items-center justify-center gap-3 text-[#A78BFA]">
+                  <div className="w-6 h-6 border-2 border-[#8B5CF6] border-t-transparent rounded-full animate-spin" />
+                  <span>Synthesizing pedagogical breakdown...</span>
+                </div>
+              ) : (
+                <>
+                  {aiModal.type === 'explain' && aiModal.explain && (
+                    <div className="space-y-3 font-sans">
+                      <div className="p-3 bg-[#16122B] border border-[#8B5CF6]/30 rounded-xl space-y-1">
+                        <span className="text-[11px] font-bold text-[#A78BFA] font-mono uppercase">What Went Wrong</span>
+                        <p className="text-xs text-[#E9D5FF] leading-relaxed">{aiModal.explain.what_went_wrong}</p>
+                      </div>
+                      <div className="p-3 bg-[#12121B] border border-[#1C1C28] rounded-xl space-y-1">
+                        <span className="text-[11px] font-bold text-amber-400 font-mono uppercase">Why It Happened (Conceptual Cause)</span>
+                        <p className="text-xs text-[#D1D1DE] leading-relaxed">{aiModal.explain.why_it_happened}</p>
+                      </div>
+                      <div className="p-3 bg-[#0E1F1A] border border-emerald-500/30 rounded-xl space-y-1">
+                        <span className="text-[11px] font-bold text-emerald-400 font-mono uppercase">How to Resolve</span>
+                        <p className="text-xs text-[#A7F3D0] leading-relaxed">{aiModal.explain.how_to_fix}</p>
+                      </div>
+                      {aiModal.explain.related_dsa_concepts && aiModal.explain.related_dsa_concepts.length > 0 && (
+                        <div className="flex items-center gap-2 pt-2">
+                          <span className="text-[#5A5A6E] text-[11px] font-mono">Related Concepts:</span>
+                          {aiModal.explain.related_dsa_concepts.map((c, i) => (
+                            <span key={i} className="px-2 py-0.5 rounded bg-[#8B5CF6]/10 text-[#A78BFA] text-[10px] font-mono border border-[#8B5CF6]/20">
+                              {c}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {aiModal.type === 'dryrun' && aiModal.dryRun && (
+                    <div className="space-y-3">
+                      <div className="p-2.5 bg-[#12121B] border border-[#1C1C28] rounded-xl text-[#8E8EA0]">
+                        <span className="text-[#5A5A6E]">Input Trace:</span> {aiModal.dryRun.test_case_input}
+                      </div>
+                      <div className="space-y-2">
+                        {aiModal.dryRun.steps.map((st) => (
+                          <div key={st.step_number} className="p-3 bg-[#12121B] border border-[#1C1C28] rounded-xl space-y-1">
+                            <div className="flex items-center justify-between text-[11px] text-[#A78BFA]">
+                              <span>Step #{st.step_number} (Line {st.line_number})</span>
+                              <span>{st.action}</span>
+                            </div>
+                            <div className="text-[#8E8EA0] text-[11px]">{st.explanation}</div>
+                            {st.variables && Object.keys(st.variables).length > 0 && (
+                              <div className="text-[#34D399] text-[11px] bg-[#0A0A10] p-1.5 rounded border border-[#1C1C28]">
+                                State: {JSON.stringify(st.variables)}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                      <div className="p-2.5 bg-[#0E1F1A] border border-emerald-500/30 rounded-xl text-emerald-300">
+                        Final Result: {aiModal.dryRun.final_output}
+                      </div>
+                    </div>
+                  )}
+
+                  {aiModal.type === 'complexity' && aiModal.complexity && (
+                    <div className="space-y-3 font-sans">
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="p-3 bg-[#12121B] border border-[#1C1C28] rounded-xl space-y-1">
+                          <span className="text-[10px] font-mono text-[#5A5A6E] uppercase">Time Complexity</span>
+                          <div className="text-base font-bold text-[#A78BFA] font-mono">{aiModal.complexity.time_complexity}</div>
+                          <p className="text-[11px] text-[#8E8EA0]">{aiModal.complexity.time_explanation}</p>
+                        </div>
+                        <div className="p-3 bg-[#12121B] border border-[#1C1C28] rounded-xl space-y-1">
+                          <span className="text-[10px] font-mono text-[#5A5A6E] uppercase">Space Complexity</span>
+                          <div className="text-base font-bold text-[#34D399] font-mono">{aiModal.complexity.space_complexity}</div>
+                          <p className="text-[11px] text-[#8E8EA0]">{aiModal.complexity.space_explanation}</p>
+                        </div>
+                      </div>
+                      {aiModal.complexity.optimisation_notes && (
+                        <div className="p-3 bg-[#16122B] border border-[#8B5CF6]/30 rounded-xl space-y-1">
+                          <span className="text-[11px] font-bold text-[#E9D5FF] font-mono">Optimisation Notes</span>
+                          <p className="text-xs text-[#D1D1DE]">{aiModal.complexity.optimisation_notes}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

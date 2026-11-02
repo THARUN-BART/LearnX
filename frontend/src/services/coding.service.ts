@@ -74,6 +74,19 @@ class CodingService {
           }
         }
 
+        // Attempt to fetch intelligent mistake diagnosis if execution failed
+        let diagnosis = undefined;
+        if (status !== 'Accepted') {
+          try {
+            const diagRes = await apiClient.get(`/api/v1/submissions/${submissionId}/diagnosis`);
+            if (diagRes.data?.data) {
+              diagnosis = diagRes.data.data;
+            }
+          } catch {
+            // Diagnosis may be queued or unanalyzed yet
+          }
+        }
+
         return {
           status: status as CodeExecutionResult['status'],
           runtimeMs: executionTimeMs,
@@ -81,7 +94,9 @@ class CodingService {
           stdout,
           stderr,
           passedTests,
-          totalTests
+          totalTests,
+          submissionId,
+          diagnosis
         };
       }
 

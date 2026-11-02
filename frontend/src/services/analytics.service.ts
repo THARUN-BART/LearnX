@@ -143,11 +143,50 @@ class AnalyticsService {
   }
 
   /**
-   * Fetches real student mistakes from actual failed submissions.
+   * Fetches real student mistakes from the intelligent Mistake Detection Engine.
    */
   async getMistakes(): Promise<MistakeRecord[]> {
     try {
-      // Fetch the student's actual submission history
+      // 1. Try to fetch from the Intelligent Mistake Detection Engine
+      const diagRes = await apiClient.get('/api/v1/student/mistakes', {
+        params: { limit: 50 }
+      });
+      const diagnoses = diagRes.data?.data || diagRes.data;
+
+      if (Array.isArray(diagnoses) && diagnoses.length > 0) {
+        return diagnoses.map((d: any, idx: number) => {
+          let category: MistakeCategory = 'logical';
+          const catLower = (d.category || '').toLowerCase();
+          if (catLower === 'compilation') category = 'syntax';
+          else if (catLower === 'complexity') category = 'time_complexity';
+          else if (catLower === 'edge_case') category = 'edge_cases';
+          else if (catLower === 'algorithmic') category = 'algorithm_selection';
+          else if (catLower === 'data_structure') category = 'logical';
+
+          const dateStr = d.created_at
+            ? new Date(d.created_at).toISOString().split('T')[0]
+            : new Date().toISOString().split('T')[0];
+
+          return {
+            id: d.id || `mistake-${idx}`,
+            problemId: d.problem_id || '',
+            problemTitle: d.evidence?.problem_title || 'DSA Problem',
+            topic: d.related_concept || 'DSA Concept',
+            category,
+            categoryLabel: `${d.category?.toUpperCase()}: ${d.subtype?.replace(/_/g, ' ')}`,
+            frequency: d.evidence?.previous_mistake_count ? d.evidence.previous_mistake_count + 1 : 1,
+            date: dateStr,
+            failedCodeSnippet: d.evidence?.source_code || '',
+            explanation: d.description || 'Intelligent diagnosis generated.',
+            whyFailed: `Detected via ${d.detection_method?.replace(/_/g, ' ')} (Confidence: ${d.confidence_level})`,
+            suggestedCorrection: d.suggested_correction || 'Review logic and invariants.',
+            recommendedTopicId: '',
+            recommendedTopicTitle: d.related_concept || 'DSA Curriculum'
+          };
+        });
+      }
+
+      // 2. Fallback to raw submissions if no diagnoses logged yet
       const res = await apiClient.get('/api/v1/student/submissions', {
         params: { limit: 50 }
       });

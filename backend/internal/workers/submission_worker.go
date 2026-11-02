@@ -9,22 +9,28 @@ import (
 
 	"github.com/THARUN-BART/LearnX/backend/internal/assessment"
 	"github.com/THARUN-BART/LearnX/backend/internal/execution"
+	"github.com/THARUN-BART/LearnX/backend/internal/mistakes"
 	"github.com/THARUN-BART/LearnX/backend/internal/progress"
 	"github.com/THARUN-BART/LearnX/backend/internal/submissions"
 	"github.com/THARUN-BART/LearnX/backend/internal/testcases"
 )
 
 type WorkerPool struct {
-	queue          JobQueue
-	submissionsRepo submissions.Repository
-	testCasesRepo  testcases.Repository
-	progressRepo   progress.Repository
-	engine         assessment.Engine
-	concurrency    int
-	logger         *slog.Logger
-	wg             sync.WaitGroup
-	ctx            context.Context
-	cancel         context.CancelFunc
+	queue           JobQueue
+	submissionsRepo  submissions.Repository
+	testCasesRepo   testcases.Repository
+	progressRepo    progress.Repository
+	mistakesService mistakes.Service
+	engine          assessment.Engine
+	concurrency     int
+	logger          *slog.Logger
+	wg              sync.WaitGroup
+	ctx             context.Context
+	cancel          context.CancelFunc
+}
+
+func (p *WorkerPool) SetMistakesService(service mistakes.Service) {
+	p.mistakesService = service
 }
 
 func NewWorkerPool(
@@ -181,6 +187,25 @@ func (p *WorkerPool) processSubmission(submissionID string) {
 
 	// Update student progress in the existing progress module
 	p.updateStudentProgress(ctx, sub)
+
+	// Trigger intelligent mistake detection if submission was not accepted
+	if p.mistakesService != nil {
+		if sub.Status != execution.StatusAccepted {
+			diag, err := p.mistakesService.DiagnoseSubmission(ctx, sub, testResults, "", "")
+			if err != nil {
+				p.logger.Warn("mistake diagnosis failed", slog.String("submission_id", sub.ID), slog.String("error", err.Error()))
+			} else if diag != nil {
+				p.logger.Info("mistake diagnosed",
+					slog.String("submission_id", sub.ID),
+					slog.String("category", diag.Category),
+					slog.String("subtype", diag.Subtype),
+					slog.String("confidence", diag.ConfidenceLevel),
+				)
+			}
+		} else {
+			_ = p.mistakesService.MarkPatternCorrected(ctx, sub.StudentID, "", "")
+		}
+	}
 
 	p.logger.Info("submission completed",
 		slog.String("submission_id", sub.ID),

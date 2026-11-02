@@ -12,6 +12,8 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/THARUN-BART/LearnX/backend/internal/ai"
+	"github.com/THARUN-BART/LearnX/backend/internal/aitutor"
 	"github.com/THARUN-BART/LearnX/backend/internal/assessment"
 	"github.com/THARUN-BART/LearnX/backend/internal/auth"
 	"github.com/THARUN-BART/LearnX/backend/internal/config"
@@ -21,6 +23,7 @@ import (
 	"github.com/THARUN-BART/LearnX/backend/internal/execution"
 	"github.com/THARUN-BART/LearnX/backend/internal/importer"
 	"github.com/THARUN-BART/LearnX/backend/internal/middleware"
+	"github.com/THARUN-BART/LearnX/backend/internal/mistakes"
 	"github.com/THARUN-BART/LearnX/backend/internal/otp"
 	"github.com/THARUN-BART/LearnX/backend/internal/profile"
 	"github.com/THARUN-BART/LearnX/backend/internal/server"
@@ -58,6 +61,8 @@ func main() {
 	var dsaRepos dsa.Repositories
 	var submissionsRepo submissions.Repository
 	var testCasesRepo testcases.Repository
+	var mistakesRepo mistakes.Repository
+	var aiRepo aitutor.Repository
 	var pool *pgxpool.Pool
 
 	if cfg.SupabaseDBURL != "" {
@@ -69,6 +74,8 @@ func main() {
 			dsaRepos = loadMemoryDSA()
 			submissionsRepo = submissions.NewMemoryRepository()
 			testCasesRepo = testcases.NewMemoryRepository()
+			mistakesRepo = mistakes.NewMemoryRepository()
+			aiRepo = aitutor.NewMemoryRepository()
 		} else {
 			pool = connected
 			defer pool.Close()
@@ -80,6 +87,8 @@ func main() {
 			dsaRepos = dsa.NewPostgresRepositories(pool)
 			submissionsRepo = submissions.NewPostgresRepository(pool)
 			testCasesRepo = testcases.NewPostgresRepository(pool)
+			mistakesRepo = mistakes.NewPostgresRepository(pool)
+			aiRepo = aitutor.NewPostgresRepository(pool)
 		}
 	} else {
 		slog.Warn("SUPABASE_DB_URL not configured: using in-memory store for development/testing")
@@ -88,6 +97,8 @@ func main() {
 		dsaRepos = loadMemoryDSA()
 		submissionsRepo = submissions.NewMemoryRepository()
 		testCasesRepo = testcases.NewMemoryRepository()
+		mistakesRepo = mistakes.NewMemoryRepository()
+		aiRepo = aitutor.NewMemoryRepository()
 	}
 
 	otpClient, err := otp.NewClient(cfg.OTPServiceBaseURL, cfg.OTPAppName, cfg.OTPTimeout)
@@ -137,6 +148,11 @@ func main() {
 		})
 	}
 
+	// Mistake Detection Engine
+	mistakesDetector := mistakes.NewDetector()
+	mistakesSvc := mistakes.NewService(mistakesRepo, mistakesDetector, logger)
+	mistakesHandler := mistakes.NewHandler(mistakesSvc)
+
 	assessmentEngine := assessment.NewEngine(execClient, logger)
 	jobQueue := workers.NewChannelJobQueue(cfg.SubmissionQueueSize)
 
@@ -149,6 +165,7 @@ func main() {
 		cfg.SubmissionWorkerConcurrency,
 		logger,
 	)
+	workerPool.SetMistakesService(mistakesSvc)
 	workerPool.Start()
 	defer workerPool.Stop()
 
@@ -163,6 +180,50 @@ func main() {
 		TestCases:   testCasesHandler,
 	}
 
+	// AI Tutor Provider, Services & Handlers
+	var llmProvider ai.LLMProvider
+	switch strings.ToLower(cfg.AIProvider) {
+	case "gemini":
+		if cfg.GeminiAPIKey != "" {
+			slog.Info("using Google Gemini provider for AI Tutor", slog.String("model", cfg.GeminiModel))
+			llmProvider = ai.NewGeminiProvider(cfg.GeminiAPIKey, cfg.GeminiBaseURL, cfg.GeminiModel, cfg.AITimeout)
+		} else {
+			slog.Warn("AIProvider set to gemini but GEMINI_API_KEY is empty, falling back to mock provider")
+			llmProvider = ai.NewMockProvider()
+		}
+	case "openai":
+		if cfg.OpenAIAPIKey != "" {
+			slog.Info("using OpenAI provider for AI Tutor", slog.String("model", cfg.OpenAIModel))
+			llmProvider = ai.NewOpenAIProvider(cfg.OpenAIAPIKey, cfg.OpenAIBaseURL, cfg.OpenAIModel, cfg.AITimeout)
+		} else {
+			slog.Warn("AIProvider set to openai but OPENAI_API_KEY is empty, falling back to mock provider")
+			llmProvider = ai.NewMockProvider()
+		}
+	case "mock":
+		slog.Info("using mock LLM provider for AI Tutor (offline simulated mode)")
+		llmProvider = ai.NewMockProvider()
+	default:
+		if cfg.GeminiAPIKey != "" {
+			slog.Info("auto-detected GEMINI_API_KEY: using Google Gemini provider", slog.String("model", cfg.GeminiModel))
+			llmProvider = ai.NewGeminiProvider(cfg.GeminiAPIKey, cfg.GeminiBaseURL, cfg.GeminiModel, cfg.AITimeout)
+		} else if cfg.OpenAIAPIKey != "" {
+			slog.Info("auto-detected OPENAI_API_KEY: using OpenAI provider", slog.String("model", cfg.OpenAIModel))
+			llmProvider = ai.NewOpenAIProvider(cfg.OpenAIAPIKey, cfg.OpenAIBaseURL, cfg.OpenAIModel, cfg.AITimeout)
+		} else {
+			slog.Info("no LLM API key provided: using mock LLM provider for AI Tutor")
+			llmProvider = ai.NewMockProvider()
+		}
+	}
+
+	ctxBuilder := aitutor.NewContextBuilder(dsaRepos.Problems, testCasesRepo, submissionsRepo)
+	aiSvc := aitutor.NewService(llmProvider, aiRepo, mistakesSvc, ctxBuilder, logger)
+	aiHandler := aitutor.NewHandler(aiSvc)
+
+	intelligenceHandlers := &server.IntelligenceHandlers{
+		Mistakes: mistakesHandler,
+		AITutor:  aiHandler,
+	}
+
 	dsaHandlers := dsa.NewHandlers(dsaRepos)
 	router := server.BuildRouter(
 		cfg,
@@ -172,6 +233,7 @@ func main() {
 		rateLimiter,
 		server.WithDSA(dsaHandlers),
 		server.WithSubmissions(submissionHandlers),
+		server.WithIntelligence(intelligenceHandlers),
 	)
 
 	httpServer := &http.Server{

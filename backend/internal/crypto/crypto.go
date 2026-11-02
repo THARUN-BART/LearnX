@@ -99,3 +99,13 @@ func HashString(input string) string {
 	hash := sha256.Sum256([]byte(input))
 	return hex.EncodeToString(hash[:])
 }
+
+// GenerateUUID generates an RFC 4122 compliant UUID v4 string.
+func GenerateUUID() string {
+	var b [16]byte
+	_, _ = io.ReadFull(rand.Reader, b[:])
+	b[6] = (b[6] & 0x0f) | 0x40 // Version 4
+	b[8] = (b[8] & 0x3f) | 0x80 // Variant 10
+	return fmt.Sprintf("%08x-%04x-%04x-%04x-%012x",
+		b[0:4], b[4:6], b[6:8], b[8:10], b[10:])
+}

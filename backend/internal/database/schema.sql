@@ -382,3 +382,176 @@ BEGIN
             );
     END IF;
 END $$;
+-- 014_create_mistake_diagnoses.sql
+-- Records intelligent diagnoses of student coding mistakes for failed submissions
+
+CREATE TABLE IF NOT EXISTS mistake_diagnoses (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    student_id UUID NOT NULL,
+    submission_id UUID NOT NULL,
+    problem_id UUID NOT NULL,
+    category VARCHAR(64) NOT NULL,
+    subtype VARCHAR(64) NOT NULL,
+    description TEXT NOT NULL,
+    related_concept VARCHAR(128) NOT NULL,
+    detection_method VARCHAR(64) NOT NULL,
+    confidence_level VARCHAR(32) NOT NULL,
+    confidence_score NUMERIC(5, 2) NOT NULL DEFAULT 0.0,
+    evidence JSONB NOT NULL DEFAULT '{}'::jsonb,
+    suggested_correction TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT uq_diagnosis_submission UNIQUE (submission_id),
+    CONSTRAINT fk_diag_submission FOREIGN KEY (submission_id) REFERENCES submissions(id) ON DELETE CASCADE,
+    CONSTRAINT fk_diag_problem FOREIGN KEY (problem_id) REFERENCES problems(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_diagnoses_student ON mistake_diagnoses (student_id);
+CREATE INDEX IF NOT EXISTS idx_diagnoses_problem ON mistake_diagnoses (problem_id);
+CREATE INDEX IF NOT EXISTS idx_diagnoses_category ON mistake_diagnoses (category, subtype);
+CREATE INDEX IF NOT EXISTS idx_diagnoses_created ON mistake_diagnoses (created_at DESC);
+-- 015_create_student_mistake_patterns.sql
+-- Aggregates and tracks recurring student weakness patterns across submissions
+
+CREATE TABLE IF NOT EXISTS student_mistake_patterns (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    student_id UUID NOT NULL,
+    category VARCHAR(64) NOT NULL,
+    subtype VARCHAR(64) NOT NULL,
+    related_concept VARCHAR(128) NOT NULL,
+    occurrence_count INT NOT NULL DEFAULT 1,
+    first_occurrence_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    last_occurrence_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    correction_status VARCHAR(32) NOT NULL DEFAULT 'active',
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT uq_student_mistake_pattern UNIQUE (student_id, category, subtype, related_concept)
+);
+
+CREATE INDEX IF NOT EXISTS idx_mistake_patterns_student ON student_mistake_patterns (student_id);
+CREATE INDEX IF NOT EXISTS idx_mistake_patterns_category ON student_mistake_patterns (category, subtype);
+CREATE INDEX IF NOT EXISTS idx_mistake_patterns_status ON student_mistake_patterns (correction_status);
+CREATE INDEX IF NOT EXISTS idx_mistake_patterns_count ON student_mistake_patterns (occurrence_count DESC);
+-- 016_create_ai_tutor_tables.sql
+-- Conversation history, progressive hint logs, and student feedback for AI Tutor
+
+CREATE TABLE IF NOT EXISTS ai_conversations (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    student_id UUID NOT NULL,
+    problem_id UUID REFERENCES problems(id) ON DELETE SET NULL,
+    conversation_type VARCHAR(64) NOT NULL DEFAULT 'general',
+    title VARCHAR(255) NOT NULL DEFAULT 'New Conversation',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_ai_conversations_student ON ai_conversations (student_id);
+CREATE INDEX IF NOT EXISTS idx_ai_conversations_problem ON ai_conversations (problem_id);
+CREATE INDEX IF NOT EXISTS idx_ai_conversations_updated ON ai_conversations (updated_at DESC);
+
+CREATE TABLE IF NOT EXISTS ai_messages (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    conversation_id UUID NOT NULL REFERENCES ai_conversations(id) ON DELETE CASCADE,
+    role VARCHAR(32) NOT NULL,
+    message TEXT NOT NULL,
+    response_type VARCHAR(64) NOT NULL DEFAULT 'text',
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+    token_usage JSONB NOT NULL DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_ai_messages_conv ON ai_messages (conversation_id, created_at ASC);
+
+CREATE TABLE IF NOT EXISTS ai_hint_history (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    student_id UUID NOT NULL,
+    problem_id UUID NOT NULL REFERENCES problems(id) ON DELETE CASCADE,
+    submission_id UUID REFERENCES submissions(id) ON DELETE SET NULL,
+    hint_level INT NOT NULL,
+    hint_content TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT uq_student_problem_hint_level UNIQUE (student_id, problem_id, hint_level)
+);
+
+CREATE INDEX IF NOT EXISTS idx_hint_history_student ON ai_hint_history (student_id, problem_id);
+
+CREATE TABLE IF NOT EXISTS mistake_feedback (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    diagnosis_id UUID NOT NULL REFERENCES mistake_diagnoses(id) ON DELETE CASCADE,
+    student_id UUID NOT NULL,
+    feedback_type VARCHAR(32) NOT NULL,
+    student_feedback TEXT NOT NULL DEFAULT '',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_feedback_diagnosis ON mistake_feedback (diagnosis_id);
+CREATE INDEX IF NOT EXISTS idx_feedback_student ON mistake_feedback (student_id);
+-- 017_rls_mistakes_and_ai.sql
+-- Enables RLS and defines policies for mistake engine and AI tutor tables
+
+ALTER TABLE mistake_diagnoses ENABLE ROW LEVEL SECURITY;
+ALTER TABLE student_mistake_patterns ENABLE ROW LEVEL SECURITY;
+ALTER TABLE ai_conversations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE ai_messages ENABLE ROW LEVEL SECURITY;
+ALTER TABLE ai_hint_history ENABLE ROW LEVEL SECURITY;
+ALTER TABLE mistake_feedback ENABLE ROW LEVEL SECURITY;
+
+DO $$
+BEGIN
+    -- mistake_diagnoses
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'mistake_diagnoses' AND policyname = 'students_select_own_diagnoses') THEN
+        CREATE POLICY students_select_own_diagnoses ON mistake_diagnoses
+            FOR SELECT TO authenticated
+            USING (student_id = auth.uid());
+    END IF;
+
+    -- student_mistake_patterns
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'student_mistake_patterns' AND policyname = 'students_select_own_patterns') THEN
+        CREATE POLICY students_select_own_patterns ON student_mistake_patterns
+            FOR SELECT TO authenticated
+            USING (student_id = auth.uid());
+    END IF;
+
+    -- ai_conversations
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'ai_conversations' AND policyname = 'students_manage_own_conversations') THEN
+        CREATE POLICY students_manage_own_conversations ON ai_conversations
+            FOR ALL TO authenticated
+            USING (student_id = auth.uid())
+            WITH CHECK (student_id = auth.uid());
+    END IF;
+
+    -- ai_messages
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'ai_messages' AND policyname = 'students_manage_own_messages') THEN
+        CREATE POLICY students_manage_own_messages ON ai_messages
+            FOR ALL TO authenticated
+            USING (
+                conversation_id IN (
+                    SELECT id FROM ai_conversations WHERE student_id = auth.uid()
+                )
+            )
+            WITH CHECK (
+                conversation_id IN (
+                    SELECT id FROM ai_conversations WHERE student_id = auth.uid()
+                )
+            );
+    END IF;
+
+    -- ai_hint_history
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'ai_hint_history' AND policyname = 'students_select_own_hints') THEN
+        CREATE POLICY students_select_own_hints ON ai_hint_history
+            FOR SELECT TO authenticated
+            USING (student_id = auth.uid());
+    END IF;
+
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'ai_hint_history' AND policyname = 'students_insert_own_hints') THEN
+        CREATE POLICY students_insert_own_hints ON ai_hint_history
+            FOR INSERT TO authenticated
+            WITH CHECK (student_id = auth.uid());
+    END IF;
+
+    -- mistake_feedback
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'mistake_feedback' AND policyname = 'students_manage_own_feedback') THEN
+        CREATE POLICY students_manage_own_feedback ON mistake_feedback
+            FOR ALL TO authenticated
+            USING (student_id = auth.uid())
+            WITH CHECK (student_id = auth.uid());
+    END IF;
+END $$;
