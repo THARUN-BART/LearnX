@@ -6,10 +6,12 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"strings"
 	"time"
 
 	"github.com/THARUN-BART/LearnX/backend/internal/ai"
 	"github.com/THARUN-BART/LearnX/backend/internal/mistakes"
+	"github.com/THARUN-BART/LearnX/backend/internal/pedagogy"
 )
 
 var (
@@ -29,6 +31,7 @@ type Service interface {
 	AskTutor(ctx context.Context, studentID string, req AskRequest) (*AskResponse, error)
 	ListConversations(ctx context.Context, studentID string, limit, offset int) ([]AIConversation, error)
 	GetConversationMessages(ctx context.Context, studentID, conversationID string) ([]AIMessage, error)
+	SetPedagogyClient(client pedagogy.Client)
 }
 
 type serviceImpl struct {
@@ -37,6 +40,7 @@ type serviceImpl struct {
 	mistakesService mistakes.Service
 	ctxBuilder      *ContextBuilder
 	logger          *slog.Logger
+	pedagogyClient  pedagogy.Client
 }
 
 func NewService(
@@ -58,6 +62,10 @@ func NewService(
 	}
 }
 
+func (s *serviceImpl) SetPedagogyClient(client pedagogy.Client) {
+	s.pedagogyClient = client
+}
+
 func (s *serviceImpl) GetProgressiveHint(ctx context.Context, studentID string, req HintRequest) (*HintResponse, error) {
 	if req.Level < 1 || req.Level > 5 {
 		return nil, ErrInvalidHintLevel
@@ -72,36 +80,67 @@ func (s *serviceImpl) GetProgressiveHint(ctx context.Context, studentID string, 
 	}
 
 	samplesStr := FormatSamples(lc.SampleTestCases)
-	messages := BuildHintMessages(
-		req.Level,
-		lc.Problem.Title,
-		lc.Problem.Summary,
-		"Standard DSA constraints",
-		samplesStr,
-		lc.Code,
-		lc.Language,
-	)
-
-	llmResp, err := s.llm.Generate(ctx, ai.ChatCompletionRequest{
-		Messages:       messages,
-		ResponseFormat: "json_object",
-		Temperature:    0.2,
-		MaxTokens:      600,
-	})
-	if err != nil {
-		s.logger.Error("failed to generate progressive hint from LLM", slog.String("error", err.Error()))
-		return nil, err
-	}
 
 	var parsed struct {
 		Title           string `json:"title"`
 		Content         string `json:"content"`
 		GuidingQuestion string `json:"guiding_question"`
 	}
-	if err := json.Unmarshal([]byte(llmResp.Content), &parsed); err != nil {
-		// Fallback to plain content
-		parsed.Title = fmt.Sprintf("Level %d Hint", req.Level)
-		parsed.Content = llmResp.Content
+
+	usedPedagogy := false
+	isPython := strings.Contains(strings.ToLower(lc.Language), "python") || strings.Contains(strings.ToLower(lc.Language), "py")
+
+	// Pedagogy Microservice Integration for Python DSA Problems
+	if s.pedagogyClient != nil && isPython && req.Level >= 1 && req.Level <= 4 && strings.TrimSpace(lc.Code) != "" {
+		hintLevelMap := map[int]string{1: "L1", 2: "L2", 3: "L3", 4: "L4"}
+		pcRes, pcErr := s.pedagogyClient.Analyze(ctx, pedagogy.AnalyzeRequest{
+			StudentCode: lc.Code,
+			TestCode:    samplesStr,
+			Skill:       "SKL-02",
+			HintLevel:   hintLevelMap[req.Level],
+			Timeout:     3.0,
+		})
+		if pcErr == nil && pcRes != nil && pcRes.Hint.Hint != "" {
+			usedPedagogy = true
+			parsed.Title = fmt.Sprintf("Level %d Hint (%s)", req.Level, pcRes.Diagnosis.Misconception)
+			parsed.Content = pcRes.Hint.Hint
+			parsed.GuidingQuestion = "Does this align with your approach?"
+			s.logger.Info("progressive hint generated via Pedagogy microservice",
+				slog.String("misconception", pcRes.Diagnosis.Misconception),
+				slog.String("source", pcRes.Hint.HintSource),
+			)
+		} else if pcErr != nil {
+			s.logger.Warn("pedagogy hint generation failed, falling back to LLM", slog.String("error", pcErr.Error()))
+		}
+	}
+
+	if !usedPedagogy {
+		messages := BuildHintMessages(
+			req.Level,
+			lc.Problem.Title,
+			lc.Problem.Summary,
+			"Standard DSA constraints",
+			samplesStr,
+			lc.Code,
+			lc.Language,
+		)
+
+		llmResp, err := s.llm.Generate(ctx, ai.ChatCompletionRequest{
+			Messages:       messages,
+			ResponseFormat: "json_object",
+			Temperature:    0.2,
+			MaxTokens:      600,
+		})
+		if err != nil {
+			s.logger.Error("failed to generate progressive hint from LLM", slog.String("error", err.Error()))
+			return nil, err
+		}
+
+		if err := json.Unmarshal([]byte(llmResp.Content), &parsed); err != nil {
+			// Fallback to plain content
+			parsed.Title = fmt.Sprintf("Level %d Hint", req.Level)
+			parsed.Content = llmResp.Content
+		}
 	}
 
 	// Persist unlocked hint in history

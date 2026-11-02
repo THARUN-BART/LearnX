@@ -46,6 +46,9 @@ type Config struct {
 	GeminiModel  string
 	AIProvider   string
 	AITimeout    time.Duration
+
+	PedagogyAPIURL  string
+	PedagogyTimeout time.Duration
 }
 
 // Load loads configuration from environment variables and an optional .env file.
@@ -89,6 +92,9 @@ func Load() (*Config, error) {
 		GeminiModel:   getEnv("GEMINI_MODEL", "gemini-1.5-flash"),
 		AIProvider:    getEnv("AI_PROVIDER", "gemini"),
 		AITimeout:     time.Duration(getEnvAsInt("AI_TIMEOUT_SECONDS", 30)) * time.Second,
+
+		PedagogyAPIURL:  getEnv("PEDAGOGY_SERVICE_URL", getEnv("PERSON_C_API_URL", "http://localhost:8001")),
+		PedagogyTimeout: time.Duration(getEnvAsInt("PEDAGOGY_TIMEOUT_SECONDS", getEnvAsInt("PERSON_C_TIMEOUT_SECONDS", 10))) * time.Second,
 	}
 
 	rawKey := getEnv("ENCRYPTION_KEY", "")

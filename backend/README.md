@@ -15,12 +15,16 @@ High-performance Go REST backend for LearnX. It reuses the existing Supabase Aut
 - **Striver A2Z DSA catalogue:** Official sections, problem names, order, and canonical practice URLs. No editorials or solutions are stored.
 - **Student progress isolation:** Attempted / Solved / Needs Revision records are scoped to the authenticated student, including Supabase RLS policies.
 - **Roadmap analytics:** Overall, topic-wise, and difficulty stats are calculated from database rows.
+- **Mistake Detection Engine (Module A):** 4-layer diagnosis system analyzing compiler errors, runtime exceptions, static loop boundaries, and historical patterns to identify student root causes.
+- **LLM-Powered AI Tutor (Module B):** Progressive scaffolding hints (L1-L5), code walkthroughs, step-by-step dry-run traces, and complexity auditing powered by Google Gemini and OpenAI.
+- **Pedagogy Microservice Integration:** First-class HTTP client and proxy handler connecting LearnX to the dedicated Python pedagogy analysis engine (`internal/pedagogy`) for misconception cataloguing and calibrated scaffolding.
 
 ## Project Structure
 
 ```text
 backend/
 ├── cmd/
+│   ├── server/main.go        # Main server entrypoint
 │   ├── migrate/main.go       # Apply PostgreSQL schema
 │   └── import-a2z/main.go    # Upsert Striver A2Z catalogue
 ├── data/
@@ -28,26 +32,23 @@ backend/
 │   └── strivers-a2z-sheet.sample.json  # Truncated sample for tests
 ├── schema/
 │   ├── 001_create_profiles.sql
-│   ├── 002_create_pending_signups.sql
-│   ├── 003_create_password_resets.sql
-│   ├── 004_create_roadmaps.sql
-│   ├── 005_create_topics.sql
-│   ├── 006_create_subtopics.sql
-│   ├── 007_create_problems.sql
-│   ├── 008_create_student_progress.sql
-│   ├── 009_rls_dsa.sql
-│   └── schema.sql
+│   ├── ...
+│   ├── 014_create_mistake_diagnoses.sql
+│   ├── 015_create_student_mistake_patterns.sql
+│   ├── 016_create_ai_tutor_tables.sql
+│   └── 017_rls_mistakes_and_ai.sql
 ├── tests/
 ├── internal/
-│   ├── auth/
-│   ├── roadmap/
-│   ├── topics/
-│   ├── problems/
-│   ├── progress/
-│   ├── analytics/
-│   ├── importer/
-│   ├── dsa/
-│   └── server/
+│   ├── auth/                 # Signup, login, OTP verification, password reset
+│   ├── crypto/               # AES-256-GCM encryption & HMAC tokens
+│   ├── middleware/           # JWT verification (RequireAuth / OptionalAuth), rate limiter
+│   ├── dsa/                  # Roadmap, topic, and problem handlers
+│   ├── submissions/          # Async worker pool, runner sandboxes, test-case comparator
+│   ├── mistakes/             # 4-layer mistake detection engine
+│   ├── aitutor/              # Progressive hints, dry runs, walkthroughs, chat tutor
+│   ├── ai/                   # Google Gemini & OpenAI LLM providers
+│   ├── pedagogy/             # Pedagogy microservice HTTP client and proxy handlers
+│   └── server/               # Chi router assembly and dependency injection
 ├── docs/
 │   ├── API.md
 │   └── openapi.yaml

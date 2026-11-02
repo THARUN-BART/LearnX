@@ -687,3 +687,273 @@ Response (HTTP 200 OK):
 #### Test Cases Management
 - `GET /api/v1/problems/{problem_id}/testcases/sample`: Returns sample (non-hidden) test cases.
 - `POST /api/v1/admin/problems/{problem_id}/testcases`: Creates a new test case.
+
+---
+
+## 5. Module A: Mistake Detection Engine Endpoints
+
+The Mistake Detection Engine executes deterministic, static code, and historical pattern analysis to diagnose student coding failures across 7 classification dimensions (compilation, runtime, logical, edge case, data structure, algorithmic, and complexity).
+
+### 5.1 Get Submission Diagnosis
+Retrieves the deep mistake diagnosis for a specific failed submission.
+
+- **Method:** `GET`
+- **URL:** `/api/v1/submissions/{submission_id}/diagnosis`
+- **Auth Required:** Yes (Bearer Token)
+- **Response:** `200 OK`
+```json
+{
+  "success": true,
+  "data": {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "submission_id": "40d47191-d9f0-4909-89fb-1192ad0bd68e",
+    "student_id": "e6a2b847-19fa-47ea-bd57-5ffc1d766324",
+    "problem_id": "c71a399f-7e04-4340-9774-8aa43e4fcda3",
+    "primary_category": "logical",
+    "subcategory": "off_by_one_index",
+    "confidence_score": 0.95,
+    "line_number": 14,
+    "dsa_concept": "two-pointers",
+    "what_went_wrong": "The loop boundary condition allows the index to exceed the array upper bound on the final iteration.",
+    "probable_cause": "Using '<= n' instead of '< n' when iterating over zero-indexed elements.",
+    "actionable_fix": "Change 'for i in range(len(nums) + 1)' to 'for i in range(len(nums))'.",
+    "is_recurring": true,
+    "historical_occurrence_count": 3
+  }
+}
+```
+
+### 5.2 List Student Mistakes
+Lists recent mistake diagnoses diagnosed for the authenticated student.
+
+- **Method:** `GET`
+- **URL:** `/api/v1/student/mistakes?limit=20&offset=0`
+- **Auth Required:** Yes (Bearer Token)
+
+### 5.3 Student Mistake Summary
+Returns frequency distribution across mistake categories and top weaknesses.
+
+- **Method:** `GET`
+- **URL:** `/api/v1/student/mistakes/summary`
+- **Auth Required:** Yes (Bearer Token)
+
+### 5.4 Student Weakness Patterns
+Tracks recurring conceptual patterns and improvement trends.
+
+- **Method:** `GET`
+- **URL:** `/api/v1/student/mistakes/patterns`
+- **Auth Required:** Yes (Bearer Token)
+
+### 5.5 Submit Feedback on Diagnosis
+Enables students to rate the accuracy of a diagnosis.
+
+- **Method:** `POST`
+- **URL:** `/api/v1/student/mistakes/{diagnosis_id}/feedback`
+- **Auth Required:** Yes (Bearer Token)
+- **Request Body:**
+```json
+{
+  "feedback_type": "helpful",
+  "student_feedback": "The line-number detection pointed right to my while loop boundary."
+}
+```
+
+---
+
+## 6. Module B: LLM-Powered AI Tutor Endpoints
+
+Provides progressive scaffolding hints, code walkthroughs, step-by-step dry-run traces, complexity auditing, and interactive Socratic chat tutoring powered by Google Gemini and OpenAI.
+
+### 6.1 Progressive Scaffolding Hints (Levels 1–5)
+Unlocks or returns a tailored hint based on problem context, previous mistakes, and student code.
+
+- **Method:** `POST`
+- **URL:** `/api/v1/ai/hint`
+- **Auth Required:** Yes (Bearer Token)
+- **Request Body:**
+```json
+{
+  "problem_id": "c71a399f-7e04-4340-9774-8aa43e4fcda3",
+  "level": 2,
+  "submission_id": "40d47191-d9f0-4909-89fb-1192ad0bd68e"
+}
+```
+- **Hint Hierarchy:**
+  - **Level 1 (Nudge):** Socratic guiding question without revealing algorithms.
+  - **Level 2 (Direction):** Algorithmic direction and invariant hint.
+  - **Level 3 (Data Structure):** Recommended data structure & complexity targets.
+  - **Level 4 (Pseudocode):** High-level structural pseudocode.
+  - **Level 5 (Edge Cases & Fix):** Concrete boundary condition handling and exact syntax fix.
+
+### 6.2 Get Unlocked Hints
+Lists all previously unlocked hints for a problem.
+
+- **Method:** `GET`
+- **URL:** `/api/v1/problems/{problem_id}/hints`
+- **Auth Required:** Yes (Bearer Token)
+
+### 6.3 Explain Mistake
+Explains why code failed in plain, accessible English.
+
+- **Method:** `POST`
+- **URL:** `/api/v1/ai/explain-mistake`
+- **Auth Required:** Yes (Bearer Token)
+- **Request Body:** `{"submission_id": "uuid"}`
+
+### 6.4 Code Walkthrough
+Generates an algorithmic breakdown explaining logic, loops, invariants, and edge conditions.
+
+- **Method:** `POST`
+- **URL:** `/api/v1/ai/walkthrough`
+- **Auth Required:** Optional (Guests supported)
+- **Request Body:**
+```json
+{
+  "problem_id": "c71a399f-7e04-4340-9774-8aa43e4fcda3",
+  "source_code": "def twoSum(nums, target):\n    seen = {}\n    for i, n in enumerate(nums):\n        if target - n in seen:\n            return [seen[target - n], i]\n        seen[n] = i",
+  "language": "python"
+}
+```
+
+### 6.5 Step-by-Step State Dry-Run
+Simulates code execution on sample test cases with variable watch tables and pointer states.
+
+- **Method:** `POST`
+- **URL:** `/api/v1/ai/dry-run`
+- **Auth Required:** Optional (Guests supported)
+- **Request Body:**
+```json
+{
+  "problem_id": "c71a399f-7e04-4340-9774-8aa43e4fcda3",
+  "source_code": "def twoSum(nums, target): ...",
+  "language": "python",
+  "test_case_input": "nums = [2, 7, 11, 15], target = 9"
+}
+```
+
+### 6.6 Algorithmic Complexity Auditor
+Compares student code theoretical time and space complexity against optimal problem constraints.
+
+- **Method:** `POST`
+- **URL:** `/api/v1/ai/complexity`
+- **Auth Required:** Optional (Guests supported)
+- **Request Body:**
+```json
+{
+  "problem_id": "c71a399f-7e04-4340-9774-8aa43e4fcda3",
+  "source_code": "for i in range(n):\n    for j in range(n): ...",
+  "language": "python"
+}
+```
+
+### 6.7 Interactive Socratic Tutor Chat
+Conversational DSA mentor with context memory across problem statements, constraints, and student submissions.
+
+- **Method:** `POST`
+- **URL:** `/api/v1/ai/ask`
+- **Auth Required:** Optional (Guests supported with ephemeral sessions)
+- **Request Body:**
+```json
+{
+  "question": "Why does a monotonic stack maintain linear O(N) time complexity if there is a while loop inside a for loop?",
+  "problem_id": "c71a399f-7e04-4340-9774-8aa43e4fcda3",
+  "conversation_id": "optional-existing-conversation-uuid"
+}
+```
+
+---
+
+## 7. Pedagogy Microservice Endpoints
+
+The **Pedagogy** microservice module (`internal/pedagogy`) integrates an external pedagogical diagnostic and hint engine (running on port `8001`). It analyzes Python DSA code against test cases, pinpoints catalogued student misconceptions (e.g., Infinite Loops, Off-by-One, Null Pointer Dereference), and returns graded hints (`L1` to `L4`).
+
+### 7.1 Full Code Analysis & Hint Generation
+Runs student code through the pedagogy sandbox, executes the test suite, diagnoses misconceptions, and generates a progressive hint.
+
+- **Method:** `POST`
+- **URL:** `/api/v1/ai/pedagogy/analyze`
+- **Legacy Alias:** `POST /api/v1/ai/person-c/analyze`
+- **Auth Required:** Optional (Guests supported)
+- **Request Body:**
+```json
+{
+  "student_code": "def search(nums, target):\n    low, high = 0, len(nums)\n    while low <= high:\n        mid = (low + high) // 2\n        if nums[mid] == target:\n            return mid\n        elif nums[mid] < target:\n            low = mid + 1\n        else:\n            high = mid - 1\n    return -1",
+  "test_code": "assert search([1, 3, 5], 3) == 1\nassert search([1, 3, 5], 6) == -1",
+  "skill": "SKL-02",
+  "hint_level": "L1",
+  "timeout": 3.0
+}
+```
+- **Response:** `200 OK`
+```json
+{
+  "success": true,
+  "data": {
+    "runner_result": {
+      "passed": false,
+      "error_type": "INDEX_ERROR",
+      "output": "IndexError: list index out of range",
+      "traceback": "Traceback (most recent call last):\n  File 'test.py', line 5, in search\n    if nums[mid] == target:\nIndexError: list index out of range"
+    },
+    "diagnosis": {
+      "skill": "SKL-02",
+      "misconception_id": "MIS-01",
+      "misconception": "Upper Bound Off-by-One",
+      "confidence": 0.95,
+      "evidence": "mid was calculated as len(nums) when target > max element",
+      "diagnosis_source": "rule_based"
+    },
+    "hint": {
+      "hint_level": "L1",
+      "hint": "Check how your 'high' pointer is initialized. Does a 0-indexed list have an element at index len(nums)?",
+      "hint_source": "pedagogy_catalogue"
+    }
+  }
+}
+```
+
+### 7.2 Diagnose Code Only
+Runs test execution and returns only the diagnosed misconception without hint generation.
+
+- **Method:** `POST`
+- **URL:** `/api/v1/ai/pedagogy/diagnose`
+- **Legacy Alias:** `POST /api/v1/ai/person-c/diagnose`
+- **Auth Required:** Optional (Guests supported)
+- **Request Body:** Same as `/analyze`
+- **Response:** `200 OK`
+```json
+{
+  "success": true,
+  "data": {
+    "runner_result": {
+      "passed": false,
+      "error_type": "INDEX_ERROR"
+    },
+    "diagnosis": {
+      "skill": "SKL-02",
+      "misconception_id": "MIS-01",
+      "misconception": "Upper Bound Off-by-One",
+      "confidence": 0.95,
+      "evidence": "mid evaluated to len(nums)"
+    }
+  }
+}
+```
+
+### 7.3 Pedagogy Health Check
+Verifies connectivity between the LearnX Go Backend and the Pedagogy microservice.
+
+- **Method:** `GET`
+- **URL:** `/api/v1/ai/pedagogy/health`
+- **Legacy Alias:** `GET /api/v1/ai/person-c/health`
+- **Auth Required:** No
+- **Response:** `200 OK`
+```json
+{
+  "success": true,
+  "data": {
+    "status": "ok",
+    "service": "pedagogy-analyzer"
+  }
+}
+```

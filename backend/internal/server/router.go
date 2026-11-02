@@ -10,6 +10,7 @@ import (
 	"github.com/THARUN-BART/LearnX/backend/internal/config"
 	"github.com/THARUN-BART/LearnX/backend/internal/middleware"
 	"github.com/THARUN-BART/LearnX/backend/internal/mistakes"
+	"github.com/THARUN-BART/LearnX/backend/internal/pedagogy"
 	"github.com/THARUN-BART/LearnX/backend/internal/problems"
 	"github.com/THARUN-BART/LearnX/backend/internal/profile"
 	"github.com/THARUN-BART/LearnX/backend/internal/progress"
@@ -36,6 +37,8 @@ type SubmissionHandlers struct {
 type IntelligenceHandlers struct {
 	Mistakes *mistakes.Handler
 	AITutor  *aitutor.Handler
+	Pedagogy *pedagogy.Handler
+	PersonC  *pedagogy.Handler // Deprecated alias for backwards compatibility
 }
 
 type RouterOption func(*routerOptions)
@@ -153,6 +156,24 @@ func BuildRouter(
 				r.Post("/ai/dry-run", options.intelligence.AITutor.GenerateDryRun)
 				r.Post("/ai/complexity", options.intelligence.AITutor.AnalyzeComplexity)
 				r.Post("/ai/ask", options.intelligence.AITutor.AskTutor)
+			}
+
+			if options.intelligence != nil {
+				pedagogyHandler := options.intelligence.Pedagogy
+				if pedagogyHandler == nil {
+					pedagogyHandler = options.intelligence.PersonC
+				}
+				if pedagogyHandler != nil {
+					// Canonical pedagogy routes
+					r.Post("/ai/pedagogy/analyze", pedagogyHandler.Analyze)
+					r.Post("/ai/pedagogy/diagnose", pedagogyHandler.Diagnose)
+					r.Get("/ai/pedagogy/health", pedagogyHandler.Health)
+
+					// Backwards-compatible aliases
+					r.Post("/ai/person-c/analyze", pedagogyHandler.Analyze)
+					r.Post("/ai/person-c/diagnose", pedagogyHandler.Diagnose)
+					r.Get("/ai/person-c/health", pedagogyHandler.Health)
+				}
 			}
 		})
 

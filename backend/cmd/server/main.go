@@ -24,6 +24,7 @@ import (
 	"github.com/THARUN-BART/LearnX/backend/internal/middleware"
 	"github.com/THARUN-BART/LearnX/backend/internal/mistakes"
 	"github.com/THARUN-BART/LearnX/backend/internal/otp"
+	"github.com/THARUN-BART/LearnX/backend/internal/pedagogy"
 	"github.com/THARUN-BART/LearnX/backend/internal/profile"
 	"github.com/THARUN-BART/LearnX/backend/internal/server"
 	"github.com/THARUN-BART/LearnX/backend/internal/submissions"
@@ -193,11 +194,20 @@ func main() {
 
 	ctxBuilder := aitutor.NewContextBuilder(dsaRepos.Problems, testCasesRepo, submissionsRepo)
 	aiSvc := aitutor.NewService(llmProvider, aiRepo, mistakesSvc, ctxBuilder, logger)
+
+	// Initialize Pedagogy AI Diagnostic Microservice Client
+	pedagogyClient := pedagogy.NewClient(cfg.PedagogyAPIURL, cfg.PedagogyTimeout, logger)
+	pedagogyHandler := pedagogy.NewHandler(pedagogyClient)
+	aiSvc.SetPedagogyClient(pedagogyClient)
+	slog.Info("Pedagogy AI microservice configured", slog.String("url", cfg.PedagogyAPIURL))
+
 	aiHandler := aitutor.NewHandler(aiSvc)
 
 	intelligenceHandlers := &server.IntelligenceHandlers{
 		Mistakes: mistakesHandler,
 		AITutor:  aiHandler,
+		Pedagogy: pedagogyHandler,
+		PersonC:  pedagogyHandler,
 	}
 
 	// DSA Handlers
