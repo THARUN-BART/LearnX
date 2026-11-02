@@ -8,6 +8,7 @@ import (
 	"github.com/THARUN-BART/LearnX/backend/internal/analytics"
 	"github.com/THARUN-BART/LearnX/backend/internal/auth"
 	"github.com/THARUN-BART/LearnX/backend/internal/config"
+	"github.com/THARUN-BART/LearnX/backend/internal/learningmemory"
 	"github.com/THARUN-BART/LearnX/backend/internal/middleware"
 	"github.com/THARUN-BART/LearnX/backend/internal/mistakes"
 	"github.com/THARUN-BART/LearnX/backend/internal/pedagogy"
@@ -35,10 +36,11 @@ type SubmissionHandlers struct {
 }
 
 type IntelligenceHandlers struct {
-	Mistakes *mistakes.Handler
-	AITutor  *aitutor.Handler
-	Pedagogy *pedagogy.Handler
-	PersonC  *pedagogy.Handler // Deprecated alias for backwards compatibility
+	Mistakes       *mistakes.Handler
+	AITutor        *aitutor.Handler
+	Pedagogy       *pedagogy.Handler
+	PersonC        *pedagogy.Handler // Deprecated alias for backwards compatibility
+	LearningMemory *learningmemory.Handler
 }
 
 type RouterOption func(*routerOptions)
@@ -218,12 +220,20 @@ func registerIntelligenceRoutes(r chi.Router, intel *IntelligenceHandlers) {
 		r.Post("/ai/hint", intel.AITutor.RequestHint)
 		r.Get("/problems/{problem_id}/hints", intel.AITutor.GetUnlockedHints)
 		r.Post("/ai/explain-mistake", intel.AITutor.ExplainMistake)
-		r.Post("/ai/walkthrough", intel.AITutor.WalkthroughCode)
-		r.Post("/ai/dry-run", intel.AITutor.GenerateDryRun)
-		r.Post("/ai/complexity", intel.AITutor.AnalyzeComplexity)
-		r.Post("/ai/ask", intel.AITutor.AskTutor)
 		r.Get("/ai/conversations", intel.AITutor.ListConversations)
 		r.Get("/ai/conversations/{conversation_id}", intel.AITutor.GetConversationMessages)
+	}
+
+	if intel.LearningMemory != nil {
+		r.Get("/student/learning-memory", intel.LearningMemory.GetSummary)
+		r.Get("/student/learning-memory/summary", intel.LearningMemory.GetStudentFacingSummary)
+		r.Get("/student/learning-memory/concepts", intel.LearningMemory.ListConcepts)
+		r.Get("/student/learning-memory/concepts/{concept_key}", intel.LearningMemory.GetConceptDetail)
+		r.Get("/student/learning-memory/strengths", intel.LearningMemory.GetStrengths)
+		r.Get("/student/learning-memory/weaknesses", intel.LearningMemory.GetWeaknesses)
+		r.Get("/student/learning-memory/history", intel.LearningMemory.GetHistory)
+		r.Get("/student/learning-memory/timeline", intel.LearningMemory.GetTimeline)
+		r.Get("/student/learning-memory/snapshots", intel.LearningMemory.GetSnapshots)
 	}
 }
 

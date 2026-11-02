@@ -21,6 +21,7 @@ import (
 	"github.com/THARUN-BART/LearnX/backend/internal/dsa"
 	"github.com/THARUN-BART/LearnX/backend/internal/dsa/model"
 	"github.com/THARUN-BART/LearnX/backend/internal/execution"
+	"github.com/THARUN-BART/LearnX/backend/internal/learningmemory"
 	"github.com/THARUN-BART/LearnX/backend/internal/middleware"
 	"github.com/THARUN-BART/LearnX/backend/internal/mistakes"
 	"github.com/THARUN-BART/LearnX/backend/internal/otp"
@@ -65,6 +66,7 @@ func main() {
 	var testCasesRepo testcases.Repository
 	var mistakesRepo mistakes.Repository
 	var aiRepo aitutor.Repository
+	var memoryRepo learningmemory.Repository
 
 	if cfg.SupabaseDBURL != "" {
 		pool, err := database.NewPool(ctx, cfg.SupabaseDBURL)
@@ -79,6 +81,7 @@ func main() {
 			testCasesRepo = testcases.NewMemoryRepository()
 			mistakesRepo = mistakes.NewMemoryRepository()
 			aiRepo = aitutor.NewMemoryRepository()
+			memoryRepo = learningmemory.NewMemoryRepository()
 		} else {
 			defer pool.Close()
 			if err := database.Migrate(ctx, pool); err != nil {
@@ -91,6 +94,7 @@ func main() {
 			testCasesRepo = testcases.NewPostgresRepository(pool)
 			mistakesRepo = mistakes.NewPostgresRepository(pool)
 			aiRepo = aitutor.NewPostgresRepository(pool)
+			memoryRepo = learningmemory.NewPostgresRepository(pool)
 		}
 	} else {
 		slog.Warn("SUPABASE_DB_URL not configured: using in-memory store for development/testing")
@@ -103,6 +107,7 @@ func main() {
 		testCasesRepo = testcases.NewMemoryRepository()
 		mistakesRepo = mistakes.NewMemoryRepository()
 		aiRepo = aitutor.NewMemoryRepository()
+		memoryRepo = learningmemory.NewMemoryRepository()
 	}
 
 	// Code Execution Client
@@ -133,6 +138,11 @@ func main() {
 	// Assessment Engine & Submission Worker Pool
 	assessmentEngine := assessment.NewEngine(execClient, logger)
 	jobQueue := workers.NewChannelJobQueue(cfg.SubmissionQueueSize)
+
+	// Initialize Student Learning Memory Service
+	memorySvc := learningmemory.NewService(memoryRepo, dsaRepos.Problems, logger)
+	memoryHandler := learningmemory.NewHandler(memorySvc)
+
 	workerPool := workers.NewWorkerPool(
 		jobQueue,
 		submissionsRepo,
@@ -143,6 +153,7 @@ func main() {
 		logger,
 	)
 	workerPool.SetMistakesService(mistakesSvc)
+	workerPool.SetMemoryService(memorySvc, dsaRepos.Problems)
 	workerPool.Start()
 	defer workerPool.Stop()
 
@@ -194,6 +205,7 @@ func main() {
 
 	ctxBuilder := aitutor.NewContextBuilder(dsaRepos.Problems, testCasesRepo, submissionsRepo)
 	aiSvc := aitutor.NewService(llmProvider, aiRepo, mistakesSvc, ctxBuilder, logger)
+	aiSvc.SetMemoryService(memorySvc)
 
 	// Initialize Pedagogy AI Diagnostic Microservice Client
 	pedagogyClient := pedagogy.NewClient(cfg.PedagogyAPIURL, cfg.PedagogyTimeout, logger)
@@ -204,10 +216,11 @@ func main() {
 	aiHandler := aitutor.NewHandler(aiSvc)
 
 	intelligenceHandlers := &server.IntelligenceHandlers{
-		Mistakes: mistakesHandler,
-		AITutor:  aiHandler,
-		Pedagogy: pedagogyHandler,
-		PersonC:  pedagogyHandler,
+		Mistakes:       mistakesHandler,
+		AITutor:        aiHandler,
+		Pedagogy:       pedagogyHandler,
+		PersonC:        pedagogyHandler,
+		LearningMemory: memoryHandler,
 	}
 
 	// DSA Handlers

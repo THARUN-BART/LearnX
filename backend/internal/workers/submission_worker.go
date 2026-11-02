@@ -8,8 +8,10 @@ import (
 	"time"
 
 	"github.com/THARUN-BART/LearnX/backend/internal/assessment"
+	"github.com/THARUN-BART/LearnX/backend/internal/dsa/model"
 	"github.com/THARUN-BART/LearnX/backend/internal/execution"
 	"github.com/THARUN-BART/LearnX/backend/internal/mistakes"
+	"github.com/THARUN-BART/LearnX/backend/internal/problems"
 	"github.com/THARUN-BART/LearnX/backend/internal/progress"
 	"github.com/THARUN-BART/LearnX/backend/internal/submissions"
 	"github.com/THARUN-BART/LearnX/backend/internal/testcases"
@@ -17,10 +19,15 @@ import (
 
 type WorkerPool struct {
 	queue           JobQueue
-	submissionsRepo  submissions.Repository
+	submissionsRepo submissions.Repository
 	testCasesRepo   testcases.Repository
 	progressRepo    progress.Repository
 	mistakesService mistakes.Service
+	memoryService   interface {
+		RecordSubmissionEvent(ctx context.Context, studentID string, problem *model.Problem, subID string, accepted bool, failedReason string) error
+		RecordMistakeEvent(ctx context.Context, studentID, problemID, submissionID, category, subtype, conceptKey string, confidence float64) error
+	}
+	problemsRepo    problems.Repository
 	engine          assessment.Engine
 	concurrency     int
 	logger          *slog.Logger
@@ -31,6 +38,14 @@ type WorkerPool struct {
 
 func (p *WorkerPool) SetMistakesService(service mistakes.Service) {
 	p.mistakesService = service
+}
+
+func (p *WorkerPool) SetMemoryService(service interface {
+	RecordSubmissionEvent(ctx context.Context, studentID string, problem *model.Problem, subID string, accepted bool, failedReason string) error
+	RecordMistakeEvent(ctx context.Context, studentID, problemID, submissionID, category, subtype, conceptKey string, confidence float64) error
+}, probRepo problems.Repository) {
+	p.memoryService = service
+	p.problemsRepo = probRepo
 }
 
 func NewWorkerPool(
@@ -201,10 +216,23 @@ func (p *WorkerPool) processSubmission(submissionID string) {
 					slog.String("subtype", diag.Subtype),
 					slog.String("confidence", diag.ConfidenceLevel),
 				)
+				if p.memoryService != nil {
+					_ = p.memoryService.RecordMistakeEvent(ctx, sub.StudentID, sub.ProblemID, sub.ID, diag.Category, diag.Subtype, diag.RelatedConcept, diag.ConfidenceScore)
+				}
 			}
 		} else {
 			_ = p.mistakesService.MarkPatternCorrected(ctx, sub.StudentID, "", "")
 		}
+	}
+
+	// Trigger Student Learning Memory ingestion
+	if p.memoryService != nil {
+		var prob *model.Problem
+		if p.problemsRepo != nil {
+			prob, _ = p.problemsRepo.Get(ctx, sub.ProblemID)
+		}
+		isAccepted := sub.Status == execution.StatusAccepted
+		_ = p.memoryService.RecordSubmissionEvent(ctx, sub.StudentID, prob, sub.ID, isAccepted, sub.ErrorMessage)
 	}
 
 	p.logger.Info("submission completed",

@@ -32,6 +32,11 @@ type Service interface {
 	ListConversations(ctx context.Context, studentID string, limit, offset int) ([]AIConversation, error)
 	GetConversationMessages(ctx context.Context, studentID, conversationID string) ([]AIMessage, error)
 	SetPedagogyClient(client pedagogy.Client)
+	SetMemoryService(memSvc interface {
+		RecordHintEvent(ctx context.Context, studentID, problemID string, hintLevel int, hintContent string) error
+		RecordWalkthroughEvent(ctx context.Context, studentID, problemID string) error
+		BuildAIContext(ctx context.Context, studentID, topicID, problemID string) (string, error)
+	})
 }
 
 type serviceImpl struct {
@@ -41,6 +46,11 @@ type serviceImpl struct {
 	ctxBuilder      *ContextBuilder
 	logger          *slog.Logger
 	pedagogyClient  pedagogy.Client
+	memoryService   interface {
+		RecordHintEvent(ctx context.Context, studentID, problemID string, hintLevel int, hintContent string) error
+		RecordWalkthroughEvent(ctx context.Context, studentID, problemID string) error
+		BuildAIContext(ctx context.Context, studentID, topicID, problemID string) (string, error)
+	}
 }
 
 func NewService(
@@ -64,6 +74,14 @@ func NewService(
 
 func (s *serviceImpl) SetPedagogyClient(client pedagogy.Client) {
 	s.pedagogyClient = client
+}
+
+func (s *serviceImpl) SetMemoryService(memSvc interface {
+	RecordHintEvent(ctx context.Context, studentID, problemID string, hintLevel int, hintContent string) error
+	RecordWalkthroughEvent(ctx context.Context, studentID, problemID string) error
+	BuildAIContext(ctx context.Context, studentID, topicID, problemID string) (string, error)
+}) {
+	s.memoryService = memSvc
 }
 
 func (s *serviceImpl) GetProgressiveHint(ctx context.Context, studentID string, req HintRequest) (*HintResponse, error) {
@@ -155,6 +173,10 @@ func (s *serviceImpl) GetProgressiveHint(ctx context.Context, studentID string, 
 		HintLevel:    req.Level,
 		HintContent:  parsed.Content,
 	})
+
+	if s.memoryService != nil {
+		_ = s.memoryService.RecordHintEvent(ctx, studentID, req.ProblemID, req.Level, parsed.Content)
+	}
 
 	return &HintResponse{
 		ProblemID:          req.ProblemID,
@@ -270,6 +292,11 @@ func (s *serviceImpl) WalkthroughCode(ctx context.Context, studentID string, req
 	if err := json.Unmarshal([]byte(llmResp.Content), &res); err != nil {
 		res.OverallSummary = llmResp.Content
 	}
+
+	if s.memoryService != nil && req.ProblemID != "" {
+		_ = s.memoryService.RecordWalkthroughEvent(ctx, studentID, req.ProblemID)
+	}
+
 	return &res, nil
 }
 
@@ -407,6 +434,18 @@ func (s *serviceImpl) AskTutor(ctx context.Context, studentID string, req AskReq
 		lc, _ := s.ctxBuilder.Build(ctx, studentID, req.ProblemID, "")
 		if lc != nil && lc.Problem != nil {
 			problemContext = fmt.Sprintf("Problem: %s\nSummary: %s", lc.Problem.Title, lc.Problem.Summary)
+		}
+	}
+
+	// Pull learning memory context for targeted pedagogical grounding
+	if s.memoryService != nil && studentID != "" {
+		memContext, err := s.memoryService.BuildAIContext(ctx, studentID, "", req.ProblemID)
+		if err == nil && memContext != "" {
+			if problemContext != "" {
+				problemContext += "\n\n" + memContext
+			} else {
+				problemContext = memContext
+			}
 		}
 	}
 

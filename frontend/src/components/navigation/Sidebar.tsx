@@ -13,6 +13,7 @@ import {
   Flame,
   Sparkles,
   X,
+  Brain,
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useProfile } from '../../hooks/useProfile';
@@ -33,6 +34,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
     { label: 'My Roadmap',      to: '/roadmap',   icon: Map,             badge: '19' },
     { label: 'Practice Arena',  to: '/practice',  icon: Code2,           badge: 'IDE' },
     { label: 'AI Assistant',    to: '/assistant',  icon: Bot,             badge: 'PRO' },
+    { label: 'Learning Memory', to: '/dashboard/learning-memory', icon: Brain, badge: 'NEW' },
     { label: 'Mistake Analysis',to: '/analysis',   icon: AlertTriangle },
     { label: 'Performance',     to: '/analytics',  icon: BarChart3 },
   ];
