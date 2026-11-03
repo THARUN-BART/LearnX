@@ -37,6 +37,8 @@ import AnalyticsPage from '../pages/analytics/AnalyticsPage';
 import ProfilePage from '../pages/profile/ProfilePage';
 import SettingsPage from '../pages/profile/SettingsPage';
 import NotFoundPage from '../pages/NotFoundPage';
+import VisualizerPage from '../pages/visualizer/VisualizerPage';
+import CodeReviewPage from '../pages/codereview/CodeReviewPage';
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -90,6 +92,8 @@ export const AppRoutes: React.FC = () => {
         <Route path="/roadmap/:topicId" element={<TopicDetailPage />} />
         <Route path="/practice" element={<PracticePage />} />
         <Route path="/practice/:problemId" element={<PracticePage />} />
+        <Route path="/visualizer" element={<VisualizerPage />} />
+        <Route path="/code-review" element={<CodeReviewPage />} />
         <Route path="/assistant" element={<AssistantPage />} />
         <Route path="/analysis" element={<MistakeAnalysisPage />} />
         <Route path="/analytics" element={<AnalyticsPage />} />

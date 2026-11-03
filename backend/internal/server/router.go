@@ -21,6 +21,8 @@ import (
 	"github.com/THARUN-BART/LearnX/backend/internal/submissions"
 	"github.com/THARUN-BART/LearnX/backend/internal/testcases"
 	"github.com/THARUN-BART/LearnX/backend/internal/topics"
+	"github.com/THARUN-BART/LearnX/backend/internal/visualizer"
+	"github.com/THARUN-BART/LearnX/backend/internal/codereview"
 	"github.com/go-chi/chi/v5"
 )
 

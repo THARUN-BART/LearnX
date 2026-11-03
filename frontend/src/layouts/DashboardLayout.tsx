@@ -27,6 +27,8 @@ export const DashboardLayout: React.FC = () => {
     if (path === '/dashboard') return { title: 'Dashboard', subtitle: 'Real-time telemetry and active study modules' };
     if (path.startsWith('/roadmap')) return { title: 'DSA Roadmap', subtitle: 'Curriculum from fundamentals to advanced trees & DP' };
     if (path.startsWith('/practice')) return { title: 'Practice Arena', subtitle: 'Production Monaco editor with live compiler & test runner' };
+    if (path.startsWith('/visualizer')) return { title: 'Algorithm Visualizer', subtitle: 'Interactive step-by-step memory and pointer simulations' };
+    if (path.startsWith('/code-review')) return { title: 'AI Code Review Assistant', subtitle: 'Automated complexity audit, clean refactoring & anti-pattern detection' };
     if (path.startsWith('/assistant')) return { title: 'AI Assistant', subtitle: 'Context-aware hints, algorithmic explainers & debugger' };
     if (path.startsWith('/analysis')) return { title: 'Mistake Analysis', subtitle: 'Automated breakdown of incorrect submissions & edge cases' };
     if (path.startsWith('/analytics')) return { title: 'Performance Analytics', subtitle: 'Detailed breakdown of time, accuracy, and topic strengths' };

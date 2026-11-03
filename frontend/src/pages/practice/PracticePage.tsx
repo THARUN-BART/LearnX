@@ -44,6 +44,59 @@ function starterFor(problem: Problem, lang: string): string {
   return problem.starterCode?.[key] || problem.starterCode?.python || '';
 }
 
+function formatInlineCode(text: string) {
+  const parts = text.split(/(`[^`]+`)/g);
+  return parts.map((part, idx) => {
+    if (part.startsWith('`') && part.endsWith('`')) {
+      return (
+        <code key={idx} className="px-1.5 py-0.5 rounded bg-[#181824] text-[#A78BFA] font-mono text-[11px] border border-[#1C1C28]">
+          {part.slice(1, -1)}
+        </code>
+      );
+    }
+    return part;
+  });
+}
+
+function RenderProblemText({ text }: { text: string }) {
+  const lines = text.split('\n');
+  return (
+    <div className="space-y-2 font-sans leading-relaxed">
+      {lines.map((line, idx) => {
+        const trimmed = line.trim();
+        if (!trimmed) return <div key={idx} className="h-1" />;
+        if (trimmed.startsWith('### ')) {
+          return (
+            <h4 key={idx} className="text-xs font-bold text-[#E9D5FF] uppercase tracking-wider pt-2">
+              {trimmed.replace(/^###\s+/, '')}
+            </h4>
+          );
+        }
+        if (trimmed.startsWith('## ')) {
+          return (
+            <h3 key={idx} className="text-sm font-bold text-[#F4F4F6] pt-2">
+              {trimmed.replace(/^##\s+/, '')}
+            </h3>
+          );
+        }
+        if (trimmed.startsWith('- ')) {
+          return (
+            <div key={idx} className="flex items-start gap-2 pl-2 text-[11px] text-[#CBD5E1]">
+              <span className="text-[#8B5CF6]">•</span>
+              <span>{formatInlineCode(trimmed.slice(2))}</span>
+            </div>
+          );
+        }
+        return (
+          <p key={idx} className="text-xs text-[#CBD5E1]">
+            {formatInlineCode(trimmed)}
+          </p>
+        );
+      })}
+    </div>
+  );
+}
+
 export const PracticePage: React.FC = () => {
   const { problemId } = useParams<{ problemId: string }>();
   const navigate = useNavigate();
@@ -119,7 +172,11 @@ export const PracticePage: React.FC = () => {
         return;
       }
       setProblem(prob);
-      setCode(starterFor(prob, selectedLanguage));
+      if (location.state?.initialCode) {
+        setCode(location.state.initialCode);
+      } else {
+        setCode(starterFor(prob, selectedLanguage));
+      }
       setExecutionResult(null);
       setPedagogy(null);
       setProgressStatus((prob.progress_status as ProgressStatus) || 'Not Started');
@@ -355,6 +412,24 @@ export const PracticePage: React.FC = () => {
           <button onClick={() => setIsFullscreen(!isFullscreen)} title="Fullscreen" className="p-1.5 text-[#8E8EA0] hover:text-[#F4F4F6] rounded-lg border border-[#1C1C28]">
             {isFullscreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
           </button>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() =>
+              navigate('/code-review', {
+                state: {
+                  problemId: problem.id,
+                  problemTitle: problem.title,
+                  language: selectedLanguage,
+                  sourceCode: code,
+                },
+              })
+            }
+            leftIcon={<Sparkles className="w-3 h-3 text-[#A78BFA]" />}
+            className="text-xs h-8 text-[#A78BFA] border-[#8B5CF6]/30 hover:border-[#8B5CF6]"
+          >
+            Review Code
+          </Button>
           <Button variant="secondary" size="sm" onClick={() => runOrSubmit(false)} isLoading={isRunning} leftIcon={<Play className="w-3 h-3" />} className="text-xs h-8">
             Run
           </Button>
@@ -421,7 +496,7 @@ export const PracticePage: React.FC = () => {
                     </a>
                   )}
                 </div>
-                <div className="whitespace-pre-line text-[#D1D1DE] font-sans">{problem.description}</div>
+                <RenderProblemText text={problem.description} />
                 <div className="flex flex-wrap gap-2">
                   {(['Solved', 'Needs Revision', 'Attempted'] as ProgressStatus[]).map((s) => (
                     <button

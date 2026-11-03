@@ -33,6 +33,8 @@ import (
 	"github.com/THARUN-BART/LearnX/backend/internal/submissions"
 	"github.com/THARUN-BART/LearnX/backend/internal/supabase"
 	"github.com/THARUN-BART/LearnX/backend/internal/testcases"
+	"github.com/THARUN-BART/LearnX/backend/internal/visualizer"
+	"github.com/THARUN-BART/LearnX/backend/internal/codereview"
 	"github.com/THARUN-BART/LearnX/backend/internal/workers"
 )
 
@@ -71,6 +73,8 @@ func main() {
 	var memoryRepo learningmemory.Repository
 	var pathRepo learningpath.Repository
 	var recRepo recommendations.Repository
+	var visualizerRepo visualizer.Repository
+	var codeReviewRepo codereview.Repository
 
 	if cfg.SupabaseDBURL != "" {
 		pool, err := database.NewPool(ctx, cfg.SupabaseDBURL)
@@ -88,6 +92,8 @@ func main() {
 			memoryRepo = learningmemory.NewMemoryRepository()
 			pathRepo = learningpath.NewMemoryRepository()
 			recRepo = recommendations.NewMemoryRepository()
+			visualizerRepo = visualizer.NewMemoryRepository()
+			codeReviewRepo = codereview.NewMemoryRepository()
 		} else {
 			defer pool.Close()
 			if err := database.Migrate(ctx, pool); err != nil {
@@ -103,6 +109,8 @@ func main() {
 			memoryRepo = learningmemory.NewPostgresRepository(pool)
 			pathRepo = learningpath.NewPostgresRepository(pool)
 			recRepo = recommendations.NewPostgresRepository(pool)
+			visualizerRepo = visualizer.NewPostgresRepository(pool)
+			codeReviewRepo = codereview.NewPostgresRepository(pool)
 		}
 	} else {
 		slog.Warn("SUPABASE_DB_URL not configured: using in-memory store for development/testing")
@@ -118,6 +126,8 @@ func main() {
 		memoryRepo = learningmemory.NewMemoryRepository()
 		pathRepo = learningpath.NewMemoryRepository()
 		recRepo = recommendations.NewMemoryRepository()
+		visualizerRepo = visualizer.NewMemoryRepository()
+		codeReviewRepo = codereview.NewMemoryRepository()
 	}
 
 	// Code Execution Client
@@ -243,6 +253,14 @@ func main() {
 
 	aiHandler := aitutor.NewHandler(aiSvc)
 
+	// Initialize Algorithm Visualizer Service & Handler
+	visualizerSvc := visualizer.NewService(visualizerRepo, llmProvider, logger)
+	visualizerHandler := visualizer.NewHandler(visualizerSvc)
+
+	// Initialize AI Code Review Service & Handler
+	codeReviewSvc := codereview.NewService(codeReviewRepo, llmProvider, dsaRepos.Problems, logger)
+	codeReviewHandler := codereview.NewHandler(codeReviewSvc)
+
 	intelligenceHandlers := &server.IntelligenceHandlers{
 		Mistakes:        mistakesHandler,
 		AITutor:         aiHandler,
@@ -251,6 +269,8 @@ func main() {
 		LearningMemory:  memoryHandler,
 		LearningPath:    pathHandler,
 		Recommendations: recHandler,
+		Visualizer:      visualizerHandler,
+		CodeReview:      codeReviewHandler,
 	}
 
 	// DSA Handlers
