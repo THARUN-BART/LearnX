@@ -207,7 +207,7 @@ func (r *PostgresRepository) Related(ctx context.Context, problemID string, limi
 		JOIN topics t ON t.id = p.topic_id
 		JOIN subtopics s ON s.id = p.subtopic_id
 		WHERE p.is_active = TRUE
-		  AND p.id <> $1
+		  AND p.id::text <> $1
 		  AND p.subtopic_id = (SELECT subtopic_id FROM problems WHERE id::text = $1 OR slug = $1 LIMIT 1)
 		ORDER BY p.problem_order
 		LIMIT $2;

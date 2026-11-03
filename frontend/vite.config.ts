@@ -18,18 +18,18 @@ export default defineConfig({
     },
   },
   server: {
+    host: '0.0.0.0',
     port: 5173,
-    host: true,
     proxy: {
       '/api': {
-        target: 'https://b917jx4f-8080.inc1.devtunnels.ms',
-        secure: false,
-        headers: {
-          'X-Tunnel-Skip-Anti-Phishing-Page': 'true',
-        },
+        target: 'http://localhost:8080',
         changeOrigin: true,
       },
     },
+  },
+  preview: {
+    host: '0.0.0.0',
+    port: 4173,
   },
   build: {
     chunkSizeWarningLimit: 600,

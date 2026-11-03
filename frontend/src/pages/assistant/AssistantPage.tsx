@@ -17,6 +17,7 @@ import {
 import { AIConversation, AssistantMessage, AssistantMode } from '../../types/learning.types';
 import aiService from '../../services/ai.service';
 import Button from '../../components/ui/Button';
+import FormattedMarkdown from '../../components/common/FormattedMarkdown';
 import { toast } from 'sonner';
 
 export const AssistantPage: React.FC = () => {
@@ -211,7 +212,11 @@ export const AssistantPage: React.FC = () => {
                   </div>
                 )}
 
-                <div className="whitespace-pre-wrap">{msg.content}</div>
+                {isUser ? (
+                  <div className="whitespace-pre-wrap">{msg.content}</div>
+                ) : (
+                  <FormattedMarkdown content={msg.content} />
+                )}
 
                 {msg.codeSnippet && (
                   <div className="mt-3 bg-[#08080C] rounded-xl border border-[#1C1C28] p-3.5 font-mono text-xs relative text-emerald-300">

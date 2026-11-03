@@ -275,7 +275,7 @@ func (r *PostgresRepository) GetActiveRecommendations(ctx context.Context, stude
 		JOIN problems p ON p.id = r.problem_id
 		LEFT JOIN topics t ON t.id = p.topic_id
 		LEFT JOIN subtopics st ON st.id = p.subtopic_id
-		LEFT JOIN student_progress sp ON sp.student_id = r.student_id AND sp.problem_id = p.id
+		LEFT JOIN student_problem_progress sp ON sp.student_id = r.student_id AND sp.problem_id = p.id
 		WHERE r.student_id = $1 AND r.status = 'active'
 		ORDER BY r.is_top_pick DESC, r.match_score DESC
 	`
@@ -302,7 +302,7 @@ func (r *PostgresRepository) GetTopPick(ctx context.Context, studentID string) (
 		JOIN problems p ON p.id = r.problem_id
 		LEFT JOIN topics t ON t.id = p.topic_id
 		LEFT JOIN subtopics st ON st.id = p.subtopic_id
-		LEFT JOIN student_progress sp ON sp.student_id = r.student_id AND sp.problem_id = p.id
+		LEFT JOIN student_problem_progress sp ON sp.student_id = r.student_id AND sp.problem_id = p.id
 		WHERE r.student_id = $1 AND r.status = 'active'
 		ORDER BY r.is_top_pick DESC, r.match_score DESC
 		LIMIT 1
@@ -337,7 +337,7 @@ func (r *PostgresRepository) GetByCategory(ctx context.Context, studentID, categ
 		JOIN problems p ON p.id = r.problem_id
 		LEFT JOIN topics t ON t.id = p.topic_id
 		LEFT JOIN subtopics st ON st.id = p.subtopic_id
-		LEFT JOIN student_progress sp ON sp.student_id = r.student_id AND sp.problem_id = p.id
+		LEFT JOIN student_problem_progress sp ON sp.student_id = r.student_id AND sp.problem_id = p.id
 		WHERE r.student_id = $1 AND r.category = $2 AND r.status = 'active'
 		ORDER BY r.match_score DESC
 	`
@@ -364,7 +364,7 @@ func (r *PostgresRepository) GetByID(ctx context.Context, studentID, recommendat
 		JOIN problems p ON p.id = r.problem_id
 		LEFT JOIN topics t ON t.id = p.topic_id
 		LEFT JOIN subtopics st ON st.id = p.subtopic_id
-		LEFT JOIN student_progress sp ON sp.student_id = r.student_id AND sp.problem_id = p.id
+		LEFT JOIN student_problem_progress sp ON sp.student_id = r.student_id AND sp.problem_id = p.id
 		WHERE r.student_id = $1 AND r.id = $2
 		LIMIT 1
 	`
@@ -436,7 +436,7 @@ func (r *PostgresRepository) GetHistory(ctx context.Context, studentID string, l
 		JOIN problems p ON p.id = r.problem_id
 		LEFT JOIN topics t ON t.id = p.topic_id
 		LEFT JOIN subtopics st ON st.id = p.subtopic_id
-		LEFT JOIN student_progress sp ON sp.student_id = r.student_id AND sp.problem_id = p.id
+		LEFT JOIN student_problem_progress sp ON sp.student_id = r.student_id AND sp.problem_id = p.id
 		WHERE r.student_id = $1
 		ORDER BY r.created_at DESC
 		LIMIT $2 OFFSET $3

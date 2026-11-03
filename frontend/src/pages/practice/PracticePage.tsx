@@ -36,6 +36,7 @@ import { recommendationService } from '../../services/recommendation.service';
 import { ProblemRecommendation } from '../../types/recommendations.types';
 import { starterCodeKey, toJudgeLanguage, toMonacoLanguage } from '../../utils/language';
 import Button from '../../components/ui/Button';
+import FormattedMarkdown from '../../components/common/FormattedMarkdown';
 import { toast } from 'sonner';
 
 const Editor = lazy(() => import('@monaco-editor/react'));
@@ -539,7 +540,7 @@ export const PracticePage: React.FC = () => {
                 {unlockedHints.map((h, i) => (
                   <div key={i} className="p-3.5 bg-[#12121B] rounded-xl border border-[#8B5CF6]/30 space-y-1.5">
                     <span className="text-xs font-bold text-[#E9D5FF]">Level {h.level}: {h.title}</span>
-                    <p className="text-[#D1D1DE] font-sans whitespace-pre-wrap">{h.content}</p>
+                    <FormattedMarkdown content={h.content} className="text-[#D1D1DE]" />
                     {h.guiding_question && <div className="text-[11px] text-[#A78BFA] italic">{h.guiding_question}</div>}
                   </div>
                 ))}

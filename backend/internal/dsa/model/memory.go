@@ -173,6 +173,12 @@ func (m *Memory) GetProblem(id string) (*Problem, bool) {
 	}
 	cp := *p
 	cp.Tags = cloneStrings(p.Tags)
+	if p.StarterCode != nil {
+		cp.StarterCode = make(map[string]string, len(p.StarterCode))
+		for k, v := range p.StarterCode {
+			cp.StarterCode[k] = v
+		}
+	}
 	if t, ok := m.Topics[p.TopicID]; ok {
 		cp.TopicName = t.Name
 	}

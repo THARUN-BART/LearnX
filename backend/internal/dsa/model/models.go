@@ -56,25 +56,27 @@ type Subtopic struct {
 }
 
 type Problem struct {
-	ID                 string    `json:"id"`
-	TopicID            string    `json:"topic_id"`
-	SubtopicID         string    `json:"subtopic_id"`
-	Title              string    `json:"title"`
-	Slug               string    `json:"slug"`
-	Summary            string    `json:"summary"`
-	Difficulty         string    `json:"difficulty"`
-	ExternalPlatform   string    `json:"external_platform"`
-	ExternalProblemURL string    `json:"external_problem_url"`
-	SourceSheet        string    `json:"source_sheet"`
-	SourceProblemID    string    `json:"source_problem_id"`
-	ProblemOrder       int       `json:"problem_order"`
-	Tags               []string  `json:"tags"`
-	IsActive           bool      `json:"is_active"`
-	CreatedAt          time.Time `json:"created_at"`
-	UpdatedAt          time.Time `json:"updated_at"`
-	TopicName          string    `json:"topic_name,omitempty"`
-	SubtopicName       string    `json:"subtopic_name,omitempty"`
-	ProgressStatus     string    `json:"progress_status,omitempty"`
+	ID                 string            `json:"id"`
+	TopicID            string            `json:"topic_id"`
+	SubtopicID         string            `json:"subtopic_id"`
+	Title              string            `json:"title"`
+	Slug               string            `json:"slug"`
+	Summary            string            `json:"summary"`
+	Description        string            `json:"description,omitempty"`
+	Difficulty         string            `json:"difficulty"`
+	ExternalPlatform   string            `json:"external_platform"`
+	ExternalProblemURL string            `json:"external_problem_url"`
+	SourceSheet        string            `json:"source_sheet"`
+	SourceProblemID    string            `json:"source_problem_id"`
+	ProblemOrder       int               `json:"problem_order"`
+	Tags               []string          `json:"tags"`
+	StarterCode        map[string]string `json:"starter_code,omitempty"`
+	IsActive           bool              `json:"is_active"`
+	CreatedAt          time.Time         `json:"created_at"`
+	UpdatedAt          time.Time         `json:"updated_at"`
+	TopicName          string            `json:"topic_name,omitempty"`
+	SubtopicName       string            `json:"subtopic_name,omitempty"`
+	ProgressStatus     string            `json:"progress_status,omitempty"`
 }
 
 type Progress struct {

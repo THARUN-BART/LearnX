@@ -5,6 +5,7 @@ import "time"
 type TestCase struct {
 	ID             string    `json:"id"`
 	ProblemID      string    `json:"problem_id"`
+	ProblemSlug    string    `json:"problem_slug,omitempty"`
 	InputData      string    `json:"input_data"`
 	ExpectedOutput string    `json:"expected_output"`
 	IsHidden       bool      `json:"is_hidden"`

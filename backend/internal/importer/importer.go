@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/THARUN-BART/LearnX/backend/internal/dsa/model"
+	"github.com/THARUN-BART/LearnX/backend/internal/testcases"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -43,17 +44,27 @@ type SeedSubtopic struct {
 	Problems      []SeedProblem `json:"problems"`
 }
 
+type SeedTestCase struct {
+	InputData      string `json:"input_data"`
+	ExpectedOutput string `json:"expected_output"`
+	IsHidden       bool   `json:"is_hidden"`
+	TestOrder      int    `json:"test_order"`
+}
+
 type SeedProblem struct {
-	Title              string   `json:"title"`
-	Slug               string   `json:"slug"`
-	Summary            string   `json:"summary"`
-	Difficulty         string   `json:"difficulty"`
-	ExternalPlatform   string   `json:"external_platform"`
-	ExternalProblemURL string   `json:"external_problem_url"`
-	SourceSheet        string   `json:"source_sheet"`
-	SourceProblemID    string   `json:"source_problem_id"`
-	ProblemOrder       int      `json:"problem_order"`
-	Tags               []string `json:"tags"`
+	Title              string            `json:"title"`
+	Slug               string            `json:"slug"`
+	Summary            string            `json:"summary"`
+	Description        string            `json:"description"`
+	Difficulty         string            `json:"difficulty"`
+	ExternalPlatform   string            `json:"external_platform"`
+	ExternalProblemURL string            `json:"external_problem_url"`
+	SourceSheet        string            `json:"source_sheet"`
+	SourceProblemID    string            `json:"source_problem_id"`
+	ProblemOrder       int               `json:"problem_order"`
+	Tags               []string          `json:"tags"`
+	StarterCode        map[string]string `json:"starter_code"`
+	TestCases          []SeedTestCase    `json:"test_cases"`
 }
 
 type Result struct {
@@ -212,6 +223,11 @@ func ImportMemory(mem *model.Memory, seed *SeedFile) (*Result, error) {
 				prob.Title = pseed.Title
 				prob.Slug = pseed.Slug
 				prob.Summary = pseed.Summary
+				prob.Description = pseed.Description
+				if prob.Description == "" {
+					prob.Description = pseed.Summary
+				}
+				prob.StarterCode = pseed.StarterCode
 				prob.Difficulty = normalizeDifficulty(pseed.Difficulty)
 				prob.ExternalPlatform = pseed.ExternalPlatform
 				prob.ExternalProblemURL = pseed.ExternalProblemURL
@@ -230,6 +246,62 @@ func ImportMemory(mem *model.Memory, seed *SeedFile) (*Result, error) {
 	}
 
 	return res, nil
+}
+
+func SeedMemoryTestCases(ctx context.Context, mem *model.Memory, seed *SeedFile, tcRepo testcases.Repository) error {
+	if mem == nil || seed == nil || tcRepo == nil {
+		return nil
+	}
+	for _, t := range seed.Topics {
+		for _, s := range t.Subtopics {
+			for _, p := range s.Problems {
+				var probID string
+				for _, memProb := range mem.Problems {
+					if memProb.Slug == p.Slug {
+						probID = memProb.ID
+						break
+					}
+				}
+				if probID == "" {
+					probID = p.Slug
+				}
+				for _, tc := range p.TestCases {
+					_ = tcRepo.Create(ctx, &testcases.TestCase{
+						ProblemID:      probID,
+						ProblemSlug:    p.Slug,
+						InputData:      tc.InputData,
+						ExpectedOutput: tc.ExpectedOutput,
+						IsHidden:       tc.IsHidden,
+						TestOrder:      tc.TestOrder,
+					})
+				}
+			}
+		}
+	}
+	return nil
+}
+
+func SeedPostgresTestCases(ctx context.Context, pool *pgxpool.Pool, seed *SeedFile) error {
+	if pool == nil || seed == nil {
+		return nil
+	}
+	for _, t := range seed.Topics {
+		for _, s := range t.Subtopics {
+			for _, p := range s.Problems {
+				for _, tc := range p.TestCases {
+					_, _ = pool.Exec(ctx, `
+						INSERT INTO test_cases (problem_id, input_data, expected_output, is_hidden, test_order)
+						SELECT id, $2, $3, $4, $5
+						FROM problems WHERE slug = $1
+						AND NOT EXISTS (
+							SELECT 1 FROM test_cases WHERE problem_id = problems.id AND test_order = $5
+						);
+					`, p.Slug, tc.InputData, tc.ExpectedOutput, tc.IsHidden, tc.TestOrder)
+				}
+			}
+		}
+	}
+	return nil
 }
 
 func ImportPostgres(ctx context.Context, pool *pgxpool.Pool, seed *SeedFile) (*Result, error) {

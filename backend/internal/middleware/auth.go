@@ -6,6 +6,8 @@ import (
 	"errors"
 	"net/http"
 	"strings"
+	"sync"
+	"time"
 
 	"github.com/THARUN-BART/LearnX/backend/internal/supabase"
 	"github.com/golang-jwt/jwt/v5"
@@ -23,15 +25,23 @@ type UserClaims struct {
 	Role   string `json:"role"`
 }
 
+type cachedToken struct {
+	claims    *UserClaims
+	expiresAt time.Time
+}
+
 type AuthMiddleware struct {
 	supabaseClient supabase.Client
 	jwtSecret      string
+	tokenCache     map[string]cachedToken
+	cacheMu        sync.RWMutex
 }
 
 func NewAuthMiddleware(supabaseClient supabase.Client, jwtSecret string) *AuthMiddleware {
 	return &AuthMiddleware{
 		supabaseClient: supabaseClient,
 		jwtSecret:      jwtSecret,
+		tokenCache:     make(map[string]cachedToken),
 	}
 }
 
@@ -109,6 +119,15 @@ func (m *AuthMiddleware) validateToken(ctx context.Context, tokenStr string) (*U
 			Role:   "student",
 		}, nil
 	}
+
+	// Check in-memory token cache first
+	m.cacheMu.RLock()
+	if cached, ok := m.tokenCache[tokenStr]; ok && time.Now().Before(cached.expiresAt) {
+		m.cacheMu.RUnlock()
+		return cached.claims, nil
+	}
+	m.cacheMu.RUnlock()
+
 	// If a local JWT secret is provided, try validating signature locally first
 	if m.jwtSecret != "" {
 		token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
@@ -126,11 +145,18 @@ func (m *AuthMiddleware) validateToken(ctx context.Context, tokenStr string) (*U
 					role = "student"
 				}
 				if sub != "" {
-					return &UserClaims{
+					claims := &UserClaims{
 						UserID: sub,
 						Email:  email,
 						Role:   role,
-					}, nil
+					}
+					m.cacheMu.Lock()
+					m.tokenCache[tokenStr] = cachedToken{
+						claims:    claims,
+						expiresAt: time.Now().Add(5 * time.Minute),
+					}
+					m.cacheMu.Unlock()
+					return claims, nil
 				}
 			}
 		}
@@ -142,11 +168,20 @@ func (m *AuthMiddleware) validateToken(ctx context.Context, tokenStr string) (*U
 		return nil, err
 	}
 
-	return &UserClaims{
+	claims := &UserClaims{
 		UserID: user.ID,
 		Email:  user.Email,
 		Role:   "student",
-	}, nil
+	}
+
+	m.cacheMu.Lock()
+	m.tokenCache[tokenStr] = cachedToken{
+		claims:    claims,
+		expiresAt: time.Now().Add(5 * time.Minute),
+	}
+	m.cacheMu.Unlock()
+
+	return claims, nil
 }
 
 func GetUserClaims(ctx context.Context) (*UserClaims, bool) {

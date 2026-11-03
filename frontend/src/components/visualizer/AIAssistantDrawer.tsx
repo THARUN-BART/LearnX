@@ -3,6 +3,7 @@ import { ExplainStepResponse, ExecutionStep } from '../../types/visualizer.types
 import visualizerService from '../../services/visualizer.service';
 import { Bot, Sparkles, X, Send, Lightbulb, Compass, Key } from 'lucide-react';
 import Button from '../ui/Button';
+import FormattedMarkdown from '../common/FormattedMarkdown';
 import { toast } from 'sonner';
 
 interface AIAssistantDrawerProps {
@@ -103,36 +104,28 @@ export const AIAssistantDrawer: React.FC<AIAssistantDrawerProps> = ({
               <div className="flex items-center gap-1.5 text-[#E9D5FF] text-xs font-bold font-sans">
                 <Lightbulb className="w-4 h-4 text-amber-400" /> Deep Step Breakdown
               </div>
-              <p className="text-xs text-[#CBD5E1] font-sans leading-relaxed">
-                {explanation.explanation}
-              </p>
+              <FormattedMarkdown content={explanation.explanation} className="text-[#CBD5E1]" />
             </div>
 
             <div className="p-3.5 bg-[#12121B] rounded-xl border border-[#1C1C28] space-y-1.5">
               <div className="flex items-center gap-1.5 text-[#A78BFA] text-xs font-bold font-sans">
                 <Compass className="w-4 h-4 text-[#8B5CF6]" /> Algorithmic Invariant
               </div>
-              <p className="text-xs text-[#CBD5E1] font-sans leading-relaxed">
-                {explanation.intuition}
-              </p>
+              <FormattedMarkdown content={explanation.intuition} className="text-[#CBD5E1]" />
             </div>
 
             <div className="p-3.5 bg-[#12121B] rounded-xl border border-[#1C1C28] space-y-1.5">
               <div className="flex items-center gap-1.5 text-emerald-400 text-xs font-bold font-sans">
                 <Compass className="w-4 h-4 text-emerald-400" /> Next Probable Action
               </div>
-              <p className="text-xs text-[#CBD5E1] font-sans leading-relaxed">
-                {explanation.next_expected_move}
-              </p>
+              <FormattedMarkdown content={explanation.next_expected_move} className="text-[#CBD5E1]" />
             </div>
 
             <div className="p-3.5 bg-gradient-to-r from-[#8B5CF6]/10 to-[#6366F1]/10 rounded-xl border border-[#8B5CF6]/20 space-y-1">
               <div className="flex items-center gap-1.5 text-[#D8B4FE] text-xs font-bold font-sans">
                 <Key className="w-4 h-4 text-[#A78BFA]" /> Interview Takeaway
               </div>
-              <p className="text-xs text-[#F4F4F6] font-sans font-medium">
-                {explanation.key_takeaway}
-              </p>
+              <FormattedMarkdown content={explanation.key_takeaway} className="text-[#F4F4F6]" />
             </div>
           </div>
         )}

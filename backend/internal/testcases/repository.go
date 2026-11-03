@@ -129,7 +129,7 @@ func (m *MemoryRepository) ListByProblem(ctx context.Context, problemID string, 
 	defer m.mu.RUnlock()
 	var list []TestCase
 	for _, tc := range m.testCases {
-		if tc.ProblemID == problemID {
+		if tc.ProblemID == problemID || (tc.ProblemSlug != "" && tc.ProblemSlug == problemID) {
 			if !includeHidden && tc.IsHidden {
 				continue
 			}

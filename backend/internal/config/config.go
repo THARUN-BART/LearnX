@@ -23,6 +23,7 @@ type Config struct {
 	SupabaseJWTSecret      string
 
 	ServerPort string
+	ServerHost string
 	ServerEnv  string
 	ClientURL  string
 
@@ -69,7 +70,8 @@ func Load() (*Config, error) {
 		SupabaseDBURL:          getEnv("SUPABASE_DB_URL", ""),
 		SupabaseJWTSecret:      getEnv("SUPABASE_JWT_SECRET", ""),
 
-		ServerPort: getEnv("SERVER_PORT", "8080"),
+		ServerPort: getEnv("PORT", getEnv("SERVER_PORT", "8080")),
+		ServerHost: getEnv("SERVER_HOST", getEnv("HOST", "0.0.0.0")),
 		ServerEnv:  getEnv("SERVER_ENV", "development"),
 		ClientURL:  getEnv("CLIENT_URL", "http://localhost:3000"),
 

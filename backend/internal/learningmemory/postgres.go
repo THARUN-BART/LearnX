@@ -580,14 +580,14 @@ func (r *PostgresRepository) GetTimeline(ctx context.Context, studentID string, 
 	query := `
 		SELECT
 			d::date::text as day,
-			COALESCE(COUNT(CASE WHEN e.event_type = 'submission_accepted' AND (e.event_data->>'is_independent')::boolean = true THEN 1 END), 0) as ind_solves,
-			COALESCE(COUNT(CASE WHEN e.event_type = 'submission_accepted' AND (e.event_data->>'is_independent')::boolean = false THEN 1 END), 0) as ass_solves,
+			COALESCE(COUNT(CASE WHEN e.event_type = 'submission_accepted' AND (e.event_data->>'is_independent') = 'true' THEN 1 END), 0) as ind_solves,
+			COALESCE(COUNT(CASE WHEN e.event_type = 'submission_accepted' AND (e.event_data->>'is_independent') = 'false' THEN 1 END), 0) as ass_solves,
 			COALESCE(COUNT(CASE WHEN e.event_type = 'mistake_detected' THEN 1 END), 0) as mistakes,
 			COALESCE(COUNT(CASE WHEN e.event_type = 'mistake_corrected' THEN 1 END), 0) as corrected,
 			COALESCE(COUNT(CASE WHEN e.event_type = 'concept_practised' THEN 1 END), 0) as concepts
-		FROM generate_series(CURRENT_DATE - ($2 || ' days')::interval, CURRENT_DATE, '1 day'::interval) d
+		FROM generate_series(CURRENT_DATE - ($2 * interval '1 day'), CURRENT_DATE, interval '1 day') d
 		LEFT JOIN student_learning_events e
-			ON e.student_id = $1 AND e.occurred_at::date = d::date
+			ON e.student_id = $1::uuid AND e.occurred_at::date = d::date
 		GROUP BY d
 		ORDER BY d ASC`
 

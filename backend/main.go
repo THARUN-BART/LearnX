@@ -82,9 +82,9 @@ func main() {
 			slog.Warn("could not connect to PostgreSQL database pool, falling back to memory repository for local development", slog.String("error", err.Error()))
 			authRepo = auth.NewMemoryRepository()
 			profileRepo = profile.NewMemoryRepository()
-			dsaRepos = loadMemoryDSA()
-			submissionsRepo = submissions.NewMemoryRepository()
 			testCasesRepo = testcases.NewMemoryRepository()
+			dsaRepos = loadMemoryDSA(testCasesRepo)
+			submissionsRepo = submissions.NewMemoryRepository()
 			mistakesRepo = mistakes.NewMemoryRepository()
 			aiRepo = aitutor.NewMemoryRepository()
 			memoryRepo = learningmemory.NewMemoryRepository()
@@ -97,6 +97,11 @@ func main() {
 			defer pool.Close()
 			if err := database.Migrate(ctx, pool); err != nil {
 				slog.Error("database migration error", slog.String("error", err.Error()))
+			}
+			if seed, err := importer.LoadSeedFile("data/strivers-a2z-sheet.json"); err == nil {
+				go func() {
+					_ = importer.SeedPostgresTestCases(context.Background(), pool, seed)
+				}()
 			}
 			authRepo = auth.NewPostgresRepository(pool)
 			profileRepo = profile.NewPostgresRepository(pool)
@@ -115,9 +120,9 @@ func main() {
 		slog.Warn("SUPABASE_DB_URL not configured: using in-memory store for development/testing")
 		authRepo = auth.NewMemoryRepository()
 		profileRepo = profile.NewMemoryRepository()
-		dsaRepos = loadMemoryDSA()
-		submissionsRepo = submissions.NewMemoryRepository()
 		testCasesRepo = testcases.NewMemoryRepository()
+		dsaRepos = loadMemoryDSA(testCasesRepo)
+		submissionsRepo = submissions.NewMemoryRepository()
 		mistakesRepo = mistakes.NewMemoryRepository()
 		aiRepo = aitutor.NewMemoryRepository()
 		memoryRepo = learningmemory.NewMemoryRepository()
@@ -308,8 +313,9 @@ func main() {
 		server.WithIntelligence(intelligenceHandlers),
 	)
 
+	bindAddr := fmt.Sprintf("%s:%s", cfg.ServerHost, cfg.ServerPort)
 	httpServer := &http.Server{
-		Addr:         ":" + cfg.ServerPort,
+		Addr:         bindAddr,
 		Handler:      router,
 		ReadTimeout:  15 * time.Second,
 		WriteTimeout: 30 * time.Second,
@@ -318,7 +324,7 @@ func main() {
 
 	serverErr := make(chan error, 1)
 	go func() {
-		slog.Info(fmt.Sprintf("LearnX backend listening on port %s", cfg.ServerPort))
+		slog.Info(fmt.Sprintf("LearnX backend listening on %s", bindAddr))
 		if err := httpServer.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			serverErr <- err
 		}
@@ -342,7 +348,7 @@ func main() {
 	}
 }
 
-func loadMemoryDSA() dsa.Repositories {
+func loadMemoryDSA(tcRepo testcases.Repository) dsa.Repositories {
 	mem := model.NewMemory()
 	for _, path := range []string{"data/strivers-a2z-sheet.json", "data/strivers-a2z-sheet.sample.json"} {
 		seed, err := importer.LoadSeedFile(path)
@@ -352,6 +358,9 @@ func loadMemoryDSA() dsa.Repositories {
 		if _, err := importer.ImportMemory(mem, seed); err != nil {
 			slog.Warn("failed to load in-memory A2Z seed", slog.String("file", path), slog.String("error", err.Error()))
 			continue
+		}
+		if tcRepo != nil {
+			_ = importer.SeedMemoryTestCases(context.Background(), mem, seed, tcRepo)
 		}
 		slog.Info("loaded in-memory Striver A2Z catalogue", slog.String("file", path))
 		break

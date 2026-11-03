@@ -1,185 +1,2409 @@
 {
   "attribution": {
-    "sheet": "Striver's A2Z DSA Sheet",
-    "author": "Raj Vikramaditya (Striver)",
-    "organization": "TakeUForward",
-    "source_url": "https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/",
-    "license_note": "Problem statements, editorials, and videos remain the property of TakeUForward and the destination platforms. This file stores catalogue metadata (names, order, links) for educational progress tracking only.",
-    "generated_from": "Public TakeUForward syllabus payload (reproduced as metadata, not editorial content).",
-    "generated_at": "2026-09-20",
-    "problem_count": 402,
-    "note": "Truncated sample for local tests and documentation. Use strivers-a2z-sheet.json for a full import."
+    "title": "LearnX Curated 3-Problem-per-Module DSA Sheet",
+    "description": "57 canonical problems across 19 modules with full descriptions, test cases, and starter code.",
+    "version": "2.0"
   },
   "roadmap": {
-    "name": "Striver's A2Z DSA Sheet",
+    "name": "Striver's A2Z DSA Sheet (Curated)",
     "slug": "strivers-a2z-dsa-sheet",
-    "description": "Official Striver's A2Z DSA Sheet from TakeUForward. Catalogue metadata only: titles, ordering, difficulty, and canonical practice URLs. No editorials or solutions are stored.",
-    "source_name": "TakeUForward",
-    "source_url": "https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/"
+    "description": "The essential 19-section DSA curriculum curated to 3 core problems per module for high-velocity mastery.",
+    "source_name": "takeuforward",
+    "source_url": "https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-problems-sheet"
   },
   "topics": [
     {
       "name": "Beginner Problems",
       "slug": "beginner-problems",
-      "description": "Official A2Z section: Beginner Problems",
+      "description": "Language basics, loops, math foundations, and pattern printing logic.",
       "topic_order": 1,
       "subtopics": [
         {
-          "name": "Patterns",
-          "slug": "patterns",
-          "description": "Beginner Problems / Patterns",
+          "name": "Beginner Problems Core",
+          "slug": "beginner-problems-core",
+          "description": "Core curated problems for Beginner Problems",
           "subtopic_order": 1,
           "problems": [
             {
               "title": "Pattern 1",
               "slug": "pattern-1",
-              "summary": "Practice problem from Striver's A2Z DSA Sheet (Beginner Problems \u2014 Patterns). Open the canonical takeuforward URL to view the problem statement.",
-              "difficulty": "Unspecified",
+              "summary": "Print an N x N square star pattern.",
+              "description": "Given an integer N, print an N x N grid of asterisks (*).\n\nInput Format:\nA single integer N.\n\nOutput Format:\nN lines each containing N asterisks without spaces.",
+              "difficulty": "Easy",
               "external_platform": "takeuforward",
-              "external_problem_url": "https://takeuforward.org/practice/dsa/pattern-1?category=patterns&source=strivers-a2z-dsa-sheet",
-              "source_sheet": "strivers-a2z-dsa-sheet",
-              "source_problem_id": "a2z-401",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/pattern-1",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-1-1",
               "problem_order": 1,
               "tags": [
-                "basic",
                 "Beginner Problems",
-                "Patterns"
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "3",
+                  "expected_output": "***\n***\n***",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "2",
+                  "expected_output": "**\n**",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "1",
+                  "expected_output": "*",
+                  "is_hidden": true,
+                  "test_order": 3
+                },
+                {
+                  "input_data": "4",
+                  "expected_output": "****\n****\n****\n****",
+                  "is_hidden": true,
+                  "test_order": 4
+                }
               ]
             },
             {
-              "title": "Pattern 2",
-              "slug": "pattern-2",
-              "summary": "Practice problem from Striver's A2Z DSA Sheet (Beginner Problems \u2014 Patterns). Open the canonical takeuforward URL to view the problem statement.",
-              "difficulty": "Unspecified",
+              "title": "Reverse a Number",
+              "slug": "reverse-a-number",
+              "summary": "Reverse the digits of a given integer.",
+              "description": "Given an integer N, reverse its digits. If N is negative, preserve the minus sign.\n\nInput Format:\nA single integer N.\n\nOutput Format:\nThe integer with reversed digits.",
+              "difficulty": "Easy",
               "external_platform": "takeuforward",
-              "external_problem_url": "https://takeuforward.org/practice/dsa/pattern-2?category=patterns&source=strivers-a2z-dsa-sheet",
-              "source_sheet": "strivers-a2z-dsa-sheet",
-              "source_problem_id": "a2z-412",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/reverse-a-number",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-1-2",
               "problem_order": 2,
               "tags": [
-                "basic",
                 "Beginner Problems",
-                "Patterns"
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "12345",
+                  "expected_output": "54321",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "-321",
+                  "expected_output": "-123",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "100",
+                  "expected_output": "1",
+                  "is_hidden": true,
+                  "test_order": 3
+                },
+                {
+                  "input_data": "7",
+                  "expected_output": "7",
+                  "is_hidden": true,
+                  "test_order": 4
+                }
               ]
-            }
-          ]
-        },
-        {
-          "name": "Basic Maths",
-          "slug": "basic-maths",
-          "description": "Beginner Problems / Basic Maths",
-          "subtopic_order": 2,
-          "problems": [
+            },
             {
-              "title": "Count all Digits of a Number",
-              "slug": "count-all-digits-of-a-number",
-              "summary": "Practice problem from Striver's A2Z DSA Sheet (Beginner Problems \u2014 Basic Maths). Open the canonical gfg URL to view the problem statement.",
+              "title": "Check Palindrome Number",
+              "slug": "check-palindrome-number",
+              "summary": "Check whether an integer reads the same forwards and backwards.",
+              "description": "Given an integer N, return true if N is a palindrome integer, or false otherwise.\n\nInput Format:\nA single integer N.\n\nOutput Format:\ntrue or false",
               "difficulty": "Easy",
-              "external_platform": "gfg",
-              "external_problem_url": "https://www.geeksforgeeks.org/problems/count-total-digits-in-a-number/1",
-              "source_sheet": "strivers-a2z-dsa-sheet",
-              "source_problem_id": "a2z-367",
-              "problem_order": 23,
-              "tags": [
-                "basic",
-                "Beginner Problems",
-                "Basic Maths"
-              ]
-            },
-            {
-              "title": "Count number of odd digits in a number",
-              "slug": "count-number-of-odd-digits-in-a-number",
-              "summary": "Practice problem from Striver's A2Z DSA Sheet (Beginner Problems \u2014 Basic Maths). Open the canonical takeuforward URL to view the problem statement.",
-              "difficulty": "Unspecified",
               "external_platform": "takeuforward",
-              "external_problem_url": "https://takeuforward.org/practice/dsa/count-number-of-odd-digits-in-a-number?category=basic-maths&source=strivers-a2z-dsa-sheet",
-              "source_sheet": "strivers-a2z-dsa-sheet",
-              "source_problem_id": "a2z-368",
-              "problem_order": 24,
+              "external_problem_url": "https://takeuforward.org/practice/dsa/check-palindrome-number",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-1-3",
+              "problem_order": 3,
               "tags": [
-                "basic",
                 "Beginner Problems",
-                "Basic Maths"
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "121",
+                  "expected_output": "true",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "-121",
+                  "expected_output": "false",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "10",
+                  "expected_output": "false",
+                  "is_hidden": true,
+                  "test_order": 3
+                },
+                {
+                  "input_data": "1221",
+                  "expected_output": "true",
+                  "is_hidden": true,
+                  "test_order": 4
+                }
               ]
             }
           ]
-        },
+        }
+      ]
+    },
+    {
+      "name": "Sorting",
+      "slug": "sorting",
+      "description": "Comparison-based sorting routines, in-place partitions, and merge routines.",
+      "topic_order": 2,
+      "subtopics": [
         {
-          "name": "Basic Arrays",
-          "slug": "basic-arrays",
-          "description": "Beginner Problems / Basic Arrays",
-          "subtopic_order": 3,
+          "name": "Sorting Core",
+          "slug": "sorting-core",
+          "description": "Core curated problems for Sorting",
+          "subtopic_order": 1,
           "problems": [
             {
-              "title": "Sum of Array Elements",
-              "slug": "sum-of-array-elements",
-              "summary": "Practice problem from Striver's A2Z DSA Sheet (Beginner Problems \u2014 Basic Arrays). Open the canonical gfg URL to view the problem statement.",
-              "difficulty": "Unspecified",
-              "external_platform": "gfg",
-              "external_problem_url": "https://www.geeksforgeeks.org/problems/sum-all-array-elements/1",
-              "source_sheet": "strivers-a2z-dsa-sheet",
-              "source_problem_id": "a2z-343",
-              "problem_order": 36,
+              "title": "Selection Sort",
+              "slug": "selection-sort",
+              "summary": "Sort an array using the selection sort algorithm.",
+              "description": "Given an array of N integers, sort the array in non-decreasing order using Selection Sort.\n\nInput Format:\nLine 1: N\nLine 2: N integers\n\nOutput Format:\nThe sorted array space-separated.",
+              "difficulty": "Easy",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/selection-sort",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-2-1",
+              "problem_order": 1,
               "tags": [
-                "basic",
-                "Beginner Problems",
-                "Basic Arrays"
+                "Sorting",
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "5\n4 1 3 9 7",
+                  "expected_output": "1 3 4 7 9",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "3\n3 2 1",
+                  "expected_output": "1 2 3",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "4\n10 -2 5 0",
+                  "expected_output": "-2 0 5 10",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
               ]
             },
             {
-              "title": "Count of odd numbers in Array",
-              "slug": "count-of-odd-numbers-in-array",
-              "summary": "Practice problem from Striver's A2Z DSA Sheet (Beginner Problems \u2014 Basic Arrays). Open the canonical takeuforward URL to view the problem statement.",
-              "difficulty": "Unspecified",
+              "title": "Bubble Sort",
+              "slug": "bubble-sort",
+              "summary": "Sort an array using the bubble sort algorithm.",
+              "description": "Given an array of N integers, sort the array in non-decreasing order using Bubble Sort.\n\nInput Format:\nLine 1: N\nLine 2: N integers\n\nOutput Format:\nThe sorted array space-separated.",
+              "difficulty": "Easy",
               "external_platform": "takeuforward",
-              "external_problem_url": "https://takeuforward.org/practice/dsa/count-of-odd-numbers-in-array?category=basic-arrays&source=strivers-a2z-dsa-sheet",
-              "source_sheet": "strivers-a2z-dsa-sheet",
-              "source_problem_id": "a2z-341",
-              "problem_order": 37,
+              "external_problem_url": "https://takeuforward.org/practice/dsa/bubble-sort",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-2-2",
+              "problem_order": 2,
               "tags": [
-                "basic",
-                "Beginner Problems",
-                "Basic Arrays"
+                "Sorting",
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "5\n5 4 3 2 1",
+                  "expected_output": "1 2 3 4 5",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "4\n1 2 3 4",
+                  "expected_output": "1 2 3 4",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "3\n10 10 5",
+                  "expected_output": "5 10 10",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
               ]
-            }
-          ]
-        },
-        {
-          "name": "Basic Hashing",
-          "slug": "basic-hashing",
-          "description": "Beginner Problems / Basic Hashing",
-          "subtopic_order": 4,
-          "problems": [
+            },
             {
-              "title": "Highest Occurring Element in an Array",
-              "slug": "highest-occurring-element-in-an-array",
-              "summary": "Practice problem from Striver's A2Z DSA Sheet (Beginner Problems \u2014 Basic Hashing). Open the canonical leetcode URL to view the problem statement.",
+              "title": "Merge Sort",
+              "slug": "merge-sort",
+              "summary": "Sort an array using the divide-and-conquer merge sort algorithm.",
+              "description": "Given an array of N integers, sort the array in ascending order using Merge Sort.\n\nInput Format:\nLine 1: N\nLine 2: N space-separated integers\n\nOutput Format:\nThe sorted array space-separated.",
               "difficulty": "Medium",
-              "external_platform": "leetcode",
-              "external_problem_url": "https://leetcode.com/problems/frequency-of-the-most-frequent-element/",
-              "source_sheet": "strivers-a2z-dsa-sheet",
-              "source_problem_id": "a2z-344",
-              "problem_order": 40,
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/merge-sort",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-2-3",
+              "problem_order": 3,
               "tags": [
-                "core",
-                "Beginner Problems",
-                "Basic Hashing"
+                "Sorting",
+                "Medium"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "6\n9 4 7 6 3 1",
+                  "expected_output": "1 3 4 6 7 9",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "4\n4 2 1 3",
+                  "expected_output": "1 2 3 4",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "5\n-5 10 -2 0 3",
+                  "expected_output": "-5 -2 0 3 10",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Arrays",
+      "slug": "arrays",
+      "description": "Contiguous linear storage, two-pointer logic, and subsegment optimizations.",
+      "topic_order": 3,
+      "subtopics": [
+        {
+          "name": "Arrays Core",
+          "slug": "arrays-core",
+          "description": "Core curated problems for Arrays",
+          "subtopic_order": 1,
+          "problems": [
+            {
+              "title": "Two Sum",
+              "slug": "two-sum",
+              "summary": "Find two numbers in array that add up to target and return 0-based indices.",
+              "description": "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n\nInput Format:\nLine 1: N\nLine 2: N space-separated integers\nLine 3: target\n\nOutput Format:\nTwo space-separated indices in ascending order.",
+              "difficulty": "Easy",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/two-sum",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-3-1",
+              "problem_order": 1,
+              "tags": [
+                "Arrays",
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "4\n2 7 11 15\n9",
+                  "expected_output": "0 1",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "3\n3 2 4\n6",
+                  "expected_output": "1 2",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "2\n3 3\n6",
+                  "expected_output": "0 1",
+                  "is_hidden": true,
+                  "test_order": 3
+                },
+                {
+                  "input_data": "5\n-1 -2 -3 -4 -5\n-8",
+                  "expected_output": "2 4",
+                  "is_hidden": true,
+                  "test_order": 4
+                }
               ]
             },
             {
-              "title": "Second Highest Occurring Element",
-              "slug": "second-highest-occurring-element",
-              "summary": "Practice problem from Striver's A2Z DSA Sheet (Beginner Problems \u2014 Basic Hashing). Open the canonical takeuforward URL to view the problem statement.",
-              "difficulty": "Unspecified",
+              "title": "Maximum Subarray",
+              "slug": "maximum-subarray",
+              "summary": "Find the contiguous subarray with the largest sum (Kadane\u2019s algorithm).",
+              "description": "Given an integer array nums, find the subarray with the largest sum, and return its sum.\n\nInput Format:\nLine 1: N\nLine 2: N space-separated integers\n\nOutput Format:\nA single integer representing the maximum subarray sum.",
+              "difficulty": "Medium",
               "external_platform": "takeuforward",
-              "external_problem_url": "https://takeuforward.org/practice/dsa/second-highest-occurring-element?category=basic-hashing&source=strivers-a2z-dsa-sheet",
-              "source_sheet": "strivers-a2z-dsa-sheet",
-              "source_problem_id": "a2z-345",
-              "problem_order": 41,
+              "external_problem_url": "https://takeuforward.org/practice/dsa/maximum-subarray",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-3-2",
+              "problem_order": 2,
               "tags": [
-                "basic",
-                "Beginner Problems",
-                "Basic Hashing"
+                "Arrays",
+                "Medium"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "9\n-2 1 -3 4 -1 2 1 -5 4",
+                  "expected_output": "6",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "1\n1",
+                  "expected_output": "1",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "5\n5 4 -1 7 8",
+                  "expected_output": "23",
+                  "is_hidden": true,
+                  "test_order": 3
+                },
+                {
+                  "input_data": "3\n-3 -2 -1",
+                  "expected_output": "-1",
+                  "is_hidden": true,
+                  "test_order": 4
+                }
+              ]
+            },
+            {
+              "title": "Move Zeroes to End",
+              "slug": "move-zeroes-to-end",
+              "summary": "Move all zeros in array to the end while maintaining relative order of non-zero elements.",
+              "description": "Given an integer array nums, move all 0's to the end of it while maintaining the relative order of the non-zero elements in-place.\n\nInput Format:\nLine 1: N\nLine 2: N space-separated integers\n\nOutput Format:\nThe modified array space-separated.",
+              "difficulty": "Easy",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/move-zeroes-to-end",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-3-3",
+              "problem_order": 3,
+              "tags": [
+                "Arrays",
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "5\n0 1 0 3 12",
+                  "expected_output": "1 3 12 0 0",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "1\n0",
+                  "expected_output": "0",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "4\n1 2 3 4",
+                  "expected_output": "1 2 3 4",
+                  "is_hidden": true,
+                  "test_order": 3
+                },
+                {
+                  "input_data": "5\n0 0 0 1 2",
+                  "expected_output": "1 2 0 0 0",
+                  "is_hidden": true,
+                  "test_order": 4
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Hashing",
+      "slug": "hashing",
+      "description": "Hash maps, frequency tables, and constant-time key lookups.",
+      "topic_order": 4,
+      "subtopics": [
+        {
+          "name": "Hashing Core",
+          "slug": "hashing-core",
+          "description": "Core curated problems for Hashing",
+          "subtopic_order": 1,
+          "problems": [
+            {
+              "title": "Count Frequency of Elements",
+              "slug": "count-frequency-of-elements",
+              "summary": "Count frequency of each distinct element.",
+              "description": "Count frequency of each element in the array. Output each pair as element:frequency in ascending order of element.\n\nInput Format:\nLine 1: N\nLine 2: N integers\n\nOutput Format:\nSpace-separated element:count pairs.",
+              "difficulty": "Easy",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/count-frequency-of-elements",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-4-1",
+              "problem_order": 1,
+              "tags": [
+                "Hashing",
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "6\n1 2 2 3 1 4",
+                  "expected_output": "1:2 2:2 3:1 4:1",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "3\n5 5 5",
+                  "expected_output": "5:3",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "4\n4 3 2 1",
+                  "expected_output": "1:1 2:1 3:1 4:1",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            },
+            {
+              "title": "Highest and Lowest Frequency",
+              "slug": "highest-and-lowest-frequency",
+              "summary": "Find the highest and lowest frequency elements.",
+              "description": "Given an array of N integers, find the element with highest frequency and element with lowest frequency.\n\nInput Format:\nLine 1: N\nLine 2: N integers\n\nOutput Format:\nTwo integers: highest_freq_element lowest_freq_element.",
+              "difficulty": "Medium",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/highest-and-lowest-frequency",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-4-2",
+              "problem_order": 2,
+              "tags": [
+                "Hashing",
+                "Medium"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "6\n1 2 3 1 1 4",
+                  "expected_output": "1 2",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "4\n10 10 20 20",
+                  "expected_output": "10 10",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "5\n2 2 3 3 3",
+                  "expected_output": "3 2",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            },
+            {
+              "title": "Longest Consecutive Sequence",
+              "slug": "longest-consecutive-sequence",
+              "summary": "Find the length of the longest consecutive elements sequence.",
+              "description": "Given an unsorted array of integers, return the length of the longest consecutive elements sequence in O(N) time.\n\nInput Format:\nLine 1: N\nLine 2: N space-separated integers\n\nOutput Format:\nA single integer length.",
+              "difficulty": "Medium",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/longest-consecutive-sequence",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-4-3",
+              "problem_order": 3,
+              "tags": [
+                "Hashing",
+                "Medium"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "6\n100 4 200 1 3 2",
+                  "expected_output": "4",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "10\n0 3 7 2 5 8 4 6 0 1",
+                  "expected_output": "9",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "1\n5",
+                  "expected_output": "1",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Binary Search",
+      "slug": "binary-search",
+      "description": "Logarithmic search boundaries, monotonic predicates, and rotated arrays.",
+      "topic_order": 5,
+      "subtopics": [
+        {
+          "name": "Binary Search Core",
+          "slug": "binary-search-core",
+          "description": "Core curated problems for Binary Search",
+          "subtopic_order": 1,
+          "problems": [
+            {
+              "title": "Binary Search",
+              "slug": "binary-search",
+              "summary": "Search for a target value in a sorted array in O(log N).",
+              "description": "Given an array of integers nums which is sorted in ascending order, and an integer target, return the 0-based index of target, or -1 if not found.\n\nInput Format:\nLine 1: N\nLine 2: N sorted integers\nLine 3: target\n\nOutput Format:\nIndex of target, or -1.",
+              "difficulty": "Easy",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/binary-search",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-5-1",
+              "problem_order": 1,
+              "tags": [
+                "Binary Search",
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "6\n-1 0 3 5 9 12\n9",
+                  "expected_output": "4",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "6\n-1 0 3 5 9 12\n2",
+                  "expected_output": "-1",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "1\n5\n5",
+                  "expected_output": "0",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            },
+            {
+              "title": "Search Insert Position",
+              "slug": "search-insert-position",
+              "summary": "Find the index where target would be inserted in sorted order.",
+              "description": "Given a sorted array of distinct integers and a target value, return the index if the target is found. If not, return the index where it would be if it were inserted in order.\n\nInput Format:\nLine 1: N\nLine 2: N sorted integers\nLine 3: target\n\nOutput Format:\nInsert index.",
+              "difficulty": "Easy",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/search-insert-position",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-5-2",
+              "problem_order": 2,
+              "tags": [
+                "Binary Search",
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "4\n1 3 5 6\n5",
+                  "expected_output": "2",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "4\n1 3 5 6\n2",
+                  "expected_output": "1",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "4\n1 3 5 6\n7",
+                  "expected_output": "4",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            },
+            {
+              "title": "Find Minimum in Rotated Sorted Array",
+              "slug": "find-minimum-in-rotated-sorted-array",
+              "summary": "Find the minimum element in a rotated sorted array in O(log N).",
+              "description": "Given the sorted rotated array nums of unique elements, return the minimum element of this array.\n\nInput Format:\nLine 1: N\nLine 2: N integers\n\nOutput Format:\nThe minimum element.",
+              "difficulty": "Medium",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/find-minimum-in-rotated-sorted-array",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-5-3",
+              "problem_order": 3,
+              "tags": [
+                "Binary Search",
+                "Medium"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "5\n3 4 5 1 2",
+                  "expected_output": "1",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "7\n4 5 6 7 0 1 2",
+                  "expected_output": "0",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "4\n11 13 15 17",
+                  "expected_output": "11",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Recursion",
+      "slug": "recursion",
+      "description": "Call stacks, recurrence relations, base conditions, and backtracking.",
+      "topic_order": 6,
+      "subtopics": [
+        {
+          "name": "Recursion Core",
+          "slug": "recursion-core",
+          "description": "Core curated problems for Recursion",
+          "subtopic_order": 1,
+          "problems": [
+            {
+              "title": "Fibonacci Number",
+              "slug": "fibonacci-number",
+              "summary": "Compute the N-th Fibonacci number.",
+              "description": "The Fibonacci numbers are defined by F(0)=0, F(1)=1, F(N)=F(N-1)+F(N-2). Given N, calculate F(N).\n\nInput Format:\nA single integer N.\n\nOutput Format:\nF(N).",
+              "difficulty": "Easy",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/fibonacci-number",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-6-1",
+              "problem_order": 1,
+              "tags": [
+                "Recursion",
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "6",
+                  "expected_output": "8",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "2",
+                  "expected_output": "1",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "0",
+                  "expected_output": "0",
+                  "is_hidden": true,
+                  "test_order": 3
+                },
+                {
+                  "input_data": "10",
+                  "expected_output": "55",
+                  "is_hidden": true,
+                  "test_order": 4
+                }
+              ]
+            },
+            {
+              "title": "Power of Two",
+              "slug": "power-of-two",
+              "summary": "Determine if an integer is a power of two.",
+              "description": "Given an integer N, return true if it is a power of two, or false otherwise.\n\nInput Format:\nA single integer N.\n\nOutput Format:\ntrue or false.",
+              "difficulty": "Easy",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/power-of-two",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-6-2",
+              "problem_order": 2,
+              "tags": [
+                "Recursion",
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "16",
+                  "expected_output": "true",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "3",
+                  "expected_output": "false",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "1",
+                  "expected_output": "true",
+                  "is_hidden": true,
+                  "test_order": 3
+                },
+                {
+                  "input_data": "0",
+                  "expected_output": "false",
+                  "is_hidden": true,
+                  "test_order": 4
+                }
+              ]
+            },
+            {
+              "title": "Subsets",
+              "slug": "subsets-generation",
+              "summary": "Calculate the total count of power set subsets.",
+              "description": "Given an array of unique integers, return the total count of subsets (the power set) which is 2^N.\n\nInput Format:\nLine 1: N\nLine 2: N integers\n\nOutput Format:\nTotal count of subsets.",
+              "difficulty": "Medium",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/subsets-generation",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-6-3",
+              "problem_order": 3,
+              "tags": [
+                "Recursion",
+                "Medium"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "3\n1 2 3",
+                  "expected_output": "8",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "1\n0",
+                  "expected_output": "2",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "4\n1 2 3 4",
+                  "expected_output": "16",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Linked-List",
+      "slug": "linked-list",
+      "description": "Node pointers, traversal, in-place pointer manipulation, and cycle detection.",
+      "topic_order": 7,
+      "subtopics": [
+        {
+          "name": "Linked-List Core",
+          "slug": "linked-list-core",
+          "description": "Core curated problems for Linked-List",
+          "subtopic_order": 1,
+          "problems": [
+            {
+              "title": "Reverse Linked List",
+              "slug": "reverse-linked-list",
+              "summary": "Reverse a singly linked list.",
+              "description": "Given a singly linked list represented as an array of values, reverse the nodes and output space-separated values.\n\nInput Format:\nLine 1: N\nLine 2: N values\n\nOutput Format:\nReversed values space-separated.",
+              "difficulty": "Easy",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/reverse-linked-list",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-7-1",
+              "problem_order": 1,
+              "tags": [
+                "Linked-List",
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "5\n1 2 3 4 5",
+                  "expected_output": "5 4 3 2 1",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "2\n1 2",
+                  "expected_output": "2 1",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "1\n10",
+                  "expected_output": "10",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            },
+            {
+              "title": "Middle of the Linked List",
+              "slug": "middle-of-linked-list",
+              "summary": "Find the middle node of a singly linked list.",
+              "description": "Given a non-empty, singly linked list, return the value of the middle node. If there are two middle nodes, return the second middle node.\n\nInput Format:\nLine 1: N\nLine 2: N values\n\nOutput Format:\nValue of the middle node.",
+              "difficulty": "Easy",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/middle-of-linked-list",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-7-2",
+              "problem_order": 2,
+              "tags": [
+                "Linked-List",
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "5\n1 2 3 4 5",
+                  "expected_output": "3",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "6\n1 2 3 4 5 6",
+                  "expected_output": "4",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "1\n100",
+                  "expected_output": "100",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            },
+            {
+              "title": "Detect Cycle in Linked List",
+              "slug": "detect-cycle-in-linked-list",
+              "summary": "Detect if a linked list contains a cycle.",
+              "description": "Given N nodes and the 0-based position where the tail connects back (-1 if no cycle), return true if there is a cycle, else false.\n\nInput Format:\nLine 1: N\nLine 2: N node values\nLine 3: pos index (-1 for none)\n\nOutput Format:\ntrue or false.",
+              "difficulty": "Medium",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/detect-cycle-in-linked-list",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-7-3",
+              "problem_order": 3,
+              "tags": [
+                "Linked-List",
+                "Medium"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "4\n3 2 0 -4\n1",
+                  "expected_output": "true",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "2\n1 2\n0",
+                  "expected_output": "true",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "1\n1\n-1",
+                  "expected_output": "false",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bit Manipulation",
+      "slug": "bit-manipulation",
+      "description": "Bitwise AND, OR, XOR, shifts, and masks.",
+      "topic_order": 8,
+      "subtopics": [
+        {
+          "name": "Bit Manipulation Core",
+          "slug": "bit-manipulation-core",
+          "description": "Core curated problems for Bit Manipulation",
+          "subtopic_order": 1,
+          "problems": [
+            {
+              "title": "Check if K-th Bit is Set",
+              "slug": "check-if-kth-bit-is-set",
+              "summary": "Check whether the K-th bit of a number is set.",
+              "description": "Given two integers N and K (0-indexed from right), return true if the K-th bit is 1, else false.\n\nInput Format:\nTwo space-separated integers N and K.\n\nOutput Format:\ntrue or false.",
+              "difficulty": "Easy",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/check-if-kth-bit-is-set",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-8-1",
+              "problem_order": 1,
+              "tags": [
+                "Bit Manipulation",
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "4 2",
+                  "expected_output": "true",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "4 0",
+                  "expected_output": "false",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "5 0",
+                  "expected_output": "true",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            },
+            {
+              "title": "Single Number",
+              "slug": "single-number",
+              "summary": "Find the element that appears once in array of duplicates.",
+              "description": "Given a non-empty array of integers nums, every element appears twice except for one. Find that single one.\n\nInput Format:\nLine 1: N\nLine 2: N space-separated integers\n\nOutput Format:\nThe unique element.",
+              "difficulty": "Easy",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/single-number",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-8-2",
+              "problem_order": 2,
+              "tags": [
+                "Bit Manipulation",
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "5\n4 1 2 1 2",
+                  "expected_output": "4",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "3\n2 2 1",
+                  "expected_output": "1",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "1\n7",
+                  "expected_output": "7",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            },
+            {
+              "title": "Count Set Bits",
+              "slug": "count-set-bits",
+              "summary": "Count number of 1-bits in the binary representation of an integer.",
+              "description": "Given an integer N, return the number of set bits (1s) in its binary representation.\n\nInput Format:\nA single integer N.\n\nOutput Format:\nNumber of set bits.",
+              "difficulty": "Easy",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/count-set-bits",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-8-3",
+              "problem_order": 3,
+              "tags": [
+                "Bit Manipulation",
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "13",
+                  "expected_output": "3",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "7",
+                  "expected_output": "3",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "0",
+                  "expected_output": "0",
+                  "is_hidden": true,
+                  "test_order": 3
+                },
+                {
+                  "input_data": "16",
+                  "expected_output": "1",
+                  "is_hidden": true,
+                  "test_order": 4
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Greedy Algorithms",
+      "slug": "greedy-algorithms",
+      "description": "Locally optimal choices, interval scheduling, and activity selection.",
+      "topic_order": 9,
+      "subtopics": [
+        {
+          "name": "Greedy Algorithms Core",
+          "slug": "greedy-algorithms-core",
+          "description": "Core curated problems for Greedy Algorithms",
+          "subtopic_order": 1,
+          "problems": [
+            {
+              "title": "Assign Cookies",
+              "slug": "assign-cookies",
+              "summary": "Maximize number of content children with cookie sizes.",
+              "description": "Given children greed factors g and cookie sizes s, maximize the number of content children.\n\nInput Format:\nLine 1: Number of children\nLine 2: Children greed factors\nLine 3: Number of cookies\nLine 4: Cookie sizes\n\nOutput Format:\nMaximum number of content children.",
+              "difficulty": "Easy",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/assign-cookies",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-9-1",
+              "problem_order": 1,
+              "tags": [
+                "Greedy Algorithms",
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "3\n1 2 3\n2\n1 1",
+                  "expected_output": "1",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "2\n1 2\n3\n1 2 3",
+                  "expected_output": "2",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "2\n3 4\n1\n2",
+                  "expected_output": "0",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            },
+            {
+              "title": "Lemonade Change",
+              "slug": "lemonade-change",
+              "summary": "Check if you can provide correct change to every customer.",
+              "description": "Each customer pays with $5, $10, or $20. Return true if you can provide correct change to every customer, false otherwise.\n\nInput Format:\nLine 1: N\nLine 2: N customer bill denominations\n\nOutput Format:\ntrue or false.",
+              "difficulty": "Easy",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/lemonade-change",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-9-2",
+              "problem_order": 2,
+              "tags": [
+                "Greedy Algorithms",
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "5\n5 5 5 10 20",
+                  "expected_output": "true",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "5\n5 5 10 10 20",
+                  "expected_output": "false",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "2\n5 10",
+                  "expected_output": "true",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            },
+            {
+              "title": "Jump Game",
+              "slug": "jump-game",
+              "summary": "Determine if you can reach the last index starting at index 0.",
+              "description": "You are given an integer array nums where each element represents your maximum jump length at that position. Return true if you can reach the last index, or false otherwise.\n\nInput Format:\nLine 1: N\nLine 2: N jump lengths\n\nOutput Format:\ntrue or false.",
+              "difficulty": "Medium",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/jump-game",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-9-3",
+              "problem_order": 3,
+              "tags": [
+                "Greedy Algorithms",
+                "Medium"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "5\n2 3 1 1 4",
+                  "expected_output": "true",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "5\n3 2 1 0 4",
+                  "expected_output": "false",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "1\n0",
+                  "expected_output": "true",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Sliding Window / 2 Pointer",
+      "slug": "sliding-window-2-pointer",
+      "description": "Dynamic window resizing, subarray sums, and string matching.",
+      "topic_order": 10,
+      "subtopics": [
+        {
+          "name": "Sliding Window / 2 Pointer Core",
+          "slug": "sliding-window-2-pointer-core",
+          "description": "Core curated problems for Sliding Window / 2 Pointer",
+          "subtopic_order": 1,
+          "problems": [
+            {
+              "title": "Maximum Sum Subarray of Size K",
+              "slug": "maximum-sum-subarray-of-size-k",
+              "summary": "Find the maximum sum of any contiguous subarray of size K.",
+              "description": "Given an array of integers and a number K, find the maximum sum of a subarray of size K.\n\nInput Format:\nLine 1: N and K\nLine 2: N space-separated integers\n\nOutput Format:\nMaximum sum.",
+              "difficulty": "Easy",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/maximum-sum-subarray-of-size-k",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-10-1",
+              "problem_order": 1,
+              "tags": [
+                "Sliding Window / 2 Pointer",
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "4 2\n100 200 300 400",
+                  "expected_output": "700",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "3 1\n1 2 3",
+                  "expected_output": "3",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "6 3\n2 1 5 1 3 2",
+                  "expected_output": "9",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            },
+            {
+              "title": "Longest Substring Without Repeating Characters",
+              "slug": "longest-substring-without-repeating-characters",
+              "summary": "Find the length of the longest substring with unique characters.",
+              "description": "Given a string s, find the length of the longest substring without repeating characters.\n\nInput Format:\nA single string s.\n\nOutput Format:\nLength of longest unique substring.",
+              "difficulty": "Medium",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/longest-substring-without-repeating-characters",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-10-2",
+              "problem_order": 2,
+              "tags": [
+                "Sliding Window / 2 Pointer",
+                "Medium"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "abcabcbb",
+                  "expected_output": "3",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "bbbbb",
+                  "expected_output": "1",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "pwwkew",
+                  "expected_output": "3",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            },
+            {
+              "title": "Max Consecutive Ones",
+              "slug": "max-consecutive-ones",
+              "summary": "Find the maximum number of consecutive 1s in a binary array.",
+              "description": "Given a binary array nums, return the maximum number of consecutive 1's in the array.\n\nInput Format:\nLine 1: N\nLine 2: N binary digits (0 or 1)\n\nOutput Format:\nMax count of consecutive 1s.",
+              "difficulty": "Easy",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/max-consecutive-ones",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-10-3",
+              "problem_order": 3,
+              "tags": [
+                "Sliding Window / 2 Pointer",
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "6\n1 1 0 1 1 1",
+                  "expected_output": "3",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "4\n1 0 1 1",
+                  "expected_output": "2",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "3\n0 0 0",
+                  "expected_output": "0",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Stack / Queues",
+      "slug": "stack-queues",
+      "description": "LIFO and FIFO data structures, monotonic stacks, and parentheses matching.",
+      "topic_order": 11,
+      "subtopics": [
+        {
+          "name": "Stack / Queues Core",
+          "slug": "stack-queues-core",
+          "description": "Core curated problems for Stack / Queues",
+          "subtopic_order": 1,
+          "problems": [
+            {
+              "title": "Valid Parentheses",
+              "slug": "valid-parentheses",
+              "summary": "Check if bracket pairs are correctly closed and nested.",
+              "description": "Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.\n\nInput Format:\nA single string s.\n\nOutput Format:\ntrue or false.",
+              "difficulty": "Easy",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/valid-parentheses",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-11-1",
+              "problem_order": 1,
+              "tags": [
+                "Stack / Queues",
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "()[]{}",
+                  "expected_output": "true",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "(]",
+                  "expected_output": "false",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "([)]",
+                  "expected_output": "false",
+                  "is_hidden": true,
+                  "test_order": 3
+                },
+                {
+                  "input_data": "{[]}",
+                  "expected_output": "true",
+                  "is_hidden": true,
+                  "test_order": 4
+                }
+              ]
+            },
+            {
+              "title": "Next Greater Element",
+              "slug": "next-greater-element",
+              "summary": "Find next greater element for each array item.",
+              "description": "Given an array of N integers, find the Next Greater Element for every element in order. If none exists, output -1.\n\nInput Format:\nLine 1: N\nLine 2: N integers\n\nOutput Format:\nSpace-separated next greater elements.",
+              "difficulty": "Medium",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/next-greater-element",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-11-2",
+              "problem_order": 2,
+              "tags": [
+                "Stack / Queues",
+                "Medium"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "4\n1 3 2 4",
+                  "expected_output": "3 4 4 -1",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "4\n6 8 0 1",
+                  "expected_output": "8 -1 1 -1",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "3\n5 4 3",
+                  "expected_output": "-1 -1 -1",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            },
+            {
+              "title": "Min Stack",
+              "slug": "min-stack",
+              "summary": "Design a stack that retrieves the minimum element in O(1).",
+              "description": "Execute stack commands: push X, pop, top, getMin.\n\nInput Format:\nLine 1: Total operations\nNext lines: command arguments\n\nOutput Format:\nResult of queries printed line-by-line.",
+              "difficulty": "Medium",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/min-stack",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-11-3",
+              "problem_order": 3,
+              "tags": [
+                "Stack / Queues",
+                "Medium"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "3\npush -2\npush 0\ngetMin",
+                  "expected_output": "-2",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "4\npush 5\npush 1\ngetMin\ntop",
+                  "expected_output": "1\n1",
+                  "is_hidden": false,
+                  "test_order": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Binary Trees",
+      "slug": "binary-trees",
+      "description": "Hierarchical data, DFS/BFS tree traversals, and height/diameter properties.",
+      "topic_order": 12,
+      "subtopics": [
+        {
+          "name": "Binary Trees Core",
+          "slug": "binary-trees-core",
+          "description": "Core curated problems for Binary Trees",
+          "subtopic_order": 1,
+          "problems": [
+            {
+              "title": "Maximum Depth of Binary Tree",
+              "slug": "maximum-depth-of-binary-tree",
+              "summary": "Find the maximum depth (height) of a binary tree.",
+              "description": "Given level-order traversal of a binary tree (-1 represents null node), compute the maximum depth.\n\nInput Format:\nSpace-separated level-order integers.\n\nOutput Format:\nMax depth integer.",
+              "difficulty": "Easy",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/maximum-depth-of-binary-tree",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-12-1",
+              "problem_order": 1,
+              "tags": [
+                "Binary Trees",
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "3 9 20 -1 -1 15 7",
+                  "expected_output": "3",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "1 -1 2",
+                  "expected_output": "2",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "-1",
+                  "expected_output": "0",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            },
+            {
+              "title": "Invert Binary Tree",
+              "slug": "invert-binary-tree",
+              "summary": "Invert a binary tree (mirror image).",
+              "description": "Given a binary tree level-order, invert the tree and return level-order values.\n\nInput Format:\nSpace-separated level-order integers.\n\nOutput Format:\nInverted tree level-order integers.",
+              "difficulty": "Easy",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/invert-binary-tree",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-12-2",
+              "problem_order": 2,
+              "tags": [
+                "Binary Trees",
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "4 2 7 1 3 6 9",
+                  "expected_output": "4 7 2 9 6 3 1",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "2 1 3",
+                  "expected_output": "2 3 1",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "-1",
+                  "expected_output": "-1",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            },
+            {
+              "title": "Diameter of Binary Tree",
+              "slug": "diameter-of-binary-tree",
+              "summary": "Compute the longest path between any two nodes in a tree.",
+              "description": "Given the root of a binary tree, return the length of the diameter of the tree.\n\nInput Format:\nLevel-order node values.\n\nOutput Format:\nDiameter length.",
+              "difficulty": "Easy",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/diameter-of-binary-tree",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-12-3",
+              "problem_order": 3,
+              "tags": [
+                "Binary Trees",
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "1 2 3 4 5",
+                  "expected_output": "3",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "1 2",
+                  "expected_output": "1",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "1",
+                  "expected_output": "0",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Binary Search Trees",
+      "slug": "binary-search-trees",
+      "description": "Ordered binary trees, range queries, and lowest common ancestors.",
+      "topic_order": 13,
+      "subtopics": [
+        {
+          "name": "Binary Search Trees Core",
+          "slug": "binary-search-trees-core",
+          "description": "Core curated problems for Binary Search Trees",
+          "subtopic_order": 1,
+          "problems": [
+            {
+              "title": "Search in a Binary Search Tree",
+              "slug": "search-in-bst",
+              "summary": "Search for a target value in a Binary Search Tree.",
+              "description": "Given the root node of a BST and an integer val, return true if val exists in the BST, else false.\n\nInput Format:\nLine 1: Level-order BST values\nLine 2: Target value\n\nOutput Format:\ntrue or false.",
+              "difficulty": "Easy",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/search-in-bst",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-13-1",
+              "problem_order": 1,
+              "tags": [
+                "Binary Search Trees",
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "4 2 7 1 3\n2",
+                  "expected_output": "true",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "4 2 7 1 3\n5",
+                  "expected_output": "false",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "1\n1",
+                  "expected_output": "true",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            },
+            {
+              "title": "Validate Binary Search Tree",
+              "slug": "validate-bst",
+              "summary": "Determine if a binary tree is a valid BST.",
+              "description": "Given the root of a binary tree, determine if it is a valid binary search tree (BST).\n\nInput Format:\nLevel-order tree values.\n\nOutput Format:\ntrue or false.",
+              "difficulty": "Medium",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/validate-bst",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-13-2",
+              "problem_order": 2,
+              "tags": [
+                "Binary Search Trees",
+                "Medium"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "2 1 3",
+                  "expected_output": "true",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "5 1 4 -1 -1 3 6",
+                  "expected_output": "false",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "1",
+                  "expected_output": "true",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            },
+            {
+              "title": "Lowest Common Ancestor of a BST",
+              "slug": "lowest-common-ancestor-of-bst",
+              "summary": "Find the lowest common ancestor (LCA) node of two given nodes.",
+              "description": "Given a binary search tree (BST), find the lowest common ancestor (LCA) node of two given nodes.\n\nInput Format:\nLine 1: Level-order BST\nLine 2: Value of node p and node q\n\nOutput Format:\nValue of the LCA node.",
+              "difficulty": "Medium",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/lowest-common-ancestor-of-bst",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-13-3",
+              "problem_order": 3,
+              "tags": [
+                "Binary Search Trees",
+                "Medium"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "6 2 8 0 4 7 9\n2 8",
+                  "expected_output": "6",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "6 2 8 0 4 7 9\n2 4",
+                  "expected_output": "2",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "2 1 3\n1 3",
+                  "expected_output": "2",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Heaps",
+      "slug": "heaps",
+      "description": "Priority queues, min/max heap properties, and top-K problems.",
+      "topic_order": 14,
+      "subtopics": [
+        {
+          "name": "Heaps Core",
+          "slug": "heaps-core",
+          "description": "Core curated problems for Heaps",
+          "subtopic_order": 1,
+          "problems": [
+            {
+              "title": "Kth Largest Element in an Array",
+              "slug": "kth-largest-element-in-an-array",
+              "summary": "Find the Kth largest element in an unsorted array.",
+              "description": "Given an integer array nums and an integer k, return the kth largest element in the array.\n\nInput Format:\nLine 1: N and K\nLine 2: N space-separated integers\n\nOutput Format:\nThe kth largest element.",
+              "difficulty": "Medium",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/kth-largest-element-in-an-array",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-14-1",
+              "problem_order": 1,
+              "tags": [
+                "Heaps",
+                "Medium"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "6 2\n3 2 1 5 6 4",
+                  "expected_output": "5",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "9 4\n3 2 3 1 2 4 5 5 6",
+                  "expected_output": "4",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "1 1\n10",
+                  "expected_output": "10",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            },
+            {
+              "title": "Top K Frequent Elements",
+              "slug": "top-k-frequent-elements",
+              "summary": "Find the K most frequent elements in an array.",
+              "description": "Given an integer array nums and an integer k, return the k most frequent elements in descending order of frequency.\n\nInput Format:\nLine 1: N and K\nLine 2: N integers\n\nOutput Format:\nSpace-separated top K elements.",
+              "difficulty": "Medium",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/top-k-frequent-elements",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-14-2",
+              "problem_order": 2,
+              "tags": [
+                "Heaps",
+                "Medium"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "6 2\n1 1 1 2 2 3",
+                  "expected_output": "1 2",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "1 1\n1",
+                  "expected_output": "1",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "4 1\n1 2 2 3",
+                  "expected_output": "2",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            },
+            {
+              "title": "Sort Characters By Frequency",
+              "slug": "sort-characters-by-frequency",
+              "summary": "Sort characters in string by descending frequency.",
+              "description": "Given a string s, sort it in decreasing order based on the frequency of the characters.\n\nInput Format:\nA single string s.\n\nOutput Format:\nThe sorted string.",
+              "difficulty": "Medium",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/sort-characters-by-frequency",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-14-3",
+              "problem_order": 3,
+              "tags": [
+                "Heaps",
+                "Medium"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "tree",
+                  "expected_output": "eert",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "cccaaa",
+                  "expected_output": "aaaccc",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "Aabb",
+                  "expected_output": "bbAa",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Graphs",
+      "slug": "graphs",
+      "description": "Adjacency lists, BFS/DFS traversals, connected components, and topological sorts.",
+      "topic_order": 15,
+      "subtopics": [
+        {
+          "name": "Graphs Core",
+          "slug": "graphs-core",
+          "description": "Core curated problems for Graphs",
+          "subtopic_order": 1,
+          "problems": [
+            {
+              "title": "Breadth First Search",
+              "slug": "bfs-of-graph",
+              "summary": "Perform BFS traversal on a graph starting at vertex 0.",
+              "description": "Given V vertices and E undirected edges, return the BFS traversal sequence starting from vertex 0.\n\nInput Format:\nLine 1: V and E\nNext E lines: u v\n\nOutput Format:\nSpace-separated traversal order.",
+              "difficulty": "Easy",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/bfs-of-graph",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-15-1",
+              "problem_order": 1,
+              "tags": [
+                "Graphs",
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "5 4\n0 1\n0 2\n0 3\n2 4",
+                  "expected_output": "0 1 2 3 4",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "3 2\n0 1\n0 2",
+                  "expected_output": "0 1 2",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "1 0",
+                  "expected_output": "0",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            },
+            {
+              "title": "Depth First Search",
+              "slug": "dfs-of-graph",
+              "summary": "Perform DFS traversal on a graph starting at vertex 0.",
+              "description": "Given V vertices and E undirected edges, return the DFS traversal sequence starting from vertex 0.\n\nInput Format:\nLine 1: V and E\nNext E lines: u v\n\nOutput Format:\nSpace-separated traversal order.",
+              "difficulty": "Easy",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/dfs-of-graph",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-15-2",
+              "problem_order": 2,
+              "tags": [
+                "Graphs",
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "5 4\n0 1\n0 2\n0 3\n2 4",
+                  "expected_output": "0 1 2 4 3",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "4 3\n0 1\n1 2\n2 3",
+                  "expected_output": "0 1 2 3",
+                  "is_hidden": false,
+                  "test_order": 2
+                }
+              ]
+            },
+            {
+              "title": "Number of Provinces",
+              "slug": "number-of-provinces",
+              "summary": "Count connected components in an adjacency matrix.",
+              "description": "There are N cities. An N x N matrix isConnected is given. Return total number of provinces (connected components).\n\nInput Format:\nLine 1: N\nNext N lines: N binary values (0 or 1)\n\nOutput Format:\nTotal provinces count.",
+              "difficulty": "Medium",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/number-of-provinces",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-15-3",
+              "problem_order": 3,
+              "tags": [
+                "Graphs",
+                "Medium"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "3\n1 1 0\n1 1 0\n0 0 1",
+                  "expected_output": "2",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "3\n1 0 0\n0 1 0\n0 0 1",
+                  "expected_output": "3",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "1\n1",
+                  "expected_output": "1",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Dynamic Programming",
+      "slug": "dynamic-programming",
+      "description": "Overlapping subproblems, optimal substructure, memoization, and tabulation.",
+      "topic_order": 16,
+      "subtopics": [
+        {
+          "name": "Dynamic Programming Core",
+          "slug": "dynamic-programming-core",
+          "description": "Core curated problems for Dynamic Programming",
+          "subtopic_order": 1,
+          "problems": [
+            {
+              "title": "Climbing Stairs",
+              "slug": "climbing-stairs",
+              "summary": "Calculate distinct ways to reach top taking 1 or 2 steps.",
+              "description": "You are climbing a staircase. It takes N steps to reach the top. Each time you can climb 1 or 2 steps. How many distinct ways can you climb to the top?\n\nInput Format:\nA single integer N.\n\nOutput Format:\nNumber of ways.",
+              "difficulty": "Easy",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/climbing-stairs",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-16-1",
+              "problem_order": 1,
+              "tags": [
+                "Dynamic Programming",
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "4",
+                  "expected_output": "5",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "2",
+                  "expected_output": "2",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "3",
+                  "expected_output": "3",
+                  "is_hidden": true,
+                  "test_order": 3
+                },
+                {
+                  "input_data": "5",
+                  "expected_output": "8",
+                  "is_hidden": true,
+                  "test_order": 4
+                }
+              ]
+            },
+            {
+              "title": "Coin Change",
+              "slug": "coin-change",
+              "summary": "Find the fewest number of coins needed to make up amount.",
+              "description": "You are given an integer array coins and an integer amount. Return the fewest number of coins that you need to make up that amount, or -1 if impossible.\n\nInput Format:\nLine 1: N and amount\nLine 2: N coin denominations\n\nOutput Format:\nMinimum coin count, or -1.",
+              "difficulty": "Medium",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/coin-change",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-16-2",
+              "problem_order": 2,
+              "tags": [
+                "Dynamic Programming",
+                "Medium"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "3 11\n1 2 5",
+                  "expected_output": "3",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "1 3\n2",
+                  "expected_output": "-1",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "1 0\n1",
+                  "expected_output": "0",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            },
+            {
+              "title": "Longest Increasing Subsequence",
+              "slug": "longest-increasing-subsequence",
+              "summary": "Find the length of the longest strictly increasing subsequence.",
+              "description": "Given an integer array nums, return the length of the longest strictly increasing subsequence.\n\nInput Format:\nLine 1: N\nLine 2: N integers\n\nOutput Format:\nLength of LIS.",
+              "difficulty": "Medium",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/longest-increasing-subsequence",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-16-3",
+              "problem_order": 3,
+              "tags": [
+                "Dynamic Programming",
+                "Medium"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "8\n10 9 2 5 3 7 101 18",
+                  "expected_output": "4",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "6\n0 1 0 3 2 3",
+                  "expected_output": "4",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "7\n7 7 7 7 7 7 7",
+                  "expected_output": "1",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Tries",
+      "slug": "tries",
+      "description": "Prefix trees, string lookups, and auto-complete indexing.",
+      "topic_order": 17,
+      "subtopics": [
+        {
+          "name": "Tries Core",
+          "slug": "tries-core",
+          "description": "Core curated problems for Tries",
+          "subtopic_order": 1,
+          "problems": [
+            {
+              "title": "Implement Trie",
+              "slug": "implement-trie",
+              "summary": "Implement insert, search, and startsWith operations on a prefix tree.",
+              "description": "Process Trie operations: insert WORD, search WORD, startsWith PREFIX. Output true or false for search/startsWith queries.\n\nInput Format:\nLine 1: Total operations\nNext lines: operation word\n\nOutput Format:\nQuery results line-by-line.",
+              "difficulty": "Medium",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/implement-trie",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-17-1",
+              "problem_order": 1,
+              "tags": [
+                "Tries",
+                "Medium"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "3\ninsert apple\nsearch apple\nsearch app",
+                  "expected_output": "true\nfalse",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "4\ninsert code\nstartsWith co\nsearch code\nsearch coding",
+                  "expected_output": "true\ntrue\nfalse",
+                  "is_hidden": false,
+                  "test_order": 2
+                }
+              ]
+            },
+            {
+              "title": "Longest Word with All Prefixes",
+              "slug": "longest-word-with-all-prefixes",
+              "summary": "Find the longest word where every prefix is present.",
+              "description": "Given an array of strings, return the longest string such that every prefix of it is also in the array.\n\nInput Format:\nLine 1: N\nNext N lines: strings\n\nOutput Format:\nThe longest word.",
+              "difficulty": "Medium",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/longest-word-with-all-prefixes",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-17-2",
+              "problem_order": 2,
+              "tags": [
+                "Tries",
+                "Medium"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "5\na\nbanana\napp\nappl\nap",
+                  "expected_output": "appl",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "3\na\nb\nc",
+                  "expected_output": "a",
+                  "is_hidden": false,
+                  "test_order": 2
+                }
+              ]
+            },
+            {
+              "title": "Count Distinct Substrings",
+              "slug": "count-distinct-substrings",
+              "summary": "Count total number of distinct substrings.",
+              "description": "Given a string s, return the total number of distinct non-empty substrings.\n\nInput Format:\nA single string s.\n\nOutput Format:\nDistinct substring count.",
+              "difficulty": "Medium",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/count-distinct-substrings",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-17-3",
+              "problem_order": 3,
+              "tags": [
+                "Tries",
+                "Medium"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "ab",
+                  "expected_output": "3",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "aaa",
+                  "expected_output": "3",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "abc",
+                  "expected_output": "6",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Strings (Advanced Algo)",
+      "slug": "strings-advanced-algo",
+      "description": "String matching, rolling hashes, and character manipulation.",
+      "topic_order": 18,
+      "subtopics": [
+        {
+          "name": "Strings (Advanced Algo) Core",
+          "slug": "strings-advanced-algo-core",
+          "description": "Core curated problems for Strings (Advanced Algo)",
+          "subtopic_order": 1,
+          "problems": [
+            {
+              "title": "Longest Common Prefix",
+              "slug": "longest-common-prefix",
+              "summary": "Find the longest common prefix amongst an array of strings.",
+              "description": "Write a function to find the longest common prefix string amongst an array of strings. If none, return empty string.\n\nInput Format:\nLine 1: N\nLine 2: N space-separated strings\n\nOutput Format:\nLongest common prefix.",
+              "difficulty": "Easy",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/longest-common-prefix",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-18-1",
+              "problem_order": 1,
+              "tags": [
+                "Strings (Advanced Algo)",
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "3\nflower flow flight",
+                  "expected_output": "fl",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "3\ndog racecar car",
+                  "expected_output": "",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "1\nabc",
+                  "expected_output": "abc",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            },
+            {
+              "title": "Valid Anagram",
+              "slug": "valid-anagram",
+              "summary": "Determine if two strings are anagrams of each other.",
+              "description": "Given two strings s and t, return true if t is an anagram of s, and false otherwise.\n\nInput Format:\nLine 1: String s\nLine 2: String t\n\nOutput Format:\ntrue or false.",
+              "difficulty": "Easy",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/valid-anagram",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-18-2",
+              "problem_order": 2,
+              "tags": [
+                "Strings (Advanced Algo)",
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "anagram\nnagaram",
+                  "expected_output": "true",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "rat\ncar",
+                  "expected_output": "false",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "a\na",
+                  "expected_output": "true",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            },
+            {
+              "title": "String to Integer (atoi)",
+              "slug": "string-to-integer-atoi",
+              "summary": "Convert a string to a 32-bit signed integer.",
+              "description": "Implement the myAtoi(string s) function, which converts a string to a 32-bit signed integer.\n\nInput Format:\nA single line string.\n\nOutput Format:\nThe converted 32-bit integer.",
+              "difficulty": "Medium",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/string-to-integer-atoi",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-18-3",
+              "problem_order": 3,
+              "tags": [
+                "Strings (Advanced Algo)",
+                "Medium"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "   -42",
+                  "expected_output": "-42",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "42",
+                  "expected_output": "42",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "4193 with words",
+                  "expected_output": "4193",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Maths",
+      "slug": "maths",
+      "description": "Primes, modular arithmetic, Euclidean GCD, and combinatorics.",
+      "topic_order": 19,
+      "subtopics": [
+        {
+          "name": "Maths Core",
+          "slug": "maths-core",
+          "description": "Core curated problems for Maths",
+          "subtopic_order": 1,
+          "problems": [
+            {
+              "title": "Count Primes",
+              "slug": "count-primes",
+              "summary": "Count the number of prime numbers strictly less than N.",
+              "description": "Given an integer N, return the number of prime numbers that are strictly less than N using Sieve of Eratosthenes.\n\nInput Format:\nA single integer N.\n\nOutput Format:\nPrime count.",
+              "difficulty": "Medium",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/count-primes",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-19-1",
+              "problem_order": 1,
+              "tags": [
+                "Maths",
+                "Medium"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "10",
+                  "expected_output": "4",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "0",
+                  "expected_output": "0",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "20",
+                  "expected_output": "8",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            },
+            {
+              "title": "Greatest Common Divisor",
+              "slug": "greatest-common-divisor",
+              "summary": "Calculate the greatest common divisor (GCD) of two numbers.",
+              "description": "Given two non-zero positive integers A and B, find their Greatest Common Divisor using the Euclidean algorithm.\n\nInput Format:\nTwo space-separated integers A and B.\n\nOutput Format:\nThe GCD.",
+              "difficulty": "Easy",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/greatest-common-divisor",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-19-2",
+              "problem_order": 2,
+              "tags": [
+                "Maths",
+                "Easy"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "12 18",
+                  "expected_output": "6",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "7 13",
+                  "expected_output": "1",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "100 25",
+                  "expected_output": "25",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
+              ]
+            },
+            {
+              "title": "Modular Exponentiation",
+              "slug": "modular-exponentiation",
+              "summary": "Compute (Base^Exp) % Mod in O(log Exp).",
+              "description": "Given three integers Base, Exp, and Mod, compute (Base ^ Exp) % Mod.\n\nInput Format:\nThree space-separated integers: Base Exp Mod\n\nOutput Format:\nResulting modulo integer.",
+              "difficulty": "Medium",
+              "external_platform": "takeuforward",
+              "external_problem_url": "https://takeuforward.org/practice/dsa/modular-exponentiation",
+              "source_sheet": "strivers-a2z-sheet",
+              "source_problem_id": "p-19-3",
+              "problem_order": 3,
+              "tags": [
+                "Maths",
+                "Medium"
+              ],
+              "test_cases": [
+                {
+                  "input_data": "2 10 1000",
+                  "expected_output": "24",
+                  "is_hidden": false,
+                  "test_order": 1
+                },
+                {
+                  "input_data": "3 5 100",
+                  "expected_output": "43",
+                  "is_hidden": false,
+                  "test_order": 2
+                },
+                {
+                  "input_data": "5 0 7",
+                  "expected_output": "1",
+                  "is_hidden": true,
+                  "test_order": 3
+                }
               ]
             }
           ]

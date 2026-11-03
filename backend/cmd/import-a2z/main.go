@@ -55,6 +55,10 @@ func main() {
 		os.Exit(1)
 	}
 
+	if err := importer.SeedPostgresTestCases(ctx, pool, seed); err != nil {
+		fmt.Printf("seed test cases warning: %v\n", err)
+	}
+
 	enc := json.NewEncoder(os.Stdout)
 	enc.SetIndent("", "  ")
 	fmt.Println("Striver A2Z catalogue import completed (student progress was not deleted).")
