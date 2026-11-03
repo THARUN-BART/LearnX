@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"math"
+	"strings"
 	"time"
 
 	"github.com/THARUN-BART/LearnX/backend/internal/dsa/model"
@@ -260,23 +262,35 @@ func (s *serviceImpl) GetPathProgress(ctx context.Context, studentID string) (*P
 		LastEvaluatedAt: path.UpdatedAt,
 	}
 
+	var weightedScore float64
 	for _, n := range path.Nodes {
 		switch n.State {
 		case StateMastered:
 			resp.MasteredCount++
+			weightedScore += 100.0
+		case StateInProgress:
+			resp.InProgressCount++
+			weightedScore += 75.0
+		case StatePracticing:
+			resp.InProgressCount++
+			weightedScore += 50.0
 		case StateNeedsRevision:
 			resp.NeedsRevisionCount++
-		case StateInProgress, StatePracticing:
-			resp.InProgressCount++
+			weightedScore += 35.0
 		case StateReadyToLearn:
 			resp.ReadyToLearnCount++
-		case StateLockedByPrerequisite:
+			weightedScore += 10.0
+		case StateLockedByPrerequisite, StateNotStarted:
 			resp.LockedCount++
 		}
 	}
 
 	if resp.TotalConcepts > 0 {
-		resp.OverallProgress = float64(resp.MasteredCount) / float64(resp.TotalConcepts) * 100.0
+		pct := weightedScore / float64(resp.TotalConcepts)
+		if pct > 100.0 {
+			pct = 100.0
+		}
+		resp.OverallProgress = math.Round(pct*10) / 10
 	}
 
 	return resp, nil
@@ -315,6 +329,22 @@ func (s *serviceImpl) RecalculatePath(ctx context.Context, studentID string) (*A
 		m, err := s.memoryRepo.ListMistakeMemories(ctx, studentID, "active")
 		if err == nil {
 			mistakesList = m
+		}
+	}
+
+	// Pre-fetch problems pool once to prevent N+1 database queries
+	problemsByDifficulty := make(map[string][]model.Problem)
+	problemsByTopicSlug := make(map[string][]model.Problem)
+	if s.problemsRepo != nil {
+		allProbs, _, err := s.problemsRepo.List(ctx, model.ProblemFilter{Limit: 250})
+		if err == nil {
+			for _, p := range allProbs {
+				problemsByDifficulty[p.Difficulty] = append(problemsByDifficulty[p.Difficulty], p)
+				topicKey := strings.ToLower(strings.TrimSpace(p.TopicName))
+				if topicKey != "" {
+					problemsByTopicSlug[topicKey] = append(problemsByTopicSlug[topicKey], p)
+				}
+			}
 		}
 	}
 
@@ -373,23 +403,42 @@ func (s *serviceImpl) RecalculatePath(ctx context.Context, studentID string) (*A
 
 		nodeStates[c.ConceptKey] = state
 
-		// Check candidate problems for this concept
+		// Check candidate problems for this concept from pre-fetched pool
 		var recommendedProblemID *string
 		var recommendedProblemTitle *string
 		var recommendedProblemSlug *string
 		var topicID *string
 
-		if s.problemsRepo != nil {
-			probList, _, err := s.problemsRepo.List(ctx, model.ProblemFilter{
-				Difficulty: diffToRecommend,
-				Limit:      5,
-			})
-			if err == nil && len(probList) > 0 {
-				p := probList[0]
-				recommendedProblemID = &p.ID
-				recommendedProblemTitle = &p.Title
-				recommendedProblemSlug = &p.Slug
-				topicID = &p.TopicID
+		var candidateProblem *model.Problem
+		cTopicKey := strings.ToLower(strings.TrimSpace(c.TopicName))
+		cSlugKey := strings.ToLower(strings.TrimSpace(c.TopicSlug))
+
+		if probList, ok := problemsByTopicSlug[cTopicKey]; ok && len(probList) > 0 {
+			for i := range probList {
+				if probList[i].Difficulty == diffToRecommend {
+					candidateProblem = &probList[i]
+					break
+				}
+			}
+			if candidateProblem == nil {
+				candidateProblem = &probList[0]
+			}
+		} else if probList, ok := problemsByTopicSlug[cSlugKey]; ok && len(probList) > 0 {
+			candidateProblem = &probList[0]
+		}
+
+		if candidateProblem == nil {
+			if diffList, ok := problemsByDifficulty[diffToRecommend]; ok && len(diffList) > 0 {
+				candidateProblem = &diffList[0]
+			}
+		}
+
+		if candidateProblem != nil {
+			recommendedProblemID = &candidateProblem.ID
+			recommendedProblemTitle = &candidateProblem.Title
+			recommendedProblemSlug = &candidateProblem.Slug
+			if candidateProblem.TopicID != "" {
+				topicID = &candidateProblem.TopicID
 			}
 		}
 
@@ -540,12 +589,21 @@ func (s *serviceImpl) RecalculatePath(ctx context.Context, studentID string) (*A
 		stage = "Divide & Conquer, Search, & Linear Structures"
 	}
 
+	var totalReadiness float64
+	for _, n := range nodes {
+		totalReadiness += n.ReadinessScore
+	}
+	avgReadiness := 70.0
+	if len(nodes) > 0 {
+		avgReadiness = math.Round((totalReadiness/float64(len(nodes)))*10) / 10
+	}
+
 	adaptivePath := &AdaptivePath{
 		StudentID:             studentID,
 		CurrentTopicID:        currentTopicID,
 		CurrentConceptKey:     currentActiveConceptKey,
 		RecommendedDifficulty: recommendedDifficulty,
-		OverallReadinessScore: 70.0,
+		OverallReadinessScore: avgReadiness,
 		LearningStage:         stage,
 		Nodes:                 nodes,
 		UpdatedAt:             time.Now(),
