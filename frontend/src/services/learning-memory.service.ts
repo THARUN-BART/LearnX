@@ -13,12 +13,12 @@ import {
 
 export const learningMemoryService = {
   getSummary: async (): Promise<LearningMemorySummary> => {
-    const res = await apiClient.get<LearningMemorySummary>('/student/learning-memory');
+    const res = await apiClient.get<LearningMemorySummary>('/api/v1/student/learning-memory');
     return res.data;
   },
 
   getNarrative: async (): Promise<StudentFacingNarrative> => {
-    const res = await apiClient.get<StudentFacingNarrative>('/student/learning-memory/summary');
+    const res = await apiClient.get<StudentFacingNarrative>('/api/v1/student/learning-memory/summary');
     return res.data;
   },
 
@@ -30,7 +30,7 @@ export const learningMemoryService = {
     offset?: number;
   }): Promise<{ concepts: ConceptMemory[]; total: number }> => {
     const res = await apiClient.get<{ concepts: ConceptMemory[]; total: number }>(
-      '/student/learning-memory/concepts',
+      '/api/v1/student/learning-memory/concepts',
       { params }
     );
     return res.data;
@@ -38,14 +38,14 @@ export const learningMemoryService = {
 
   getConceptDetail: async (conceptKey: string): Promise<ConceptDetailResponse> => {
     const res = await apiClient.get<ConceptDetailResponse>(
-      `/student/learning-memory/concepts/${encodeURIComponent(conceptKey)}`
+      `/api/v1/student/learning-memory/concepts/${encodeURIComponent(conceptKey)}`
     );
     return res.data;
   },
 
   getStrengths: async (limit = 5): Promise<ConceptStrength[]> => {
     const res = await apiClient.get<{ strengths: ConceptStrength[] }>(
-      '/student/learning-memory/strengths',
+      '/api/v1/student/learning-memory/strengths',
       { params: { limit } }
     );
     return res.data.strengths || [];
@@ -53,7 +53,7 @@ export const learningMemoryService = {
 
   getWeaknesses: async (limit = 5): Promise<ConceptWeakness[]> => {
     const res = await apiClient.get<{ weaknesses: ConceptWeakness[] }>(
-      '/student/learning-memory/weaknesses',
+      '/api/v1/student/learning-memory/weaknesses',
       { params: { limit } }
     );
     return res.data.weaknesses || [];
@@ -66,7 +66,7 @@ export const learningMemoryService = {
     offset?: number;
   }): Promise<{ events: LearningEventItem[]; total: number }> => {
     const res = await apiClient.get<{ events: LearningEventItem[]; total: number }>(
-      '/student/learning-memory/history',
+      '/api/v1/student/learning-memory/history',
       { params }
     );
     return res.data;
@@ -74,7 +74,7 @@ export const learningMemoryService = {
 
   getTimeline: async (days = 14): Promise<TimelinePoint[]> => {
     const res = await apiClient.get<{ timeline: TimelinePoint[] }>(
-      '/student/learning-memory/timeline',
+      '/api/v1/student/learning-memory/timeline',
       { params: { days } }
     );
     return res.data.timeline || [];
@@ -83,7 +83,7 @@ export const learningMemoryService = {
   getSnapshots: async (days = 30): Promise<LearningSnapshot[]> => {
     try {
       const res = await apiClient.get<{ snapshots: LearningSnapshot[] }>(
-        '/student/learning-memory/snapshots',
+        '/api/v1/student/learning-memory/snapshots',
         { params: { days } }
       );
       return res.data?.snapshots || [];

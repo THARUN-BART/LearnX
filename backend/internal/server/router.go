@@ -208,6 +208,17 @@ func BuildRouter(
 		})
 	})
 
+	// Root-level aliases for backwards compatibility with clients calling /student/... without /api/v1 prefix
+	r.Group(func(r chi.Router) {
+		if authMiddleware != nil {
+			r.Use(authMiddleware.RequireAuth)
+		}
+
+		if options.intelligence != nil {
+			registerIntelligenceRoutes(r, options.intelligence)
+		}
+	})
+
 	return r
 }
 

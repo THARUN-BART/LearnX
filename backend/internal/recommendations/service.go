@@ -204,16 +204,16 @@ func (s *serviceImpl) generateRecommendations(ctx context.Context, studentID str
 		progressMap[progressList[i].ProblemID] = &progressList[i]
 	}
 
-	var weaknesses []learningmemory.MistakeMemory
+	var weaknesses []learningmemory.ConceptWeakness
 	var conceptMemories []learningmemory.ConceptMemory
 	if s.learningMemorySvc != nil {
-		weaknesses, _ = s.learningMemorySvc.GetWeaknesses(ctx, studentID)
-		conceptMemories, _ = s.learningMemorySvc.ListConcepts(ctx, studentID)
+		weaknesses, _ = s.learningMemorySvc.GetWeaknesses(ctx, studentID, 10)
+		conceptMemories, _, _ = s.learningMemorySvc.ListConcepts(ctx, studentID, learningmemory.ConceptFilter{Limit: 20})
 	}
 
 	var mistakePatterns []mistakes.StudentMistakePattern
 	if s.mistakesRepo != nil {
-		mistakePatterns, _ = s.mistakesRepo.ListPatterns(ctx, studentID)
+		mistakePatterns, _ = s.mistakesRepo.GetActivePatterns(ctx, studentID)
 	}
 
 	var nextPathAction *learningpath.LearningRecommendation
@@ -257,9 +257,9 @@ func (s *serviceImpl) generateRecommendations(ctx context.Context, studentID str
 		isWeaknessMatch := false
 		weaknessReason := ""
 		for _, w := range weaknesses {
-			if strings.EqualFold(w.ConceptKey, p.TopicName) || strings.EqualFold(w.Category, p.Difficulty) {
+			if strings.EqualFold(w.ConceptKey, p.TopicName) || strings.EqualFold(w.ConceptName, p.TopicName) {
 				isWeaknessMatch = true
-				weaknessReason = fmt.Sprintf("Addresses recurring %s mistakes (%s)", w.Subtype, w.Category)
+				weaknessReason = fmt.Sprintf("Addresses recurring %s mistakes (%s)", w.MistakeSubtype, w.MistakeCategory)
 				break
 			}
 		}

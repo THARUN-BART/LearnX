@@ -312,19 +312,6 @@ export const PracticePage: React.FC = () => {
             <option value="Not Started">Not Started</option>
           </select>
           <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="bg-[#12121B] text-[#A78BFA] text-[11px] px-2 py-1.5 rounded-lg border border-[#1C1C28] outline-none font-mono"
-          >
-            <option value="">All Statuses</option>
-            <option value="Needs Revision">Needs Revision</option>
-            <option value="Attempted">Attempted</option>
-            <option value="Solved">Solved</option>
-            <option value="Not Started">Not Started</option>
-          </select>
-            className="w-28 sm:w-36 bg-[#12121B] text-[#F4F4F6] text-[11px] px-2 py-1.5 rounded-lg border border-[#1C1C28] outline-none"
-          />
-          <select
             value={problem.id}
             onChange={(e) => navigate(`/practice/${e.target.value}`)}
             className="bg-[#12121B] text-[#F4F4F6] text-xs font-semibold px-3 py-1.5 rounded-lg border border-[#1C1C28] outline-none max-w-[220px] truncate"

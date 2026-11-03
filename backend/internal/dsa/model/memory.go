@@ -149,6 +149,12 @@ func (m *Memory) GetSubtopic(id string) (*Subtopic, bool) {
 	return &cp, true
 }
 
+func (m *Memory) SetProblem(p Problem) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	m.Problems[p.ID] = &p
+}
+
 func (m *Memory) GetProblem(id string) (*Problem, bool) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()

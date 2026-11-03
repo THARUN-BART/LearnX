@@ -152,7 +152,7 @@ func TestRecommendations_WithSeededProblems(t *testing.T) {
 		CreatedAt:       time.Now(),
 	})
 
-	_ = mistakesRepo.SavePattern(ctx, &mistakes.StudentMistakePattern{
+	_ = mistakesRepo.UpsertPattern(ctx, &mistakes.StudentMistakePattern{
 		ID:                "pat-1",
 		StudentID:         studentID,
 		Category:          "edge_case",
