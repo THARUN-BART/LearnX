@@ -5,7 +5,7 @@
 # ========================================================
 
 # Stage 1: Build the Go Backend Binary
-FROM golang:1.24-bookworm AS go-builder
+FROM golang:1.27.1-alpine AS go-builder
 WORKDIR /build
 
 COPY backend/go.mod backend/go.sum ./
