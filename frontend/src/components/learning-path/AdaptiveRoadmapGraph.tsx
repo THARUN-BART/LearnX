@@ -1,3 +1,4 @@
+import { normalizePercentage } from '../../utils/formatters';
 import React from 'react';
 import {
   Lock,
@@ -184,14 +185,14 @@ export const AdaptiveRoadmapGraph: React.FC<AdaptiveRoadmapGraphProps> = ({
                   <div className="flex items-center justify-between text-[11px] font-mono text-[#8E8EA0] mb-1">
                     <span>Readiness</span>
                     <span className="font-semibold" style={{ color: cfg.accentColor }}>
-                      {Math.round(node.readiness_score * 100)}%
+                      {normalizePercentage(node.readiness_score)}%
                     </span>
                   </div>
                   <div className="w-full h-1.5 rounded-full bg-[#1C1C28] overflow-hidden">
                     <div
                       className="h-full rounded-full transition-all duration-500"
                       style={{
-                        width: `${Math.min(100, Math.max(5, node.readiness_score * 100))}%`,
+                        width: `${Math.min(100, Math.max(5, normalizePercentage(node.readiness_score)))}%`,
                         backgroundColor: cfg.accentColor,
                       }}
                     />

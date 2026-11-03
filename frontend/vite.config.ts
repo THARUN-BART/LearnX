@@ -22,7 +22,11 @@ export default defineConfig({
     host: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:8080',
+        target: 'https://b917jx4f-8080.inc1.devtunnels.ms',
+        secure: false,
+        headers: {
+          'X-Tunnel-Skip-Anti-Phishing-Page': 'true',
+        },
         changeOrigin: true,
       },
     },

@@ -1,6 +1,6 @@
 import { Topic, Problem } from '../types/learning.types';
 
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'https://b917jx4f-8080.inc1.devtunnels.ms').replace(/\/+$/, '');
 export const TOKEN_KEY = 'learnx_access_token';
 export const REFRESH_TOKEN_KEY = 'learnx_refresh_token';
 export const USER_KEY = 'learnx_auth_user';

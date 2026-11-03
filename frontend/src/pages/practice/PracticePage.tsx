@@ -1,3 +1,4 @@
+import { normalizePercentage } from '../../utils/formatters';
 import React, { Suspense, lazy, useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import {
@@ -599,7 +600,7 @@ export const PracticePage: React.FC = () => {
                             {sim.problem_title || sim.headline}
                           </span>
                           <span className="text-[10px] font-mono text-purple-400 shrink-0">
-                            {Math.round(sim.match_score * 100)}% match
+                            {normalizePercentage(sim.match_score)}% match
                           </span>
                         </div>
                         <p className="text-[11px] text-[#8E8EA0] line-clamp-2">
@@ -830,7 +831,7 @@ export const PracticePage: React.FC = () => {
                         {pedagogy.runner_result?.output && <pre className="mt-2 whitespace-pre-wrap">{pedagogy.runner_result.output}</pre>}
                       </div>
                       <div className="p-3 bg-[#16122B] border border-[#8B5CF6]/30 rounded-xl">
-                        {pedagogy.diagnosis?.misconception} ({Math.round((pedagogy.diagnosis?.confidence || 0) * 100)}%)
+                        {pedagogy.diagnosis?.misconception} ({normalizePercentage(pedagogy.diagnosis?.confidence)}%)
                         <p className="text-[#8E8EA0] mt-1">{pedagogy.diagnosis?.evidence}</p>
                       </div>
                       {pedagogy.hint?.hint && (

@@ -17,6 +17,7 @@ export const apiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
+    'X-Tunnel-Skip-Anti-Phishing-Page': 'true',
   },
   timeout: 20000,
 });
@@ -25,6 +26,7 @@ export const aiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
+    'X-Tunnel-Skip-Anti-Phishing-Page': 'true',
   },
   timeout: 60000,
 });

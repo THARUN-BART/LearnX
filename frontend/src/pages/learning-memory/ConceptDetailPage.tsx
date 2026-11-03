@@ -1,3 +1,4 @@
+import { normalizePercentage } from '../../utils/formatters';
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
@@ -97,7 +98,7 @@ export const ConceptDetailPage: React.FC = () => {
         <div className="p-4 rounded-xl bg-[#0D0D14] border border-[#1C1C28]">
           <span className="text-[10px] uppercase font-mono text-[#8E8EA0]">Estimated Mastery</span>
           <div className="text-2xl font-bold text-[#F4F4F6] font-mono mt-1">
-            {concept.estimated_mastery}%
+            {normalizePercentage(concept.estimated_mastery)}%
           </div>
           <span className="text-[10px] text-[#5A5A6E]">Provisional calculation</span>
         </div>

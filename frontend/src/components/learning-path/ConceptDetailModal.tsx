@@ -1,3 +1,4 @@
+import { normalizePercentage } from '../../utils/formatters';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -92,7 +93,7 @@ export const ConceptDetailModal: React.FC<ConceptDetailModalProps> = ({ node, on
             <div className="p-3.5 rounded-xl bg-[#141420] border border-[#1C1C28]">
               <span className="text-[11px] font-mono text-[#8E8EA0] block mb-1">Readiness Score</span>
               <span className="text-xl font-bold text-[#8B5CF6] font-mono">
-                {Math.round(node.readiness_score * 100)}%
+                {normalizePercentage(node.readiness_score)}%
               </span>
             </div>
             <div className="p-3.5 rounded-xl bg-[#141420] border border-[#1C1C28]">
@@ -143,7 +144,7 @@ export const ConceptDetailModal: React.FC<ConceptDetailModalProps> = ({ node, on
                 <div className="p-2.5 rounded-lg bg-[#141420] border border-[#1C1C28]">
                   <span className="text-[#8E8EA0] block">Mastery Score</span>
                   <span className="font-bold text-[#F4F4F6] text-sm">
-                    {Math.round((detail.concept.estimated_mastery || 0) * 100)}%
+                    {normalizePercentage(detail.concept.estimated_mastery)}%
                   </span>
                 </div>
                 <div className="p-2.5 rounded-lg bg-[#141420] border border-[#1C1C28]">

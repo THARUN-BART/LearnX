@@ -1,3 +1,4 @@
+import { normalizePercentage } from '../../utils/formatters';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Sparkles, CheckCircle2, AlertCircle } from 'lucide-react';
@@ -85,7 +86,7 @@ export const ConceptMemoryList: React.FC<Props> = ({ concepts, loading }) => {
               </div>
               <div className="text-center">
                 <span className="text-[#8E8EA0] block text-[10px] uppercase">Est. Mastery</span>
-                <span className="text-[#F4F4F6] font-bold">{c.estimated_mastery}%</span>
+                <span className="text-[#F4F4F6] font-bold">{normalizePercentage(c.estimated_mastery)}%</span>
               </div>
             </div>
 

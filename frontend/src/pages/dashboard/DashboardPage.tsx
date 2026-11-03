@@ -1,3 +1,4 @@
+import { normalizePercentage } from '../../utils/formatters';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -436,7 +437,7 @@ export const DashboardPage: React.FC = () => {
                           {(rec.problem_difficulty || rec.recommended_difficulty)}
                         </span>
                         <span className="text-[9px] font-mono text-[#A78BFA] bg-[#8B5CF6]/10 px-1.5 py-0.5 rounded">
-                          {Math.round(rec.match_score * 100)}% Match
+                          {normalizePercentage(rec.match_score)}% Match
                         </span>
                       </div>
                     </div>
