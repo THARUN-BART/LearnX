@@ -110,3 +110,17 @@ export interface ConceptDetailResponse {
   timeline: LearningEventItem[];
   next_steps: string[];
 }
+
+export interface LearningSnapshot {
+  id: string;
+  student_id: string;
+  snapshot_date: string;
+  total_concepts_practised: number;
+  independent_solves: number;
+  assisted_solves: number;
+  mistake_count: number;
+  corrected_mistake_count: number;
+  active_learning_days: number;
+  summary?: Record<string, any>;
+  created_at?: string;
+}

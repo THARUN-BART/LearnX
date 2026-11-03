@@ -63,6 +63,12 @@ export const RoadmapPage: React.FC = () => {
           <div className="px-3 py-1 bg-[#8B5CF6]/10 text-[#A78BFA] rounded-lg border border-[#8B5CF6]/20">
             {inProgressCount} In Progress
           </div>
+          <button
+            onClick={() => navigate('/practice', { state: { filterStatus: 'Needs Revision' } })}
+            className="px-3 py-1 bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 rounded-lg border border-amber-500/20 transition-colors"
+          >
+            Revision Queue
+          </button>
         </div>
       </div>
 

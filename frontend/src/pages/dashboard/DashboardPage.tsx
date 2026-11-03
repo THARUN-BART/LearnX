@@ -155,9 +155,20 @@ export const DashboardPage: React.FC = () => {
             </h1>
             <p className="text-xs text-[#8E8EA0] max-w-2xl leading-relaxed">
               Current focus: <strong className="text-white">{activeTopic?.title || 'Striver A2Z roadmap'}</strong>.
-              {analytics?.needsRevision
-                ? ` ${analytics.needsRevision} problems are marked for revision.`
-                : ' Pick up the next unsolved problem from your active pillar.'}
+              {analytics?.needsRevision ? (
+                <span>
+                  {' '}
+                  <button
+                    onClick={() => navigate('/practice', { state: { filterStatus: 'Needs Revision' } })}
+                    className="text-amber-400 underline hover:text-amber-300 font-semibold"
+                  >
+                    {analytics.needsRevision} problems are marked for revision
+                  </button>
+                  .
+                </span>
+              ) : (
+                ' Pick up the next unsolved problem from your active pillar.'
+              )}
             </p>
           </div>
           <div className="flex items-center gap-3 shrink-0">

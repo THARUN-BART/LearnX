@@ -8,12 +8,14 @@ import {
   ConceptWeakness,
   TimelinePoint,
   StudentFacingNarrative,
+  LearningSnapshot,
 } from '../../types/learning-memory.types';
 import { LearningMetricCards } from '../../components/learning-memory/LearningMetricCards';
 import { ConceptMemoryList } from '../../components/learning-memory/ConceptMemoryList';
 import { StrengthsWeaknessesSection } from '../../components/learning-memory/StrengthsWeaknessesSection';
 import { LearningActivityChart } from '../../components/learning-memory/LearningActivityChart';
 import { MistakeCorrectionChart } from '../../components/learning-memory/MistakeCorrectionChart';
+import { LearningSnapshotsHistory } from '../../components/learning-memory/LearningSnapshotsHistory';
 
 export const LearningMemoryPage: React.FC = () => {
   const [summary, setSummary] = useState<LearningMemorySummary | null>(null);
@@ -22,6 +24,7 @@ export const LearningMemoryPage: React.FC = () => {
   const [strengths, setStrengths] = useState<ConceptStrength[]>([]);
   const [weaknesses, setWeaknesses] = useState<ConceptWeakness[]>([]);
   const [timeline, setTimeline] = useState<TimelinePoint[]>([]);
+  const [snapshots, setSnapshots] = useState<LearningSnapshot[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   // Filters
@@ -31,13 +34,14 @@ export const LearningMemoryPage: React.FC = () => {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [sum, narr, concRes, strList, weakList, timeData] = await Promise.all([
+      const [sum, narr, concRes, strList, weakList, timeData, snapData] = await Promise.all([
         learningMemoryService.getSummary(),
         learningMemoryService.getNarrative(),
         learningMemoryService.listConcepts({ search, learning_state: stateFilter }),
         learningMemoryService.getStrengths(5),
         learningMemoryService.getWeaknesses(5),
         learningMemoryService.getTimeline(14),
+        learningMemoryService.getSnapshots(30),
       ]);
       setSummary(sum);
       setNarrative(narr);
@@ -45,6 +49,7 @@ export const LearningMemoryPage: React.FC = () => {
       setStrengths(strList);
       setWeaknesses(weakList);
       setTimeline(timeData);
+      setSnapshots(snapData);
     } catch (err) {
       console.error('Failed to load learning memory profile', err);
     } finally {
@@ -97,6 +102,9 @@ export const LearningMemoryPage: React.FC = () => {
         <LearningActivityChart data={timeline} />
         <MistakeCorrectionChart data={timeline} />
       </div>
+
+      {/* Mastery Snapshots & Long-Term Milestones */}
+      <LearningSnapshotsHistory snapshots={snapshots} loading={loading} />
 
       {/* Strengths & Weaknesses */}
       <StrengthsWeaknessesSection strengths={strengths} weaknesses={weaknesses} />

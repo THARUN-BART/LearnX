@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   User,
   GraduationCap,
@@ -7,7 +8,15 @@ import {
   Mail,
   Edit2,
   CheckCircle2,
-  Save
+  Save,
+  Clock,
+  Flame,
+  Activity,
+  Layers,
+  ExternalLink,
+  Filter,
+  RefreshCw,
+  Play
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useProfile } from '../../hooks/useProfile';
@@ -21,17 +30,32 @@ import {
   DSA_LEVELS
 } from '../../utils/constants';
 import { ProgrammingLanguage, DSALevel } from '../../types/profile.types';
+import { SubmissionHistoryItem, AnalyticsSummary } from '../../types/learning.types';
+import codingService from '../../services/coding.service';
+import analyticsService from '../../services/analytics.service';
 import Card from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
 import { toast } from 'sonner';
 
 export const ProfilePage: React.FC = () => {
+  const navigate = useNavigate();
   const { user, updateLocalUser } = useAuth();
   const { profile, updateProfile } = useProfile();
 
+  const [activeTab, setActiveTab] = useState<'profile' | 'submissions' | 'performance'>('profile');
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
+
+  // Submissions state
+  const [submissions, setSubmissions] = useState<SubmissionHistoryItem[]>([]);
+  const [submissionTotal, setSubmissionTotal] = useState(0);
+  const [submissionStatus, setSubmissionStatus] = useState<string>('');
+  const [submissionsLoading, setSubmissionsLoading] = useState(false);
+
+  // Performance telemetry state
+  const [analytics, setAnalytics] = useState<AnalyticsSummary | null>(null);
+  const [analyticsLoading, setAnalyticsLoading] = useState(false);
 
   // Edit form state
   const [formData, setFormData] = useState({
@@ -62,6 +86,42 @@ export const ProfilePage: React.FC = () => {
     }
   }, [profile, user]);
 
+  useEffect(() => {
+    if (activeTab === 'submissions') {
+      loadSubmissions();
+    } else if (activeTab === 'performance') {
+      loadPerformance();
+    }
+  }, [activeTab, submissionStatus]);
+
+  const loadSubmissions = async () => {
+    setSubmissionsLoading(true);
+    try {
+      const res = await codingService.getStudentSubmissions({
+        limit: 30,
+        status: submissionStatus || undefined,
+      });
+      setSubmissions(res.submissions);
+      setSubmissionTotal(res.total);
+    } catch {
+      toast.error('Failed to load submission history');
+    } finally {
+      setSubmissionsLoading(false);
+    }
+  };
+
+  const loadPerformance = async () => {
+    setAnalyticsLoading(true);
+    try {
+      const data = await analyticsService.getAnalytics();
+      setAnalytics(data);
+    } catch {
+      toast.error('Failed to load performance metrics');
+    } finally {
+      setAnalyticsLoading(false);
+    }
+  };
+
   const handleSave = async () => {
     setIsSaving(true);
     try {
@@ -76,8 +136,25 @@ export const ProfilePage: React.FC = () => {
     }
   };
 
+  const getStatusBadge = (status: string) => {
+    const s = (status || '').toLowerCase();
+    if (s.includes('accepted')) {
+      return <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-mono">Accepted</span>;
+    }
+    if (s.includes('wrong')) {
+      return <span className="px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20 text-[10px] font-mono">Wrong Answer</span>;
+    }
+    if (s.includes('time')) {
+      return <span className="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[10px] font-mono">Time Limit Exceeded</span>;
+    }
+    if (s.includes('compile') || s.includes('syntax')) {
+      return <span className="px-2 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/20 text-[10px] font-mono">Compile Error</span>;
+    }
+    return <span className="px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20 text-[10px] font-mono">{status}</span>;
+  };
+
   return (
-    <div className="space-y-8 max-w-4xl mx-auto">
+    <div className="space-y-8 max-w-5xl mx-auto pb-16">
       {/* Header Banner */}
       <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-[#171722] via-[#1A1A28] to-[#101019] border border-[#232336] flex flex-col sm:flex-row items-center justify-between gap-6">
         <div className="flex items-center gap-5">
@@ -103,187 +180,393 @@ export const ProfilePage: React.FC = () => {
           </div>
         </div>
 
-        <Button
-          variant={isEditing ? 'secondary' : 'primary'}
-          size="sm"
-          onClick={() => {
-            if (isEditing) handleSave();
-            else setIsEditing(true);
-          }}
-          isLoading={isSaving}
-          leftIcon={isEditing ? <Save className="w-4 h-4" /> : <Edit2 className="w-4 h-4" />}
-        >
-          {isEditing ? 'Save Profile' : 'Edit Profile'}
-        </Button>
+        {activeTab === 'profile' && (
+          <Button
+            variant={isEditing ? 'secondary' : 'primary'}
+            size="sm"
+            onClick={() => {
+              if (isEditing) handleSave();
+              else setIsEditing(true);
+            }}
+            isLoading={isSaving}
+            leftIcon={isEditing ? <Save className="w-4 h-4" /> : <Edit2 className="w-4 h-4" />}
+          >
+            {isEditing ? 'Save Profile' : 'Edit Profile'}
+          </Button>
+        )}
       </div>
 
-      {/* Main Profile Info Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Academic Card */}
-        <Card className="p-6 space-y-4">
-          <div className="flex items-center gap-2 pb-2 border-b border-[#232336] text-[#A78BFA] font-mono text-xs font-bold">
-            <GraduationCap className="w-4 h-4 text-[#8B5CF6]" />
-            <span>Academic Credentials </span>
-          </div>
+      {/* Navigation Tabs */}
+      <div className="flex items-center gap-2 border-b border-[#1C1C28] pb-3 text-xs font-mono">
+        <button
+          onClick={() => setActiveTab('profile')}
+          className={`px-4 py-2 rounded-xl transition-all flex items-center gap-2 ${
+            activeTab === 'profile'
+              ? 'bg-[#1C1C28] text-[#F4F4F6] font-semibold border border-[#2A2A3C]'
+              : 'text-[#8E8EA0] hover:text-[#F4F4F6]'
+          }`}
+        >
+          <User className="w-4 h-4" />
+          <span>Profile Info</span>
+        </button>
 
-          <div className="space-y-4 text-xs">
-            <div className="space-y-1">
-              <label className="text-[#65657B]">Full Name</label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={formData.full_name}
-                  onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
-                  className="w-full bg-[#101019] text-[#F5F5F7] rounded-xl px-3 py-2 border border-[#232336]"
-                />
-              ) : (
-                <p className="font-semibold text-[#F5F5F7]">{formData.full_name}</p>
-              )}
+        <button
+          onClick={() => setActiveTab('submissions')}
+          className={`px-4 py-2 rounded-xl transition-all flex items-center gap-2 ${
+            activeTab === 'submissions'
+              ? 'bg-[#1C1C28] text-[#F4F4F6] font-semibold border border-[#2A2A3C]'
+              : 'text-[#8E8EA0] hover:text-[#F4F4F6]'
+          }`}
+        >
+          <Code2 className="w-4 h-4" />
+          <span>Submission History</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('performance')}
+          className={`px-4 py-2 rounded-xl transition-all flex items-center gap-2 ${
+            activeTab === 'performance'
+              ? 'bg-[#1C1C28] text-[#F4F4F6] font-semibold border border-[#2A2A3C]'
+              : 'text-[#8E8EA0] hover:text-[#F4F4F6]'
+          }`}
+        >
+          <Activity className="w-4 h-4" />
+          <span>Performance Telemetry</span>
+        </button>
+      </div>
+
+      {/* Tab 1: Profile Information */}
+      {activeTab === 'profile' && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Card className="p-6 space-y-4">
+            <div className="flex items-center gap-2 pb-2 border-b border-[#232336] text-[#A78BFA] font-mono text-xs font-bold">
+              <GraduationCap className="w-4 h-4 text-[#8B5CF6]" />
+              <span>Academic Credentials</span>
             </div>
 
-            <div className="space-y-1">
-              <label className="text-[#65657B]">University / Institution</label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={formData.college}
-                  onChange={(e) => setFormData({ ...formData, college: e.target.value })}
-                  className="w-full bg-[#101019] text-[#F5F5F7] rounded-xl px-3 py-2 border border-[#232336]"
-                />
-              ) : (
-                <p className="font-semibold text-[#F5F5F7]">{formData.college}</p>
-              )}
-            </div>
-
-            <div className="space-y-1">
-              <label className="text-[#65657B]">Degree / Course</label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={formData.course}
-                  onChange={(e) => setFormData({ ...formData, course: e.target.value })}
-                  className="w-full bg-[#101019] text-[#F5F5F7] rounded-xl px-3 py-2 border border-[#232336]"
-                />
-              ) : (
-                <p className="font-semibold text-[#F5F5F7]">{formData.course}</p>
-              )}
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-4 text-xs">
               <div className="space-y-1">
-                <label className="text-[#65657B]">Department</label>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={formData.department}
-                    onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                    className="w-full bg-[#101019] text-[#F5F5F7] rounded-xl px-3 py-2 border border-[#232336]"
-                  />
-                ) : (
-                  <p className="font-semibold text-[#F5F5F7]">{formData.department}</p>
-                )}
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-[#65657B]">Current Year</label>
+                <label className="text-[#65657B] font-mono text-[10px] uppercase">College / University</label>
                 {isEditing ? (
                   <select
-                    value={formData.current_year}
-                    onChange={(e) => setFormData({ ...formData, current_year: e.target.value })}
-                    className="w-full bg-[#101019] text-[#F5F5F7] rounded-xl px-3 py-2 border border-[#232336]"
+                    value={formData.college}
+                    onChange={(e) => setFormData({ ...formData, college: e.target.value })}
+                    className="w-full bg-[#101019] text-[#F5F5F7] p-2.5 rounded-xl border border-[#232336] outline-none"
                   >
-                    {ACADEMIC_YEARS.map((y) => (
-                      <option key={y} value={y}>{y}</option>
+                    {COLLEGES.map((c) => (
+                      <option key={c} value={c}>{c}</option>
                     ))}
                   </select>
                 ) : (
-                  <p className="font-semibold text-[#F5F5F7]">{formData.current_year}</p>
+                  <p className="text-[#F5F5F7] font-medium p-1">{formData.college}</p>
+                )}
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-[#65657B] font-mono text-[10px] uppercase">Course</label>
+                  {isEditing ? (
+                    <select
+                      value={formData.course}
+                      onChange={(e) => setFormData({ ...formData, course: e.target.value })}
+                      className="w-full bg-[#101019] text-[#F5F5F7] p-2.5 rounded-xl border border-[#232336] outline-none"
+                    >
+                      {COURSES.map((c) => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
+                    </select>
+                  ) : (
+                    <p className="text-[#F5F5F7] font-medium p-1">{formData.course}</p>
+                  )}
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[#65657B] font-mono text-[10px] uppercase">Year</label>
+                  {isEditing ? (
+                    <select
+                      value={formData.current_year}
+                      onChange={(e) => setFormData({ ...formData, current_year: e.target.value })}
+                      className="w-full bg-[#101019] text-[#F5F5F7] p-2.5 rounded-xl border border-[#232336] outline-none"
+                    >
+                      {ACADEMIC_YEARS.map((y) => (
+                        <option key={y} value={y}>{y}</option>
+                      ))}
+                    </select>
+                  ) : (
+                    <p className="text-[#F5F5F7] font-medium p-1">{formData.current_year}</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[#65657B] font-mono text-[10px] uppercase">Department</label>
+                {isEditing ? (
+                  <select
+                    value={formData.department}
+                    onChange={(e) => setFormData({ ...formData, department: e.target.value })}
+                    className="w-full bg-[#101019] text-[#F5F5F7] p-2.5 rounded-xl border border-[#232336] outline-none"
+                  >
+                    {DEPARTMENTS.map((d) => (
+                      <option key={d} value={d}>{d}</option>
+                    ))}
+                  </select>
+                ) : (
+                  <p className="text-[#F5F5F7] font-medium p-1">{formData.department}</p>
                 )}
               </div>
             </div>
-          </div>
-        </Card>
+          </Card>
 
-        {/* Learning Preferences Card */}
-        <Card className="p-6 space-y-4">
-          <div className="flex items-center gap-2 pb-2 border-b border-[#232336] text-[#A78BFA] font-mono text-xs font-bold">
-            <Target className="w-4 h-4 text-[#8B5CF6]" />
-            <span>Target Calibration</span>
-          </div>
-
-          <div className="space-y-4 text-xs">
-            <div className="space-y-1">
-              <label className="text-[#65657B]">Preferred Language (C, C++, Java, Python, Go)</label>
-              {isEditing ? (
-                <select
-                  value={formData.preferred_language}
-                  onChange={(e) =>
-                    setFormData({ ...formData, preferred_language: e.target.value as ProgrammingLanguage })
-                  }
-                  className="w-full bg-[#101019] text-[#F5F5F7] rounded-xl px-3 py-2 border border-[#232336]"
-                >
-                  {PROGRAMMING_LANGUAGES.map((l) => (
-                    <option key={l.id} value={l.id}>{l.name}</option>
-                  ))}
-                </select>
-              ) : (
-                <p className="font-semibold text-[#F5F5F7] font-mono">{formData.preferred_language}</p>
-              )}
+          <Card className="p-6 space-y-4">
+            <div className="flex items-center gap-2 pb-2 border-b border-[#232336] text-[#A78BFA] font-mono text-xs font-bold">
+              <Code2 className="w-4 h-4 text-[#8B5CF6]" />
+              <span>DSA & Programming Focus</span>
             </div>
 
-            <div className="space-y-1">
-              <label className="text-[#65657B]">Learning Goal</label>
-              {isEditing ? (
-                <select
-                  value={formData.learning_goal}
-                  onChange={(e) => setFormData({ ...formData, learning_goal: e.target.value })}
-                  className="w-full bg-[#101019] text-[#F5F5F7] rounded-xl px-3 py-2 border border-[#232336]"
-                >
-                  {LEARNING_GOALS.map((g) => (
-                    <option key={g.id} value={g.id}>{g.title}</option>
-                  ))}
-                </select>
-              ) : (
-                <p className="font-semibold text-[#F5F5F7]">{formData.learning_goal}</p>
-              )}
+            <div className="space-y-4 text-xs">
+              <div className="space-y-1">
+                <label className="text-[#65657B] font-mono text-[10px] uppercase">Preferred Language</label>
+                {isEditing ? (
+                  <select
+                    value={formData.preferred_language}
+                    onChange={(e) => setFormData({ ...formData, preferred_language: e.target.value as ProgrammingLanguage })}
+                    className="w-full bg-[#101019] text-[#F5F5F7] p-2.5 rounded-xl border border-[#232336] outline-none"
+                  >
+                    {PROGRAMMING_LANGUAGES.map((l: any) => (
+                      <option key={l.id || l} value={l.name || l}>{l.name || l}</option>
+                    ))}
+                  </select>
+                ) : (
+                  <p className="text-[#F5F5F7] font-medium p-1">{formData.preferred_language}</p>
+                )}
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[#65657B] font-mono text-[10px] uppercase">Target Learning Goal</label>
+                {isEditing ? (
+                  <select
+                    value={formData.learning_goal}
+                    onChange={(e) => setFormData({ ...formData, learning_goal: e.target.value })}
+                    className="w-full bg-[#101019] text-[#F5F5F7] p-2.5 rounded-xl border border-[#232336] outline-none"
+                  >
+                    {LEARNING_GOALS.map((g: any) => (
+                      <option key={g.id || g} value={g.title || g}>{g.title || g}</option>
+                    ))}
+                  </select>
+                ) : (
+                  <p className="text-[#F5F5F7] font-medium p-1">{formData.learning_goal}</p>
+                )}
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[#65657B] font-mono text-[10px] uppercase">Bio / Purpose</label>
+                {isEditing ? (
+                  <textarea
+                    rows={2}
+                    value={formData.bio}
+                    onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                    className="w-full bg-[#101019] text-[#F5F5F7] p-2.5 rounded-xl border border-[#232336] outline-none resize-none"
+                  />
+                ) : (
+                  <p className="text-[#9292A3] p-1 italic leading-relaxed">{formData.bio}</p>
+                )}
+              </div>
+            </div>
+          </Card>
+        </div>
+      )}
+
+      {/* Tab 2: Global Submission History */}
+      {activeTab === 'submissions' && (
+        <div className="space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-[#0D0D14] border border-[#1C1C28]">
+            <div className="flex items-center gap-2">
+              <Code2 className="w-4 h-4 text-[#8B5CF6]" />
+              <span className="text-xs font-mono font-bold text-[#F4F4F6]">
+                All Submissions ({submissionTotal})
+              </span>
             </div>
 
-            <div className="space-y-1">
-              <label className="text-[#65657B]">DSA Proficiency Tier (Beginner, Intermediate, Advanced)</label>
-              {isEditing ? (
-                <select
-                  value={formData.dsa_level}
-                  onChange={(e) => setFormData({ ...formData, dsa_level: e.target.value as DSALevel })}
-                  className="w-full bg-[#101019] text-[#F5F5F7] rounded-xl px-3 py-2 border border-[#232336]"
-                >
-                  {DSA_LEVELS.map((lvl) => (
-                    <option key={lvl.id} value={lvl.id}>{lvl.title}</option>
-                  ))}
-                </select>
-              ) : (
-                <p className="font-semibold text-[#F5F5F7]">{formData.dsa_level}</p>
-              )}
+            <div className="flex items-center gap-2">
+              <Filter className="w-3.5 h-3.5 text-[#5A5A6E]" />
+              <select
+                value={submissionStatus}
+                onChange={(e) => setSubmissionStatus(e.target.value)}
+                className="bg-[#12121B] text-xs text-[#8E8EA0] px-3 py-1.5 rounded-lg border border-[#1C1C28] outline-none font-mono"
+              >
+                <option value="">All Statuses</option>
+                <option value="Accepted">Accepted</option>
+                <option value="Wrong Answer">Wrong Answer</option>
+                <option value="Runtime Error">Runtime Error</option>
+                <option value="Time Limit Exceeded">Time Limit Exceeded</option>
+                <option value="Compilation Error">Compilation Error</option>
+              </select>
+
+              <button
+                onClick={loadSubmissions}
+                disabled={submissionsLoading}
+                className="p-1.5 rounded-lg bg-[#12121B] border border-[#1C1C28] text-[#8E8EA0] hover:text-white"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${submissionsLoading ? 'animate-spin' : ''}`} />
+              </button>
             </div>
           </div>
-        </Card>
-      </div>
 
-      {/* Bio / Summary Statement */}
-      <Card className="p-6 space-y-3">
-        <h4 className="text-xs font-bold text-[#F5F5F7] font-mono">Bio & Focus Statement</h4>
-        {isEditing ? (
-          <textarea
-            rows={3}
-            value={formData.bio}
-            onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-            className="w-full bg-[#101019] text-[#F5F5F7] rounded-xl p-3 border border-[#232336] text-xs outline-none"
-          />
-        ) : (
-          <p className="text-xs text-[#9292A3] leading-relaxed">
-            {formData.bio}
-          </p>
-        )}
-      </Card>
+          {submissionsLoading ? (
+            <div className="space-y-3">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="h-16 rounded-xl bg-[#12121B] border border-[#1C1C28] animate-pulse" />
+              ))}
+            </div>
+          ) : submissions.length > 0 ? (
+            <div className="rounded-xl border border-[#1C1C28] overflow-hidden bg-[#0D0D14]">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs font-mono">
+                  <thead className="bg-[#12121B] border-b border-[#1C1C28] text-[#5A5A6E] uppercase text-[10px]">
+                    <tr>
+                      <th className="px-4 py-3">Problem</th>
+                      <th className="px-4 py-3">Status</th>
+                      <th className="px-4 py-3">Language</th>
+                      <th className="px-4 py-3">Runtime</th>
+                      <th className="px-4 py-3">Memory</th>
+                      <th className="px-4 py-3">Submitted At</th>
+                      <th className="px-4 py-3 text-right">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#1C1C28]">
+                    {submissions.map((sub) => (
+                      <tr key={sub.id || sub.submission_id} className="hover:bg-[#12121B]/60 transition-colors">
+                        <td className="px-4 py-3 text-[#F4F4F6] font-semibold">
+                          {sub.problem_title || sub.problem_id || 'Problem'}
+                        </td>
+                        <td className="px-4 py-3">
+                          {getStatusBadge(sub.status)}
+                        </td>
+                        <td className="px-4 py-3 text-[#8E8EA0] capitalize">
+                          {sub.language || 'python'}
+                        </td>
+                        <td className="px-4 py-3 text-[#8E8EA0]">
+                          {sub.execution_time_ms ? `${sub.execution_time_ms}ms` : '—'}
+                        </td>
+                        <td className="px-4 py-3 text-[#8E8EA0]">
+                          {sub.memory_used_kb ? `${Math.round(sub.memory_used_kb / 1024 * 10) / 10}MB` : '—'}
+                        </td>
+                        <td className="px-4 py-3 text-[#5A5A6E] text-[11px]">
+                          {sub.submitted_at ? new Date(sub.submitted_at).toLocaleString() : '—'}
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          <button
+                            onClick={() => navigate(`/practice/${sub.problem_id}`)}
+                            className="inline-flex items-center gap-1 text-[11px] text-[#8B5CF6] hover:text-[#A78BFA]"
+                          >
+                            <span>Open</span>
+                            <ExternalLink className="w-3 h-3" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ) : (
+            <div className="p-12 text-center rounded-xl bg-[#0D0D14] border border-dashed border-[#2A2A3C] text-xs text-[#8E8EA0] space-y-2">
+              <Code2 className="w-8 h-8 text-[#5A5A6E] mx-auto mb-2" />
+              <p>No submissions recorded for this filter.</p>
+              <Button size="sm" variant="outline" onClick={() => navigate('/practice')}>
+                Go to Practice Arena
+              </Button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Tab 3: Performance Telemetry */}
+      {activeTab === 'performance' && (
+        <div className="space-y-6">
+          {analyticsLoading || !analytics ? (
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="h-28 rounded-2xl bg-[#12121B] border border-[#1C1C28] animate-pulse" />
+              ))}
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 font-mono">
+                <div className="p-5 rounded-2xl bg-[#0D0D14] border border-[#1C1C28] space-y-1">
+                  <div className="flex items-center justify-between text-xs text-[#5A5A6E]">
+                    <span>TOTAL_SOLVED</span>
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  </div>
+                  <div className="text-3xl font-bold text-[#F4F4F6]">{analytics.totalSolved}</div>
+                  <span className="text-[11px] text-emerald-400">
+                    Accuracy: {analytics.accuracyRate}%
+                  </span>
+                </div>
+
+                <div className="p-5 rounded-2xl bg-[#0D0D14] border border-[#1C1C28] space-y-1">
+                  <div className="flex items-center justify-between text-xs text-[#5A5A6E]">
+                    <span>ACTIVE_STREAK</span>
+                    <Flame className="w-4 h-4 text-amber-400" />
+                  </div>
+                  <div className="text-3xl font-bold text-amber-400">{analytics.streakDays}d</div>
+                  <span className="text-[11px] text-[#8E8EA0]">Consistent practice</span>
+                </div>
+
+                <div className="p-5 rounded-2xl bg-[#0D0D14] border border-[#1C1C28] space-y-1">
+                  <div className="flex items-center justify-between text-xs text-[#5A5A6E]">
+                    <span>HOURS_INVESTED</span>
+                    <Clock className="w-4 h-4 text-[#818CF8]" />
+                  </div>
+                  <div className="text-3xl font-bold text-[#818CF8]">{analytics.hoursSpent}h</div>
+                  <span className="text-[11px] text-[#8E8EA0]">{analytics.attemptedProblems} total attempts</span>
+                </div>
+
+                <div className="p-5 rounded-2xl bg-[#0D0D14] border border-[#1C1C28] space-y-1">
+                  <div className="flex items-center justify-between text-xs text-[#5A5A6E]">
+                    <span>REVISION_QUEUE</span>
+                    <Activity className="w-4 h-4 text-[#A78BFA]" />
+                  </div>
+                  <div className="text-3xl font-bold text-[#A78BFA]">{analytics.needsRevision}</div>
+                  <span className="text-[11px] text-[#8E8EA0]">Marked for review</span>
+                </div>
+              </div>
+
+              {/* Difficulty Breakdown */}
+              <div className="p-6 rounded-2xl bg-[#0D0D14] border border-[#1C1C28] space-y-4 font-mono">
+                <h3 className="text-sm font-bold text-[#F4F4F6]">Difficulty Distribution</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  {analytics.difficultyDistribution.map((d) => (
+                    <div
+                      key={d.name}
+                      className="p-4 rounded-xl bg-[#12121B] border border-[#1C1C28] space-y-2"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-[#F4F4F6]">{d.name}</span>
+                        <span className="text-xs text-[#8E8EA0]">{d.count} solved</span>
+                      </div>
+                      <div className="w-full bg-[#1C1C28] h-1.5 rounded-full overflow-hidden">
+                        <div
+                          className={`h-full ${
+                            d.name === 'Easy'
+                              ? 'bg-emerald-400'
+                              : d.name === 'Medium'
+                              ? 'bg-amber-400'
+                              : 'bg-rose-400'
+                          }`}
+                          style={{
+                            width: `${Math.min(100, Math.round((d.count / Math.max(1, analytics.totalSolved)) * 100))}%`,
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 };

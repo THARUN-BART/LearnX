@@ -147,6 +147,20 @@ class AIService {
     return unwrap<PedagogyAnalysis>(res.data, 'data');
   }
 
+  async diagnosePedagogy(
+    studentCode: string,
+    testCode: string,
+    skill: string = 'SKL-02'
+  ): Promise<any> {
+    const res = await aiClient.post('/api/v1/ai/pedagogy/diagnose', {
+      student_code: studentCode,
+      test_code: testCode,
+      skill,
+      timeout: 3.0,
+    });
+    return unwrap<any>(res.data, 'data');
+  }
+
   async sendMessage(
     message: string,
     mode: AssistantMode,

@@ -8,6 +8,7 @@ import {
   LearningEventItem,
   TimelinePoint,
   StudentFacingNarrative,
+  LearningSnapshot,
 } from '../types/learning-memory.types';
 
 export const learningMemoryService = {
@@ -78,4 +79,18 @@ export const learningMemoryService = {
     );
     return res.data.timeline || [];
   },
+
+  getSnapshots: async (days = 30): Promise<LearningSnapshot[]> => {
+    try {
+      const res = await apiClient.get<{ snapshots: LearningSnapshot[] }>(
+        '/student/learning-memory/snapshots',
+        { params: { days } }
+      );
+      return res.data?.snapshots || [];
+    } catch {
+      return [];
+    }
+  },
 };
+
+export default learningMemoryService;

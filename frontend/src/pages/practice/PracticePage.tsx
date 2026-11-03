@@ -66,6 +66,7 @@ export const PracticePage: React.FC = () => {
   const [history, setHistory] = useState<SubmissionHistoryItem[]>([]);
   const [pedagogy, setPedagogy] = useState<PedagogyAnalysis | null>(null);
   const [similarRecs, setSimilarRecs] = useState<ProblemRecommendation[]>([]);
+  const [statusFilter, setStatusFilter] = useState<string>(location.state?.filterStatus || '');
   const [progressStatus, setProgressStatus] = useState<ProgressStatus>('Not Started');
   const [aiModal, setAiModal] = useState<{
     isOpen: boolean;
@@ -78,10 +79,16 @@ export const PracticePage: React.FC = () => {
   }>({ isOpen: false, title: '', type: 'explain', loading: false });
 
   useEffect(() => {
-    learningService.getProblems({ limit: 40 }).then((list) => {
-      if (Array.isArray(list) && list.length) setAllProblems(list);
-    });
-  }, []);
+    if (statusFilter) {
+      learningService.getProblems({ status: statusFilter, limit: 50 }).then((list) => {
+        if (Array.isArray(list)) setAllProblems(list);
+      });
+    } else {
+      learningService.getProblems({ limit: 40 }).then((list) => {
+        if (Array.isArray(list)) setAllProblems(list);
+      });
+    }
+  }, [statusFilter]);
 
   useEffect(() => {
     const q = problemQuery.trim();
@@ -291,6 +298,30 @@ export const PracticePage: React.FC = () => {
             value={problemQuery}
             onChange={(e) => setProblemQuery(e.target.value)}
             placeholder="Search problems"
+            className="w-28 sm:w-36 bg-[#12121B] text-[#F4F4F6] text-[11px] px-2 py-1.5 rounded-lg border border-[#1C1C28] outline-none"
+          />
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="bg-[#12121B] text-[#A78BFA] text-[11px] px-2 py-1.5 rounded-lg border border-[#1C1C28] outline-none font-mono"
+          >
+            <option value="">All Statuses</option>
+            <option value="Needs Revision">Needs Revision</option>
+            <option value="Attempted">Attempted</option>
+            <option value="Solved">Solved</option>
+            <option value="Not Started">Not Started</option>
+          </select>
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="bg-[#12121B] text-[#A78BFA] text-[11px] px-2 py-1.5 rounded-lg border border-[#1C1C28] outline-none font-mono"
+          >
+            <option value="">All Statuses</option>
+            <option value="Needs Revision">Needs Revision</option>
+            <option value="Attempted">Attempted</option>
+            <option value="Solved">Solved</option>
+            <option value="Not Started">Not Started</option>
+          </select>
             className="w-28 sm:w-36 bg-[#12121B] text-[#F4F4F6] text-[11px] px-2 py-1.5 rounded-lg border border-[#1C1C28] outline-none"
           />
           <select

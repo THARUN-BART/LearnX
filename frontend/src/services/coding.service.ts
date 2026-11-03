@@ -64,6 +64,45 @@ class CodingService {
     }
   }
 
+  async getStudentSubmissions(params?: {
+    page?: number;
+    limit?: number;
+    problemId?: string;
+    status?: string;
+  }): Promise<{ submissions: SubmissionHistoryItem[]; total: number; page: number; totalPages: number }> {
+    try {
+      const res = await apiClient.get('/api/v1/student/submissions', {
+        params: {
+          page: params?.page ?? 1,
+          limit: params?.limit ?? 20,
+          problem_id: params?.problemId,
+          status: params?.status,
+        },
+      });
+      const data = unwrap<any>(res.data, 'data');
+      const list = data?.submissions || [];
+      return {
+        submissions: list.map((s: any) => ({
+          id: s.submission_id || s.id,
+          submission_id: s.submission_id || s.id,
+          problem_id: s.problem_id,
+          problem_title: s.problem_title || s.title,
+          status: s.status,
+          language: s.language,
+          execution_time_ms: s.execution_time_ms,
+          memory_used_kb: s.memory_used_kb,
+          submitted_at: s.submitted_at,
+          source_code: s.source_code,
+        })),
+        total: data?.total || list.length,
+        page: data?.page || 1,
+        totalPages: data?.total_pages || 1,
+      };
+    } catch {
+      return { submissions: [], total: 0, page: 1, totalPages: 1 };
+    }
+  }
+
   async getLatestSubmission(problemId: string): Promise<SubmissionHistoryItem | null> {
     try {
       const res = await apiClient.get(`/api/v1/problems/${problemId}/submissions/latest`);
