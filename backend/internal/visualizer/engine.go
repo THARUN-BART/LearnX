@@ -3,9 +3,7 @@ package visualizer
 import (
 	"fmt"
 	"math"
-	
 	"sort"
-	"strings"
 )
 
 // GenerateExecutionSteps runs real algorithms and returns structured step-by-step traces.

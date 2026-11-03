@@ -876,22 +876,27 @@ CREATE INDEX IF NOT EXISTS idx_code_reviews_created_at ON code_reviews(created_a
 ALTER TABLE visualizer_sessions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE code_reviews ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Students can view their own visualizer sessions" ON visualizer_sessions;
 CREATE POLICY "Students can view their own visualizer sessions"
     ON visualizer_sessions FOR SELECT
     USING (auth.uid() = student_id);
 
+DROP POLICY IF EXISTS "Students can insert their own visualizer sessions" ON visualizer_sessions;
 CREATE POLICY "Students can insert their own visualizer sessions"
     ON visualizer_sessions FOR INSERT
     WITH CHECK (auth.uid() = student_id);
 
+DROP POLICY IF EXISTS "Students can update their own visualizer sessions" ON visualizer_sessions;
 CREATE POLICY "Students can update their own visualizer sessions"
     ON visualizer_sessions FOR UPDATE
     USING (auth.uid() = student_id);
 
+DROP POLICY IF EXISTS "Students can view their own code reviews" ON code_reviews;
 CREATE POLICY "Students can view their own code reviews"
     ON code_reviews FOR SELECT
     USING (auth.uid() = student_id);
 
+DROP POLICY IF EXISTS "Students can insert their own code reviews" ON code_reviews;
 CREATE POLICY "Students can insert their own code reviews"
     ON code_reviews FOR INSERT
     WITH CHECK (auth.uid() = student_id);

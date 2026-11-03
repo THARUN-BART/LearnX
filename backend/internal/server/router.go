@@ -47,6 +47,8 @@ type IntelligenceHandlers struct {
 	LearningMemory  *learningmemory.Handler
 	LearningPath    *learningpath.Handler
 	Recommendations *recommendations.Handler
+	Visualizer      *visualizer.Handler
+	CodeReview      *codereview.Handler
 }
 
 type RouterOption func(*routerOptions)
@@ -270,6 +272,30 @@ func registerIntelligenceRoutes(r chi.Router, intel *IntelligenceHandlers) {
 		r.Post("/student/recommendations/refresh", intel.Recommendations.Refresh)
 		r.Post("/student/recommendations/{id}/feedback", intel.Recommendations.SubmitFeedback)
 		r.Get("/student/recommendations/history", intel.Recommendations.GetHistory)
+	}
+
+	if intel.Visualizer != nil {
+		r.Get("/visualizer/algorithms", intel.Visualizer.ListAlgorithms)
+		r.Get("/visualizer/algorithms/{id}", intel.Visualizer.GetAlgorithm)
+		r.Post("/visualizer/execute", intel.Visualizer.Execute)
+		r.Post("/visualizer/explain-step", intel.Visualizer.ExplainStep)
+		r.Get("/visualizer/practice-questions", intel.Visualizer.GetPracticeQuestions)
+		r.Post("/visualizer/sessions", intel.Visualizer.CreateSession)
+		r.Get("/visualizer/sessions", intel.Visualizer.ListSessions)
+		r.Get("/visualizer/sessions/{id}", intel.Visualizer.GetSession)
+		r.Patch("/visualizer/sessions/{id}", intel.Visualizer.UpdateSession)
+		r.Put("/visualizer/sessions/{id}", intel.Visualizer.UpdateSession)
+	}
+
+	if intel.CodeReview != nil {
+		r.Post("/ai/code-review", intel.CodeReview.ReviewCode)
+		r.Get("/ai/code-review/{id}", intel.CodeReview.GetReview)
+		r.Get("/ai/code-review/{id}/comparison", intel.CodeReview.GetComparison)
+		r.Get("/student/code-reviews", intel.CodeReview.ListReviews)
+		// Backwards-compatible aliases
+		r.Post("/code-review", intel.CodeReview.ReviewCode)
+		r.Get("/code-review/history", intel.CodeReview.ListReviews)
+		r.Get("/code-review/{id}", intel.CodeReview.GetReview)
 	}
 }
 

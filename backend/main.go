@@ -16,20 +16,26 @@ import (
 	"github.com/THARUN-BART/LearnX/backend/internal/aitutor"
 	"github.com/THARUN-BART/LearnX/backend/internal/assessment"
 	"github.com/THARUN-BART/LearnX/backend/internal/auth"
+	"github.com/THARUN-BART/LearnX/backend/internal/codereview"
 	"github.com/THARUN-BART/LearnX/backend/internal/config"
 	"github.com/THARUN-BART/LearnX/backend/internal/database"
 	"github.com/THARUN-BART/LearnX/backend/internal/dsa"
 	"github.com/THARUN-BART/LearnX/backend/internal/dsa/model"
 	"github.com/THARUN-BART/LearnX/backend/internal/execution"
 	"github.com/THARUN-BART/LearnX/backend/internal/importer"
+	"github.com/THARUN-BART/LearnX/backend/internal/learningmemory"
+	"github.com/THARUN-BART/LearnX/backend/internal/learningpath"
 	"github.com/THARUN-BART/LearnX/backend/internal/middleware"
 	"github.com/THARUN-BART/LearnX/backend/internal/mistakes"
 	"github.com/THARUN-BART/LearnX/backend/internal/otp"
+	"github.com/THARUN-BART/LearnX/backend/internal/pedagogy"
 	"github.com/THARUN-BART/LearnX/backend/internal/profile"
+	"github.com/THARUN-BART/LearnX/backend/internal/recommendations"
 	"github.com/THARUN-BART/LearnX/backend/internal/server"
 	"github.com/THARUN-BART/LearnX/backend/internal/submissions"
 	"github.com/THARUN-BART/LearnX/backend/internal/supabase"
 	"github.com/THARUN-BART/LearnX/backend/internal/testcases"
+	"github.com/THARUN-BART/LearnX/backend/internal/visualizer"
 	"github.com/THARUN-BART/LearnX/backend/internal/workers"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -63,6 +69,11 @@ func main() {
 	var testCasesRepo testcases.Repository
 	var mistakesRepo mistakes.Repository
 	var aiRepo aitutor.Repository
+	var memoryRepo learningmemory.Repository
+	var pathRepo learningpath.Repository
+	var recRepo recommendations.Repository
+	var visualizerRepo visualizer.Repository
+	var codeReviewRepo codereview.Repository
 	var pool *pgxpool.Pool
 
 	if cfg.SupabaseDBURL != "" {
@@ -76,6 +87,11 @@ func main() {
 			testCasesRepo = testcases.NewMemoryRepository()
 			mistakesRepo = mistakes.NewMemoryRepository()
 			aiRepo = aitutor.NewMemoryRepository()
+			memoryRepo = learningmemory.NewMemoryRepository()
+			pathRepo = learningpath.NewMemoryRepository()
+			recRepo = recommendations.NewMemoryRepository()
+			visualizerRepo = visualizer.NewMemoryRepository()
+			codeReviewRepo = codereview.NewMemoryRepository()
 		} else {
 			pool = connected
 			defer pool.Close()
@@ -89,6 +105,11 @@ func main() {
 			testCasesRepo = testcases.NewPostgresRepository(pool)
 			mistakesRepo = mistakes.NewPostgresRepository(pool)
 			aiRepo = aitutor.NewPostgresRepository(pool)
+			memoryRepo = learningmemory.NewPostgresRepository(pool)
+			pathRepo = learningpath.NewPostgresRepository(pool)
+			recRepo = recommendations.NewPostgresRepository(pool)
+			visualizerRepo = visualizer.NewPostgresRepository(pool)
+			codeReviewRepo = codereview.NewPostgresRepository(pool)
 		}
 	} else {
 		slog.Warn("SUPABASE_DB_URL not configured: using in-memory store for development/testing")
@@ -99,6 +120,11 @@ func main() {
 		testCasesRepo = testcases.NewMemoryRepository()
 		mistakesRepo = mistakes.NewMemoryRepository()
 		aiRepo = aitutor.NewMemoryRepository()
+		memoryRepo = learningmemory.NewMemoryRepository()
+		pathRepo = learningpath.NewMemoryRepository()
+		recRepo = recommendations.NewMemoryRepository()
+		visualizerRepo = visualizer.NewMemoryRepository()
+		codeReviewRepo = codereview.NewMemoryRepository()
 	}
 
 	otpClient, err := otp.NewClient(cfg.OTPServiceBaseURL, cfg.OTPAppName, cfg.OTPTimeout)
@@ -153,6 +179,26 @@ func main() {
 	mistakesSvc := mistakes.NewService(mistakesRepo, mistakesDetector, logger)
 	mistakesHandler := mistakes.NewHandler(mistakesSvc)
 
+	// Initialize Student Learning Memory Service
+	memorySvc := learningmemory.NewService(memoryRepo, dsaRepos.Problems, logger)
+	memoryHandler := learningmemory.NewHandler(memorySvc)
+
+	// Initialize Adaptive Learning Path Engine
+	pathSvc := learningpath.NewService(pathRepo, memoryRepo, dsaRepos.Problems, dsaRepos.Topics, logger)
+	pathHandler := learningpath.NewHandler(pathSvc)
+
+	// Initialize Personalised Problem Recommendation Engine
+	recSvc := recommendations.NewService(
+		recRepo,
+		dsaRepos.Problems,
+		dsaRepos.Progress,
+		memorySvc,
+		mistakesRepo,
+		pathSvc,
+		logger,
+	)
+	recHandler := recommendations.NewHandler(recSvc)
+
 	assessmentEngine := assessment.NewEngine(execClient, logger)
 	jobQueue := workers.NewChannelJobQueue(cfg.SubmissionQueueSize)
 
@@ -166,6 +212,9 @@ func main() {
 		logger,
 	)
 	workerPool.SetMistakesService(mistakesSvc)
+	workerPool.SetMemoryService(memorySvc, dsaRepos.Problems)
+	workerPool.SetPathService(pathSvc)
+	workerPool.SetRecommendationsService(recSvc)
 	workerPool.Start()
 	defer workerPool.Stop()
 
@@ -217,11 +266,34 @@ func main() {
 
 	ctxBuilder := aitutor.NewContextBuilder(dsaRepos.Problems, testCasesRepo, submissionsRepo)
 	aiSvc := aitutor.NewService(llmProvider, aiRepo, mistakesSvc, ctxBuilder, logger)
+	aiSvc.SetMemoryService(memorySvc)
+
+	// Initialize Pedagogy AI Diagnostic Microservice Client
+	pedagogyClient := pedagogy.NewClient(cfg.PedagogyAPIURL, cfg.PedagogyTimeout, logger)
+	pedagogyHandler := pedagogy.NewHandler(pedagogyClient)
+	aiSvc.SetPedagogyClient(pedagogyClient)
+	slog.Info("Pedagogy AI microservice configured", slog.String("url", cfg.PedagogyAPIURL))
+
 	aiHandler := aitutor.NewHandler(aiSvc)
 
+	// Initialize Algorithm Visualizer Service & Handler
+	visualizerSvc := visualizer.NewService(visualizerRepo, llmProvider, logger)
+	visualizerHandler := visualizer.NewHandler(visualizerSvc)
+
+	// Initialize AI Code Review Service & Handler
+	codeReviewSvc := codereview.NewService(codeReviewRepo, llmProvider, dsaRepos.Problems, logger)
+	codeReviewHandler := codereview.NewHandler(codeReviewSvc)
+
 	intelligenceHandlers := &server.IntelligenceHandlers{
-		Mistakes: mistakesHandler,
-		AITutor:  aiHandler,
+		Mistakes:        mistakesHandler,
+		AITutor:         aiHandler,
+		Pedagogy:        pedagogyHandler,
+		PersonC:         pedagogyHandler,
+		LearningMemory:  memoryHandler,
+		LearningPath:    pathHandler,
+		Recommendations: recHandler,
+		Visualizer:      visualizerHandler,
+		CodeReview:      codeReviewHandler,
 	}
 
 	dsaHandlers := dsa.NewHandlers(dsaRepos)
@@ -259,11 +331,12 @@ func main() {
 	case err := <-serverErr:
 		slog.Error("server startup error", slog.String("error", err.Error()))
 	case sig := <-shutdownSignal:
-		slog.Info("shutdown signal received, gracefully shutting down...", slog.String("signal", sig.String()))
+		slog.Info(fmt.Sprintf("received shutdown signal: %v, gracefully shutting down...", sig))
 		shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer shutdownCancel()
+
 		if err := httpServer.Shutdown(shutdownCtx); err != nil {
-			slog.Error("server forced shutdown error", slog.String("error", err.Error()))
+			slog.Error("graceful shutdown failed", slog.String("error", err.Error()))
 		}
 		slog.Info("server exited cleanly")
 	}

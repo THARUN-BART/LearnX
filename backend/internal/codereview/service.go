@@ -56,7 +56,7 @@ func (s *serviceImpl) ReviewCode(ctx context.Context, studentID string, req Code
 	// Fetch problem metadata if problem_id was provided
 	problemTitle := "General Coding Solution"
 	if req.ProblemID != "" && s.problemsRepo != nil {
-		if p, err := s.problemsRepo.GetByID(ctx, req.ProblemID); err == nil && p != nil {
+		if p, err := s.problemsRepo.Get(ctx, req.ProblemID); err == nil && p != nil {
 			problemTitle = p.Title
 		}
 	}
