@@ -26,8 +26,10 @@ import { analyticsService } from '../../services/analytics.service';
 import { learningService } from '../../services/learning.service';
 import { roadmapService } from '../../services/roadmap.service';
 import { learningPathService } from '../../services/learning-path.service';
+import { recommendationService } from '../../services/recommendation.service';
 import { AnalyticsSummary, Problem, Topic, MistakeRecord } from '../../types/learning.types';
 import { LearningRecommendation } from '../../types/learning-path.types';
+import { ProblemRecommendation } from '../../types/recommendations.types';
 import { RecommendedActionCard } from '../../components/learning-path/RecommendedActionCard';
 import Button from '../../components/ui/Button';
 import { PageSkeleton } from '../../components/ui/Skeleton';
@@ -39,6 +41,7 @@ export const DashboardPage: React.FC = () => {
 
   const [analytics, setAnalytics] = useState<AnalyticsSummary | null>(null);
   const [recommendedProblems, setRecommendedProblems] = useState<Problem[]>([]);
+  const [smartRecommendations, setSmartRecommendations] = useState<ProblemRecommendation[]>([]);
   const [activeTopic, setActiveTopic] = useState<Topic | null>(null);
   const [latestMistake, setLatestMistake] = useState<MistakeRecord | null>(null);
   const [adaptiveNextAction, setAdaptiveNextAction] = useState<LearningRecommendation | null>(null);
@@ -70,11 +73,20 @@ export const DashboardPage: React.FC = () => {
     };
 
     const loadSecondary = async () => {
-      const [problems, mistakes] = await Promise.all([
+      const [problems, mistakes, recRes] = await Promise.all([
         learningService.getProblems({ status: 'Not Started', limit: 8 }),
         analyticsService.getMistakes(),
+        recommendationService.getRecommendations().catch(() => null),
       ]);
       if (cancelled) return;
+
+      if (recRes) {
+        const top = recRes.top_pick ? [recRes.top_pick] : [];
+        const general = recRes.categories?.recommended_for_you || [];
+        const combined = [...top, ...general.filter((r) => r.id !== recRes.top_pick?.id)].slice(0, 3);
+        setSmartRecommendations(combined);
+      }
+
       let list = Array.isArray(problems) ? problems.slice(0, 3) : [];
       if (!list.length) {
         const fallback = await learningService.getProblems({ limit: 8 });
@@ -155,7 +167,22 @@ export const DashboardPage: React.FC = () => {
             <Button
               variant="primary"
               size="sm"
-              onClick={() => navigate(recommendedProblems[0] ? `/practice/${recommendedProblems[0].id}` : '/practice')}
+              onClick={() => {
+                if (smartRecommendations[0]) {
+                  navigate(`/practice/${smartRecommendations[0].problem_id}`, {
+                    state: {
+                      fromRecommendation: true,
+                      recommendationId: smartRecommendations[0].id,
+                      category: smartRecommendations[0].category,
+                      primaryReason: smartRecommendations[0].explanation,
+                    }
+                  });
+                } else if (recommendedProblems[0]) {
+                  navigate(`/practice/${recommendedProblems[0].id}`);
+                } else {
+                  navigate('/practice');
+                }
+              }}
               rightIcon={<Play className="w-4 h-4" />}
             >
               Resume Coding
@@ -349,41 +376,92 @@ export const DashboardPage: React.FC = () => {
 
           <div className="space-y-3">
             <div className="flex items-center justify-between font-mono">
-              <h3 className="text-xs font-bold text-[#F4F4F6] uppercase tracking-wider">Recommended Queued</h3>
-              <button onClick={() => navigate('/practice')} className="text-xs text-[#8B5CF6] hover:text-[#A78BFA]">
-                View all
+              <h3 className="text-xs font-bold text-[#F4F4F6] uppercase tracking-wider flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-[#8B5CF6]" />
+                <span>Recommended Queued</span>
+              </h3>
+              <button
+                onClick={() => navigate('/recommendations')}
+                className="text-xs text-[#8B5CF6] hover:text-[#A78BFA] flex items-center gap-1 font-mono"
+              >
+                Explore Picks <ChevronRight className="w-3.5 h-3.5" />
               </button>
             </div>
+
             <div className="space-y-2">
-              {recommendedProblems.length === 0 && (
-                <p className="text-xs text-[#5A5A6E] font-mono">Loading next problems…</p>
-              )}
-              {recommendedProblems.map((prob) => (
-                <div
-                  key={prob.id}
-                  onClick={() => navigate(`/practice/${prob.id}`)}
-                  className="p-3.5 rounded-xl bg-[#0D0D14] hover:bg-[#14141E] border border-[#1C1C28] hover:border-[#2D2D3E] cursor-pointer transition-all flex items-center justify-between group"
-                >
-                  <div className="space-y-1 min-w-0">
-                    <div className="text-xs font-bold text-[#F4F4F6] group-hover:text-[#A78BFA] truncate font-mono">
-                      {prob.title}
+              {smartRecommendations.length > 0 ? (
+                smartRecommendations.map((rec) => (
+                  <div
+                    key={rec.id}
+                    onClick={() =>
+                      navigate(`/practice/${rec.problem_id}`, {
+                        state: {
+                          fromRecommendation: true,
+                          recommendationId: rec.id,
+                          category: rec.category,
+                          primaryReason: rec.explanation,
+                        }
+                      })
+                    }
+                    className="p-3.5 rounded-xl bg-[#0D0D14] hover:bg-[#14141E] border border-[#1C1C28] hover:border-[#8B5CF6]/40 cursor-pointer transition-all flex items-center justify-between group"
+                  >
+                    <div className="space-y-1 min-w-0 pr-2">
+                      <div className="text-xs font-bold text-[#F4F4F6] group-hover:text-[#A78BFA] truncate font-mono">
+                        {rec.problem_title || rec.headline}
+                      </div>
+                      <p className="text-[11px] text-[#8E8EA0] truncate">
+                        {rec.explanation}
+                      </p>
+                      <div className="flex items-center gap-2 pt-0.5">
+                        <span
+                          className={`text-[9px] font-mono px-1.5 py-0.5 rounded ${
+                            (rec.problem_difficulty || rec.recommended_difficulty) === 'Easy'
+                              ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                              : (rec.problem_difficulty || rec.recommended_difficulty) === 'Medium'
+                              ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                              : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+                          }`}
+                        >
+                          {(rec.problem_difficulty || rec.recommended_difficulty)}
+                        </span>
+                        <span className="text-[9px] font-mono text-[#A78BFA] bg-[#8B5CF6]/10 px-1.5 py-0.5 rounded">
+                          {Math.round(rec.match_score * 100)}% Match
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={`text-[10px] font-mono px-2 py-0.5 rounded ${
-                          prob.difficulty === 'Easy'
-                            ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                            : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
-                        }`}
-                      >
-                        {prob.difficulty}
-                      </span>
-                      <span className="text-[10px] text-[#5A5A6E] font-mono">{prob.progress_status}</span>
-                    </div>
+                    <ChevronRight className="w-4 h-4 text-[#5A5A6E] group-hover:text-white shrink-0" />
                   </div>
-                  <ChevronRight className="w-4 h-4 text-[#5A5A6E] group-hover:text-white" />
-                </div>
-              ))}
+                ))
+              ) : recommendedProblems.length > 0 ? (
+                recommendedProblems.map((prob) => (
+                  <div
+                    key={prob.id}
+                    onClick={() => navigate(`/practice/${prob.id}`)}
+                    className="p-3.5 rounded-xl bg-[#0D0D14] hover:bg-[#14141E] border border-[#1C1C28] hover:border-[#2D2D3E] cursor-pointer transition-all flex items-center justify-between group"
+                  >
+                    <div className="space-y-1 min-w-0">
+                      <div className="text-xs font-bold text-[#F4F4F6] group-hover:text-[#A78BFA] truncate font-mono">
+                        {prob.title}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`text-[10px] font-mono px-2 py-0.5 rounded ${
+                            prob.difficulty === 'Easy'
+                              ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                              : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                          }`}
+                        >
+                          {prob.difficulty}
+                        </span>
+                        <span className="text-[10px] text-[#5A5A6E] font-mono">{prob.progress_status}</span>
+                      </div>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-[#5A5A6E] group-hover:text-white shrink-0" />
+                  </div>
+                ))
+              ) : (
+                <p className="text-xs text-[#5A5A6E] font-mono p-4 text-center">Loading queued problems…</p>
+              )}
             </div>
           </div>
         </div>

@@ -27,16 +27,19 @@ type WorkerPool struct {
 		RecordSubmissionEvent(ctx context.Context, studentID string, problem *model.Problem, subID string, accepted bool, failedReason string) error
 		RecordMistakeEvent(ctx context.Context, studentID, problemID, submissionID, category, subtype, conceptKey string, confidence float64) error
 	}
-	pathService     interface {
+	pathService interface {
 		Recalculate(ctx context.Context, studentID string)
 	}
-	problemsRepo    problems.Repository
-	engine          assessment.Engine
-	concurrency     int
-	logger          *slog.Logger
-	wg              sync.WaitGroup
-	ctx             context.Context
-	cancel          context.CancelFunc
+	recService interface {
+		OnSubmissionEvaluated(ctx context.Context, studentID, problemID, status string)
+	}
+	problemsRepo problems.Repository
+	engine       assessment.Engine
+	concurrency  int
+	logger       *slog.Logger
+	wg           sync.WaitGroup
+	ctx          context.Context
+	cancel       context.CancelFunc
 }
 
 func (p *WorkerPool) SetMistakesService(service mistakes.Service) {
@@ -55,6 +58,12 @@ func (p *WorkerPool) SetPathService(service interface {
 	Recalculate(ctx context.Context, studentID string)
 }) {
 	p.pathService = service
+}
+
+func (p *WorkerPool) SetRecommendationsService(service interface {
+	OnSubmissionEvaluated(ctx context.Context, studentID, problemID, status string)
+}) {
+	p.recService = service
 }
 
 func NewWorkerPool(
@@ -247,6 +256,11 @@ func (p *WorkerPool) processSubmission(submissionID string) {
 	// Trigger Adaptive Learning Path re-evaluation
 	if p.pathService != nil {
 		p.pathService.Recalculate(ctx, sub.StudentID)
+	}
+
+	// Trigger Problem Recommendations feedback update
+	if p.recService != nil {
+		p.recService.OnSubmissionEvaluated(ctx, sub.StudentID, sub.ProblemID, sub.Status)
 	}
 
 	p.logger.Info("submission completed",

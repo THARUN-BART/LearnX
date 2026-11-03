@@ -32,6 +32,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
 
   const navItems = [
     { label: 'Overview',        to: '/dashboard', icon: LayoutDashboard, badge: 'Active' },
+    { label: 'Smart Picks',     to: '/recommendations', icon: Sparkles, badge: 'AI' },
     { label: 'Adaptive Path',   to: '/dashboard/learning-path', icon: Compass, badge: 'AI' },
     { label: 'My Roadmap',      to: '/roadmap',   icon: Map,             badge: '19' },
     { label: 'Practice Arena',  to: '/practice',  icon: Code2,           badge: 'IDE' },

@@ -1,5 +1,5 @@
 import React, { Suspense, lazy, useEffect, useMemo, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import {
   Play,
   Send,
@@ -31,6 +31,8 @@ import codingService from '../../services/coding.service';
 import learningService from '../../services/learning.service';
 import aiService from '../../services/ai.service';
 import progressService from '../../services/progress.service';
+import { recommendationService } from '../../services/recommendation.service';
+import { ProblemRecommendation } from '../../types/recommendations.types';
 import { starterCodeKey, toJudgeLanguage, toMonacoLanguage } from '../../utils/language';
 import Button from '../../components/ui/Button';
 import { toast } from 'sonner';
@@ -45,6 +47,7 @@ function starterFor(problem: Problem, lang: string): string {
 export const PracticePage: React.FC = () => {
   const { problemId } = useParams<{ problemId: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [problem, setProblem] = useState<Problem | null>(null);
   const [problemLoading, setProblemLoading] = useState(true);
@@ -62,6 +65,7 @@ export const PracticePage: React.FC = () => {
   const [isLoadingHint, setIsLoadingHint] = useState(false);
   const [history, setHistory] = useState<SubmissionHistoryItem[]>([]);
   const [pedagogy, setPedagogy] = useState<PedagogyAnalysis | null>(null);
+  const [similarRecs, setSimilarRecs] = useState<ProblemRecommendation[]>([]);
   const [progressStatus, setProgressStatus] = useState<ProgressStatus>('Not Started');
   const [aiModal, setAiModal] = useState<{
     isOpen: boolean;
@@ -127,6 +131,9 @@ export const PracticePage: React.FC = () => {
       if (prog.status === 'fulfilled' && prog.value?.status) {
         setProgressStatus(prog.value.status);
       }
+      recommendationService.getSimilarProblems(prob.id).then((sim) => {
+        if (mounted && Array.isArray(sim)) setSimilarRecs(sim);
+      });
     };
     load();
     return () => {
@@ -363,6 +370,26 @@ export const PracticePage: React.FC = () => {
           <div className="flex-1 p-5 overflow-y-auto space-y-5 text-xs text-[#8E8EA0] leading-relaxed">
             {activeTab === 'description' && (
               <>
+                {location.state?.fromRecommendation && (
+                  <div className="p-3.5 rounded-xl bg-[#8B5CF6]/10 border border-[#8B5CF6]/30 flex items-start gap-2.5">
+                    <Sparkles className="w-4 h-4 text-[#A78BFA] shrink-0 mt-0.5" />
+                    <div className="space-y-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-[#A78BFA] font-bold">
+                          Recommended by AI Engine
+                        </span>
+                        {location.state?.category && (
+                          <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[#8B5CF6]/20 text-[#D8B4FE]">
+                            {location.state.category.replace(/_/g, ' ')}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-[#E2E8F0]">
+                        {location.state.primaryReason || 'Selected based on your learning curve and practice vector.'}
+                      </p>
+                    </div>
+                  </div>
+                )}
                 <div className="flex items-start justify-between gap-3">
                   <h2 className="text-base font-bold text-[#F4F4F6]">{problem.title}</h2>
                   {problem.external_problem_url && (
@@ -452,6 +479,51 @@ export const PracticePage: React.FC = () => {
             )}
 
             {activeTab === 'related' && (
+              <div className="space-y-4">
+                {similarRecs.length > 0 && (
+                  <div className="space-y-2">
+                    <div className="text-[11px] font-mono uppercase tracking-wider text-[#A78BFA] font-semibold flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-[#8B5CF6]" />
+                      <span>AI Curated Similar Problems</span>
+                    </div>
+                    {similarRecs.map((sim) => (
+                      <button
+                        key={sim.id}
+                        onClick={() =>
+                          navigate(`/practice/${sim.problem_id}`, {
+                            state: {
+                              fromRecommendation: true,
+                              recommendationId: sim.id,
+                              category: sim.category,
+                              primaryReason: sim.explanation,
+                            }
+                          })
+                        }
+                        className="w-full text-left p-3 bg-[#12121B] rounded-xl border border-[#1C1C28] hover:border-[#8B5CF6]/40 transition-colors space-y-1 group"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-semibold text-[#F4F4F6] group-hover:text-[#A78BFA] truncate">
+                            {sim.problem_title || sim.headline}
+                          </span>
+                          <span className="text-[10px] font-mono text-purple-400 shrink-0">
+                            {Math.round(sim.match_score * 100)}% match
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-[#8E8EA0] line-clamp-2">
+                          {sim.explanation}
+                        </p>
+                        <div className="text-[10px] font-mono text-[#5A5A6E] flex items-center gap-2 pt-0.5">
+                          <span>{sim.problem_difficulty || sim.recommended_difficulty}</span>
+                          <span>·</span>
+                          <span>{sim.primary_concept}</span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+                <div className="text-[11px] font-mono uppercase tracking-wider text-[#8E8EA0] font-semibold">
+                  Subtopic Problems
+                </div>
               <div className="space-y-2">
                 {related.length === 0 && <p>No related problems from this subtopic.</p>}
                 {related.map((r) => (
@@ -465,6 +537,7 @@ export const PracticePage: React.FC = () => {
                   </button>
                 ))}
               </div>
+            </div>
             )}
           </div>
         </div>

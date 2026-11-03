@@ -16,6 +16,7 @@ import (
 	"github.com/THARUN-BART/LearnX/backend/internal/problems"
 	"github.com/THARUN-BART/LearnX/backend/internal/profile"
 	"github.com/THARUN-BART/LearnX/backend/internal/progress"
+	"github.com/THARUN-BART/LearnX/backend/internal/recommendations"
 	"github.com/THARUN-BART/LearnX/backend/internal/roadmap"
 	"github.com/THARUN-BART/LearnX/backend/internal/submissions"
 	"github.com/THARUN-BART/LearnX/backend/internal/testcases"
@@ -37,12 +38,13 @@ type SubmissionHandlers struct {
 }
 
 type IntelligenceHandlers struct {
-	Mistakes       *mistakes.Handler
-	AITutor        *aitutor.Handler
-	Pedagogy       *pedagogy.Handler
-	PersonC        *pedagogy.Handler // Deprecated alias for backwards compatibility
-	LearningMemory *learningmemory.Handler
-	LearningPath   *learningpath.Handler
+	Mistakes        *mistakes.Handler
+	AITutor         *aitutor.Handler
+	Pedagogy        *pedagogy.Handler
+	PersonC         *pedagogy.Handler // Deprecated alias for backwards compatibility
+	LearningMemory  *learningmemory.Handler
+	LearningPath    *learningpath.Handler
+	Recommendations *recommendations.Handler
 }
 
 type RouterOption func(*routerOptions)
@@ -245,6 +247,16 @@ func registerIntelligenceRoutes(r chi.Router, intel *IntelligenceHandlers) {
 		r.Get("/student/learning-path/progress", intel.LearningPath.GetPathProgress)
 		r.Get("/student/learning-path/history", intel.LearningPath.GetHistory)
 		r.Post("/student/learning-path/recalculate", intel.LearningPath.RecalculatePath)
+	}
+
+	if intel.Recommendations != nil {
+		r.Get("/student/recommendations", intel.Recommendations.GetRecommendations)
+		r.Get("/student/recommendations/next", intel.Recommendations.GetNext)
+		r.Get("/student/recommendations/weaknesses", intel.Recommendations.GetWeaknesses)
+		r.Get("/student/recommendations/similar/{problem_id}", intel.Recommendations.GetSimilar)
+		r.Post("/student/recommendations/refresh", intel.Recommendations.Refresh)
+		r.Post("/student/recommendations/{id}/feedback", intel.Recommendations.SubmitFeedback)
+		r.Get("/student/recommendations/history", intel.Recommendations.GetHistory)
 	}
 }
 

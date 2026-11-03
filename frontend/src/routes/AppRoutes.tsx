@@ -27,6 +27,7 @@ import DashboardPage from '../pages/dashboard/DashboardPage';
 import LearningPathPage from '../pages/learning-path/LearningPathPage';
 import LearningMemoryPage from '../pages/learning-memory/LearningMemoryPage';
 import ConceptDetailPage from '../pages/learning-memory/ConceptDetailPage';
+import RecommendationsPage from '../pages/recommendations/RecommendationsPage';
 import RoadmapPage from '../pages/roadmap/RoadmapPage';
 import TopicDetailPage from '../pages/roadmap/TopicDetailPage';
 import PracticePage from '../pages/practice/PracticePage';
@@ -84,6 +85,7 @@ export const AppRoutes: React.FC = () => {
         <Route path="/dashboard/learning-path" element={<LearningPathPage />} />
         <Route path="/dashboard/learning-memory" element={<LearningMemoryPage />} />
         <Route path="/dashboard/learning-memory/concepts/:conceptKey" element={<ConceptDetailPage />} />
+        <Route path="/recommendations" element={<RecommendationsPage />} />
         <Route path="/roadmap" element={<RoadmapPage />} />
         <Route path="/roadmap/:topicId" element={<TopicDetailPage />} />
         <Route path="/practice" element={<PracticePage />} />
