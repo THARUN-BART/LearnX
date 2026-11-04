@@ -43,10 +43,6 @@ export const LandingPage: React.FC = () => {
 
       {/* HERO SECTION */}
       <section className="pt-24 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center relative z-10">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#F1F5F9] border border-[#E2E8F0] text-xs font-mono text-[#DC2626] mb-8 shadow-inner">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-          <span>LEARNX V2.4 • COGNITIVE DSA COMPILER</span>
-        </div>
 
         <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-[#0F172A] max-w-4xl mx-auto leading-[1.08] font-mono">
           Don't just learn to code.{' '}
