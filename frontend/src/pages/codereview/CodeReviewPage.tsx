@@ -98,12 +98,12 @@ export const CodeReviewPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col gap-6 font-mono text-[#F4F4F6] pb-12">
+    <div className="flex flex-col gap-6 font-mono text-[#0F172A] pb-12">
       {/* Hero Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 bg-gradient-to-r from-[#12121B] via-[#0D0D14] to-[#12121B] border border-[#1C1C28] rounded-2xl relative overflow-hidden">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 bg-gradient-to-r from-[#12121B] via-[#0D0D14] to-[#12121B] border border-[#E2E8F0] rounded-2xl relative overflow-hidden">
         <div className="space-y-1 relative z-10">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] uppercase font-bold tracking-widest text-[#8B5CF6] bg-[#8B5CF6]/10 px-2 py-0.5 rounded border border-[#8B5CF6]/20">
+            <span className="text-[10px] uppercase font-bold tracking-widest text-[#EF4444] bg-[#EF4444]/10 px-2 py-0.5 rounded border border-[#EF4444]/20">
               AI Code Review Assistant
             </span>
             <span className="text-[10px] text-emerald-400 font-bold">
@@ -113,7 +113,7 @@ export const CodeReviewPage: React.FC = () => {
           <h1 className="text-xl sm:text-2xl font-bold font-sans tracking-tight text-white">
             Automated Code Quality, Security & Optimization Audit
           </h1>
-          <p className="text-xs text-[#8E8EA0] font-sans max-w-xl">
+          <p className="text-xs text-[#64748B] font-sans max-w-xl">
             Audit time/space bottlenecks, detect anti-patterns, generate clean production refactorings, and connect to interactive algorithm visualizers.
           </p>
         </div>
@@ -132,13 +132,13 @@ export const CodeReviewPage: React.FC = () => {
       </div>
 
       {/* Editor & Review Trigger Section */}
-      <div className="bg-[#0D0D14] border border-[#1C1C28] rounded-2xl p-5 flex flex-col gap-4">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#1C1C28] pb-3">
+      <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5 flex flex-col gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#E2E8F0] pb-3">
           <div className="flex items-center gap-3">
             <span className="text-xs font-bold text-white font-sans">
               Target Code for Review
             </span>
-            <span className="text-[11px] text-[#A78BFA] bg-[#12121B] px-2.5 py-0.5 rounded-lg border border-[#1C1C28]">
+            <span className="text-[11px] text-[#DC2626] bg-[#F1F5F9] px-2.5 py-0.5 rounded-lg border border-[#E2E8F0]">
               {problemTitle}
             </span>
           </div>
@@ -147,7 +147,7 @@ export const CodeReviewPage: React.FC = () => {
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
-              className="bg-[#12121B] text-[#F4F4F6] text-xs px-3 py-1.5 rounded-lg border border-[#1C1C28] outline-none"
+              className="bg-[#F1F5F9] text-[#0F172A] text-xs px-3 py-1.5 rounded-lg border border-[#E2E8F0] outline-none"
             >
               <option value="python">Python</option>
               <option value="cpp">C++</option>
@@ -161,7 +161,7 @@ export const CodeReviewPage: React.FC = () => {
               size="sm"
               onClick={() => setSourceCode(SAMPLE_CODE)}
               leftIcon={<RotateCcw className="w-3.5 h-3.5" />}
-              className="text-xs text-[#8E8EA0]"
+              className="text-xs text-[#64748B]"
             >
               Load Sample
             </Button>
@@ -185,7 +185,7 @@ export const CodeReviewPage: React.FC = () => {
           value={sourceCode}
           onChange={(e) => setSourceCode(e.target.value)}
           placeholder="Paste or write your solution code here for comprehensive AI review..."
-          className="w-full bg-[#07070B] text-[#CBD5E1] font-mono text-xs p-4 rounded-xl border border-[#1C1C28] outline-none focus:border-[#8B5CF6]/60 leading-relaxed resize-y"
+          className="w-full bg-[#F8FAFC] text-[#CBD5E1] font-mono text-xs p-4 rounded-xl border border-[#E2E8F0] outline-none focus:border-[#EF4444]/60 leading-relaxed resize-y"
         />
       </div>
 
@@ -197,9 +197,9 @@ export const CodeReviewPage: React.FC = () => {
 
           {/* Cross-Feature Recommendation to Algorithm Visualizer */}
           {reviewResult.recommended_visualizer_algo_id && (
-            <div className="p-4 rounded-2xl bg-gradient-to-r from-[#8B5CF6]/15 via-[#6366F1]/10 to-[#8B5CF6]/15 border border-[#8B5CF6]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg shadow-[#8B5CF6]/10">
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-[#EF4444]/15 via-[#6366F1]/10 to-[#8B5CF6]/15 border border-[#EF4444]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg shadow-[#8B5CF6]/10">
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-xl bg-[#8B5CF6] text-white flex items-center justify-center shrink-0 shadow-md shadow-[#8B5CF6]/30">
+                <div className="w-8 h-8 rounded-xl bg-[#EF4444] text-white flex items-center justify-center shrink-0 shadow-md shadow-[#8B5CF6]/30">
                   <Eye className="w-4 h-4" />
                 </div>
                 <div>
@@ -218,7 +218,7 @@ export const CodeReviewPage: React.FC = () => {
                 onClick={() =>
                   navigate(`/visualizer?algo=${reviewResult.recommended_visualizer_algo_id}`)
                 }
-                className="px-4 py-2 bg-[#8B5CF6] hover:bg-[#7C3AED] text-white rounded-xl text-xs font-bold font-sans flex items-center gap-2 shrink-0 shadow-md shadow-[#8B5CF6]/30 transition-all"
+                className="px-4 py-2 bg-[#EF4444] hover:bg-[#7C3AED] text-white rounded-xl text-xs font-bold font-sans flex items-center gap-2 shrink-0 shadow-md shadow-[#8B5CF6]/30 transition-all"
               >
                 Explore Visualizer <ArrowRight className="w-3.5 h-3.5" />
               </button>
@@ -227,8 +227,8 @@ export const CodeReviewPage: React.FC = () => {
 
           {/* Correctness Observations */}
           {reviewResult.correctness_observations && reviewResult.correctness_observations.length > 0 && (
-            <div className="p-4 bg-[#0D0D14] border border-[#1C1C28] rounded-2xl space-y-2">
-              <span className="text-[10px] uppercase font-bold text-[#5A5A6E] tracking-wider">
+            <div className="p-4 bg-white border border-[#E2E8F0] rounded-2xl space-y-2">
+              <span className="text-[10px] uppercase font-bold text-[#94A3B8] tracking-wider">
                 Correctness & Structural Observations
               </span>
               <ul className="space-y-1.5 text-xs text-[#CBD5E1] font-sans">
@@ -257,9 +257,9 @@ export const CodeReviewPage: React.FC = () => {
 
           {/* Alternative Approaches */}
           {reviewResult.alternative_approaches && reviewResult.alternative_approaches.length > 0 && (
-            <div className="bg-[#0D0D14] border border-[#1C1C28] rounded-2xl p-5 flex flex-col gap-4">
-              <div className="flex items-center gap-2 border-b border-[#1C1C28] pb-3">
-                <GitBranch className="w-4 h-4 text-[#8B5CF6]" />
+            <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5 flex flex-col gap-4">
+              <div className="flex items-center gap-2 border-b border-[#E2E8F0] pb-3">
+                <GitBranch className="w-4 h-4 text-[#EF4444]" />
                 <span className="text-sm font-bold text-white font-sans">
                   Alternative Algorithmic Paradigms & Trade-offs
                 </span>
@@ -267,17 +267,17 @@ export const CodeReviewPage: React.FC = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {reviewResult.alternative_approaches.map((alt, idx) => (
-                  <div key={idx} className="p-4 bg-[#12121B] border border-[#1C1C28] rounded-xl flex flex-col gap-2">
+                  <div key={idx} className="p-4 bg-[#F1F5F9] border border-[#E2E8F0] rounded-xl flex flex-col gap-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-[#F4F4F6] font-sans">{alt.name}</span>
+                      <span className="text-xs font-bold text-[#0F172A] font-sans">{alt.name}</span>
                       <div className="flex items-center gap-2 text-[10px]">
                         <span className="text-emerald-400 font-bold">{alt.time}</span>
                         <span>·</span>
-                        <span className="text-[#A78BFA]">{alt.space}</span>
+                        <span className="text-[#DC2626]">{alt.space}</span>
                       </div>
                     </div>
                     <p className="text-xs text-[#CBD5E1] font-sans leading-relaxed">{alt.description}</p>
-                    <div className="text-[11px] text-[#94A3B8] font-sans pt-1 border-t border-[#1C1C28]/60">
+                    <div className="text-[11px] text-[#94A3B8] font-sans pt-1 border-t border-[#E2E8F0]/60">
                       <span className="text-amber-400 font-bold">Trade-off: </span>
                       {alt.trade_off}
                     </div>

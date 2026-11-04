@@ -101,16 +101,16 @@ export const AdaptiveRoadmapGraph: React.FC<AdaptiveRoadmapGraphProps> = ({
   onSelectConcept,
 }) => {
   return (
-    <div className="rounded-2xl border border-[#1C1C28] bg-[#0D0D14] p-5 md:p-6">
-      <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-[#1C1C28]">
+    <div className="rounded-2xl border border-[#E2E8F0] bg-white p-5 md:p-6">
+      <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-[#E2E8F0]">
         <div>
-          <h3 className="text-base font-semibold text-[#F4F4F6] flex items-center gap-2">
+          <h3 className="text-base font-semibold text-[#0F172A] flex items-center gap-2">
             <span>Adaptive DSA Curriculum Graph</span>
-            <span className="text-xs font-mono font-normal text-[#8E8EA0]">
+            <span className="text-xs font-mono font-normal text-[#64748B]">
               ({nodes.length} Concepts)
             </span>
           </h3>
-          <p className="text-xs text-[#8E8EA0] mt-0.5">
+          <p className="text-xs text-[#64748B] mt-0.5">
             Nodes dynamically adapt their progression state based on your real performance and prerequisite mastery.
           </p>
         </div>
@@ -149,16 +149,16 @@ export const AdaptiveRoadmapGraph: React.FC<AdaptiveRoadmapGraphProps> = ({
               onClick={() => onSelectConcept(node)}
               className={`relative cursor-pointer rounded-xl border p-4 transition-all duration-200 flex flex-col justify-between ${
                 cfg.bg
-              } ${isSelected ? 'ring-2 ring-[#8B5CF6] border-[#8B5CF6]' : cfg.border} ${
+              } ${isSelected ? 'ring-2 ring-[#8B5CF6] border-[#EF4444]' : cfg.border} ${
                 isLocked
                   ? 'hover:border-zinc-700'
-                  : 'hover:scale-[1.01] hover:border-[#8B5CF6]/50 shadow-lg shadow-black/20'
+                  : 'hover:scale-[1.01] hover:border-[#EF4444]/50 shadow-lg shadow-black/20'
               }`}
             >
               {/* Top Row: Order & Status */}
               <div className="flex items-center justify-between gap-2 mb-2">
                 <div className="flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-md bg-[#1C1C28] text-[10px] font-mono text-[#8E8EA0] flex items-center justify-center font-bold">
+                  <span className="w-5 h-5 rounded-md bg-[#F1F5F9] text-[10px] font-mono text-[#64748B] flex items-center justify-center font-bold">
                     {index + 1}
                   </span>
                   <span className="text-[10px] uppercase font-mono tracking-wider text-[#717182] truncate max-w-[120px]">
@@ -176,19 +176,19 @@ export const AdaptiveRoadmapGraph: React.FC<AdaptiveRoadmapGraphProps> = ({
 
               {/* Center: Concept Name & Readiness */}
               <div className="my-1.5">
-                <h4 className="text-sm font-semibold text-[#F4F4F6] tracking-tight line-clamp-1">
+                <h4 className="text-sm font-semibold text-[#0F172A] tracking-tight line-clamp-1">
                   {node.concept_name}
                 </h4>
 
                 {/* Readiness score bar */}
                 <div className="mt-2.5">
-                  <div className="flex items-center justify-between text-[11px] font-mono text-[#8E8EA0] mb-1">
+                  <div className="flex items-center justify-between text-[11px] font-mono text-[#64748B] mb-1">
                     <span>Readiness</span>
                     <span className="font-semibold" style={{ color: cfg.accentColor }}>
                       {normalizePercentage(node.readiness_score)}%
                     </span>
                   </div>
-                  <div className="w-full h-1.5 rounded-full bg-[#1C1C28] overflow-hidden">
+                  <div className="w-full h-1.5 rounded-full bg-[#F1F5F9] overflow-hidden">
                     <div
                       className="h-full rounded-full transition-all duration-500"
                       style={{
@@ -201,7 +201,7 @@ export const AdaptiveRoadmapGraph: React.FC<AdaptiveRoadmapGraphProps> = ({
               </div>
 
               {/* Bottom: Prerequisites & Difficulty */}
-              <div className="pt-2.5 mt-2 border-t border-[#1C1C28]/80 flex items-center justify-between text-[10px] font-mono text-[#8E8EA0]">
+              <div className="pt-2.5 mt-2 border-t border-[#E2E8F0]/80 flex items-center justify-between text-[10px] font-mono text-[#64748B]">
                 <div className="truncate max-w-[160px]">
                   {node.prerequisite_concept_keys && node.prerequisite_concept_keys.length > 0 ? (
                     <span className="text-[#64748B]">
@@ -212,7 +212,7 @@ export const AdaptiveRoadmapGraph: React.FC<AdaptiveRoadmapGraphProps> = ({
                   )}
                 </div>
 
-                <span className="text-[#A0A0B2] font-medium bg-[#1C1C28] px-1.5 py-0.5 rounded">
+                <span className="text-[#A0A0B2] font-medium bg-[#F1F5F9] px-1.5 py-0.5 rounded">
                   {node.recommended_difficulty}
                 </span>
               </div>

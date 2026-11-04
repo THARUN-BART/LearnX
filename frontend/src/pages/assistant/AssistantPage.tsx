@@ -113,15 +113,15 @@ export const AssistantPage: React.FC = () => {
   return (
     <div className="h-[calc(100vh-6.5rem)] flex flex-col gap-3 max-w-5xl mx-auto font-mono">
       {/* Header Toolbar: Mode selector & New Chat */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-[#0D0D14] border border-[#1C1C28] px-4 py-2.5 rounded-xl shrink-0">
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white border border-[#E2E8F0] px-4 py-2.5 rounded-xl shrink-0">
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1.5 p-1 bg-[#12121B] rounded-xl border border-[#1C1C28]">
+          <div className="flex items-center gap-1.5 p-1 bg-[#F1F5F9] rounded-xl border border-[#E2E8F0]">
             <button
               onClick={() => setMode('hint')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer ${
                 mode === 'hint'
-                  ? 'bg-[#8B5CF6] text-white shadow-sm'
-                  : 'text-[#8E8EA0] hover:text-white'
+                  ? 'bg-[#EF4444] text-white shadow-sm'
+                  : 'text-[#64748B] hover:text-[#0F172A]'
               }`}
             >
               <HelpCircle className="w-3.5 h-3.5" />
@@ -132,8 +132,8 @@ export const AssistantPage: React.FC = () => {
               onClick={() => setMode('explain')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer ${
                 mode === 'explain'
-                  ? 'bg-[#6366F1] text-white shadow-sm'
-                  : 'text-[#8E8EA0] hover:text-white'
+                  ? 'bg-[#DC2626] text-white shadow-sm'
+                  : 'text-[#64748B] hover:text-[#0F172A]'
               }`}
             >
               <BookOpen className="w-3.5 h-3.5" />
@@ -145,7 +145,7 @@ export const AssistantPage: React.FC = () => {
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer ${
                 mode === 'debug'
                   ? 'bg-amber-600 text-white shadow-sm'
-                  : 'text-[#8E8EA0] hover:text-white'
+                  : 'text-[#64748B] hover:text-[#0F172A]'
               }`}
             >
               <Bug className="w-3.5 h-3.5" />
@@ -162,7 +162,7 @@ export const AssistantPage: React.FC = () => {
               onChange={(e) => {
                 if (e.target.value) loadConversation(e.target.value);
               }}
-              className="bg-[#12121B] text-[#F4F4F6] text-[11px] font-mono px-2 py-1.5 rounded-lg border border-[#1C1C28] max-w-[180px]"
+              className="bg-[#F1F5F9] text-[#0F172A] text-[11px] font-mono px-2 py-1.5 rounded-lg border border-[#E2E8F0] max-w-[180px]"
             >
               <option value="">Past sessions</option>
               {conversations.map((c) => (
@@ -185,7 +185,7 @@ export const AssistantPage: React.FC = () => {
       </div>
 
       {/* Messages Scroll Area */}
-      <div className="flex-1 bg-[#0D0D14] border border-[#1C1C28] rounded-xl p-4 sm:p-6 overflow-y-auto space-y-6">
+      <div className="flex-1 bg-white border border-[#E2E8F0] rounded-xl p-4 sm:p-6 overflow-y-auto space-y-6">
         {messages.map((msg) => {
           const isUser = msg.role === 'user';
           return (
@@ -194,7 +194,7 @@ export const AssistantPage: React.FC = () => {
               className={`flex gap-3 max-w-3xl ${isUser ? 'ml-auto justify-end' : ''}`}
             >
               {!isUser && (
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#8B5CF6] to-[#6366F1] flex items-center justify-center text-white shrink-0 mt-0.5">
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#EF4444] to-[#B91C1C] flex items-center justify-center text-white shrink-0 mt-0.5">
                   <Bot className="w-4 h-4" />
                 </div>
               )}
@@ -202,12 +202,12 @@ export const AssistantPage: React.FC = () => {
               <div
                 className={`p-4 rounded-2xl text-xs space-y-3 leading-relaxed ${
                   isUser
-                    ? 'bg-[#8B5CF6] text-white rounded-tr-none'
-                    : 'bg-[#12121B] text-[#F4F4F6] border border-[#1C1C28] rounded-tl-none font-sans'
+                    ? 'bg-[#EF4444] text-white rounded-tr-none'
+                    : 'bg-[#F1F5F9] text-[#0F172A] border border-[#E2E8F0] rounded-tl-none font-sans'
                 }`}
               >
                 {!isUser && msg.mode && (
-                  <div className="flex items-center gap-2 pb-1.5 border-b border-[#1C1C28] text-[10px] font-mono text-[#A78BFA] uppercase">
+                  <div className="flex items-center gap-2 pb-1.5 border-b border-[#E2E8F0] text-[10px] font-mono text-[#DC2626] uppercase">
                     <span>LearnX Copilot // {msg.mode}</span>
                   </div>
                 )}
@@ -219,10 +219,10 @@ export const AssistantPage: React.FC = () => {
                 )}
 
                 {msg.codeSnippet && (
-                  <div className="mt-3 bg-[#08080C] rounded-xl border border-[#1C1C28] p-3.5 font-mono text-xs relative text-emerald-300">
+                  <div className="mt-3 bg-[#F8FAFC] rounded-xl border border-[#E2E8F0] p-3.5 font-mono text-xs relative text-emerald-300">
                     <button
                       onClick={() => handleCopyCode(msg.codeSnippet!, msg.id)}
-                      className="absolute top-2.5 right-2.5 p-1 rounded bg-[#12121B] text-[#8E8EA0] hover:text-white border border-[#1C1C28] cursor-pointer"
+                      className="absolute top-2.5 right-2.5 p-1 rounded bg-[#F1F5F9] text-[#64748B] hover:text-[#0F172A] border border-[#E2E8F0] cursor-pointer"
                     >
                       {copiedId === msg.id ? (
                         <Check className="w-3 h-3 text-emerald-400" />
@@ -240,7 +240,7 @@ export const AssistantPage: React.FC = () => {
               </div>
 
               {isUser && (
-                <div className="w-8 h-8 rounded-xl bg-[#1C1C28] flex items-center justify-center text-[#8E8EA0] shrink-0 mt-0.5 font-mono text-xs font-bold">
+                <div className="w-8 h-8 rounded-xl bg-[#F1F5F9] flex items-center justify-center text-[#64748B] shrink-0 mt-0.5 font-mono text-xs font-bold">
                   U
                 </div>
               )}
@@ -250,11 +250,11 @@ export const AssistantPage: React.FC = () => {
 
         {isLoading && (
           <div className="flex gap-3 max-w-xl font-mono">
-            <div className="w-8 h-8 rounded-xl bg-[#8B5CF6]/20 border border-[#8B5CF6]/40 flex items-center justify-center text-[#A78BFA]">
+            <div className="w-8 h-8 rounded-xl bg-[#EF4444]/20 border border-[#EF4444]/40 flex items-center justify-center text-[#DC2626]">
               <Sparkles className="w-4 h-4 animate-spin" />
             </div>
-            <div className="p-4 bg-[#12121B] border border-[#1C1C28] rounded-2xl text-xs text-[#8E8EA0] flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#8B5CF6] animate-ping" />
+            <div className="p-4 bg-[#F1F5F9] border border-[#E2E8F0] rounded-2xl text-xs text-[#64748B] flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#EF4444] animate-ping" />
               <span>Synthesizing cognitive advice...</span>
             </div>
           </div>
@@ -268,9 +268,9 @@ export const AssistantPage: React.FC = () => {
             <button
               key={idx}
               onClick={() => handleSend(p.text, p.mode)}
-              className="p-2.5 bg-[#0D0D14] hover:bg-[#12121B] border border-[#1C1C28] rounded-xl text-left text-[11px] text-[#8E8EA0] hover:text-[#F4F4F6] transition-all truncate flex items-center gap-2 cursor-pointer font-sans"
+              className="p-2.5 bg-white hover:bg-[#F1F5F9] border border-[#E2E8F0] rounded-xl text-left text-[11px] text-[#64748B] hover:text-[#0F172A] transition-all truncate flex items-center gap-2 cursor-pointer font-sans"
             >
-              <Sparkles className="w-3 h-3 text-[#8B5CF6] shrink-0" />
+              <Sparkles className="w-3 h-3 text-[#EF4444] shrink-0" />
               <span className="truncate">{p.text}</span>
             </button>
           ))}
@@ -278,7 +278,7 @@ export const AssistantPage: React.FC = () => {
       )}
 
       {/* Message Input Box */}
-      <div className="bg-[#0D0D14] border border-[#1C1C28] rounded-xl p-2.5 flex items-center gap-2 shrink-0">
+      <div className="bg-white border border-[#E2E8F0] rounded-xl p-2.5 flex items-center gap-2 shrink-0">
         <textarea
           rows={1}
           value={inputText}
@@ -290,7 +290,7 @@ export const AssistantPage: React.FC = () => {
             }
           }}
           placeholder={`Formulate prompt in ${mode} mode... (Enter to send)`}
-          className="flex-1 bg-transparent px-3 py-1.5 text-xs text-[#F4F4F6] placeholder-[#5A5A6E] outline-none resize-none font-mono"
+          className="flex-1 bg-transparent px-3 py-1.5 text-xs text-[#0F172A] placeholder-[#5A5A6E] outline-none resize-none font-mono"
         />
         <Button
           variant="primary"

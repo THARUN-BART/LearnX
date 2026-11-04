@@ -49,10 +49,10 @@ export const SignupPage: React.FC = () => {
   return (
     <div className="w-full space-y-6">
       <div className="space-y-1.5">
-        <h1 className="text-2xl font-bold tracking-tight text-[#F5F5F7] font-mono">
+        <h1 className="text-2xl font-bold tracking-tight text-[#0F172A] font-mono">
           Create an Account
         </h1>
-        <p className="text-xs text-[#9292A3]">
+        <p className="text-xs text-[#64748B]">
           Start your personalized algorithmic mastery journey today.
         </p>
       </div>
@@ -92,11 +92,11 @@ export const SignupPage: React.FC = () => {
           />
           {passwordValue && (
             <div className="pt-1 space-y-1">
-              <div className="flex items-center justify-between text-[11px] text-[#9292A3]">
+              <div className="flex items-center justify-between text-[11px] text-[#64748B]">
                 <span>Strength:</span>
-                <span className="font-medium text-[#F5F5F7]">{strength.label}</span>
+                <span className="font-medium text-[#0F172A]">{strength.label}</span>
               </div>
-              <div className="grid grid-cols-5 gap-1 h-1 w-full bg-[#101019] rounded-full overflow-hidden">
+              <div className="grid grid-cols-5 gap-1 h-1 w-full bg-white rounded-full overflow-hidden">
                 {[1, 2, 3, 4, 5].map((level) => (
                   <div
                     key={level}
@@ -130,9 +130,9 @@ export const SignupPage: React.FC = () => {
         </Button>
       </form>
 
-      <p className="text-center text-xs text-[#9292A3]">
+      <p className="text-center text-xs text-[#64748B]">
         Already have an account?{' '}
-        <Link to="/login" className="text-[#8B5CF6] hover:text-[#A78BFA] font-medium transition-colors">
+        <Link to="/login" className="text-[#EF4444] hover:text-[#DC2626] font-medium transition-colors">
           Log In
         </Link>
       </p>

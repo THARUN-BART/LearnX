@@ -4,7 +4,7 @@ import PublicNavbar from '../components/navigation/PublicNavbar';
 
 export const PublicLayout: React.FC = () => {
   return (
-    <div className="min-h-screen bg-[#08080D] flex flex-col text-[#F5F5F7]">
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col text-[#0F172A]">
       <PublicNavbar />
       <main className="flex-1 pt-18">
         <Outlet />

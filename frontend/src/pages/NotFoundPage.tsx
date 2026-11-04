@@ -7,12 +7,12 @@ export const NotFoundPage: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-[#08080D] flex flex-col items-center justify-center p-6 text-center text-[#F5F5F7]">
-      <div className="w-16 h-16 rounded-2xl bg-[#8B5CF6]/15 border border-[#8B5CF6]/30 text-[#A78BFA] flex items-center justify-center mb-6">
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center p-6 text-center text-[#0F172A]">
+      <div className="w-16 h-16 rounded-2xl bg-[#EF4444]/15 border border-[#EF4444]/30 text-[#DC2626] flex items-center justify-center mb-6">
         <Terminal className="w-8 h-8" />
       </div>
 
-      <span className="text-xs font-mono text-[#8B5CF6] uppercase tracking-widest block mb-2">
+      <span className="text-xs font-mono text-[#EF4444] uppercase tracking-widest block mb-2">
         Error 404 • Path Undefined
       </span>
 
@@ -20,7 +20,7 @@ export const NotFoundPage: React.FC = () => {
         Page Not Found
       </h1>
 
-      <p className="text-sm text-[#9292A3] max-w-md mb-8">
+      <p className="text-sm text-[#64748B] max-w-md mb-8">
         The route you are navigating to does not exist or has been relocated to another curriculum milestone.
       </p>
 

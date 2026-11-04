@@ -90,27 +90,27 @@ export const RecommendedActionCard: React.FC<RecommendedActionCardProps> = ({
 
   if (loading) {
     return (
-      <div className="rounded-2xl border border-[#1C1C28] bg-gradient-to-br from-[#0D0D14] to-[#12121B] p-6 animate-pulse">
-        <div className="h-6 w-48 bg-[#1C1C28] rounded mb-4" />
-        <div className="h-8 w-3/4 bg-[#1C1C28] rounded mb-3" />
-        <div className="h-4 w-full bg-[#1C1C28] rounded mb-6" />
-        <div className="h-10 w-36 bg-[#1C1C28] rounded" />
+      <div className="rounded-2xl border border-[#E2E8F0] bg-gradient-to-br from-[#0D0D14] to-[#12121B] p-6 animate-pulse">
+        <div className="h-6 w-48 bg-[#F1F5F9] rounded mb-4" />
+        <div className="h-8 w-3/4 bg-[#F1F5F9] rounded mb-3" />
+        <div className="h-4 w-full bg-[#F1F5F9] rounded mb-6" />
+        <div className="h-10 w-36 bg-[#F1F5F9] rounded" />
       </div>
     );
   }
 
   if (!recommendation) {
     return (
-      <div className="rounded-2xl border border-[#1C1C28] bg-[#0D0D14] p-6 flex flex-col items-center text-center">
+      <div className="rounded-2xl border border-[#E2E8F0] bg-white p-6 flex flex-col items-center text-center">
         <CheckCircle className="w-10 h-10 text-emerald-400 mb-2" />
-        <h3 className="text-base font-semibold text-[#F4F4F6]">All Set!</h3>
-        <p className="text-sm text-[#8E8EA0] max-w-sm mt-1">
+        <h3 className="text-base font-semibold text-[#0F172A]">All Set!</h3>
+        <p className="text-sm text-[#64748B] max-w-sm mt-1">
           Your adaptive learning path is up to date. Solve any problem or recalculate your recommendations.
         </p>
         {onRefresh && (
           <button
             onClick={onRefresh}
-            className="mt-4 px-4 py-2 rounded-xl bg-[#1C1C28] hover:bg-[#252538] text-xs font-medium text-[#F4F4F6] transition-colors"
+            className="mt-4 px-4 py-2 rounded-xl bg-[#F1F5F9] hover:bg-[#252538] text-xs font-medium text-[#0F172A] transition-colors"
           >
             Recalculate Path
           </button>
@@ -134,9 +134,9 @@ export const RecommendedActionCard: React.FC<RecommendedActionCardProps> = ({
   };
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-[#8B5CF6]/30 bg-gradient-to-br from-[#0D0D14] via-[#12121E] to-[#161226] p-6 shadow-xl shadow-[#8B5CF6]/5 group">
+    <div className="relative overflow-hidden rounded-2xl border border-[#EF4444]/30 bg-gradient-to-br from-[#0D0D14] via-[#12121E] to-[#161226] p-6 shadow-xl shadow-[#8B5CF6]/5 group">
       {/* Glow accent */}
-      <div className="absolute -top-24 -right-24 w-60 h-60 bg-[#8B5CF6]/15 rounded-full blur-3xl pointer-events-none group-hover:bg-[#8B5CF6]/20 transition-all duration-500" />
+      <div className="absolute -top-24 -right-24 w-60 h-60 bg-[#EF4444]/15 rounded-full blur-3xl pointer-events-none group-hover:bg-[#EF4444]/20 transition-all duration-500" />
 
       {/* Top Header */}
       <div className="flex flex-wrap items-center justify-between gap-3 relative z-10 mb-4">
@@ -159,7 +159,7 @@ export const RecommendedActionCard: React.FC<RecommendedActionCardProps> = ({
           <button
             onClick={onRefresh}
             title="Re-evaluate learning path"
-            className="flex items-center gap-1.5 text-xs text-[#8E8EA0] hover:text-[#F4F4F6] transition-colors bg-[#1C1C28]/60 hover:bg-[#1C1C28] px-2.5 py-1 rounded-lg border border-[#252538]"
+            className="flex items-center gap-1.5 text-xs text-[#64748B] hover:text-[#0F172A] transition-colors bg-[#F1F5F9]/60 hover:bg-[#F1F5F9] px-2.5 py-1 rounded-lg border border-[#252538]"
           >
             <RefreshCw className="w-3 h-3" />
             <span>Recalculate</span>
@@ -169,7 +169,7 @@ export const RecommendedActionCard: React.FC<RecommendedActionCardProps> = ({
 
       {/* Headline & Context */}
       <div className="relative z-10 mb-3">
-        <h2 className="text-xl md:text-2xl font-bold text-[#F4F4F6] tracking-tight group-hover:text-white transition-colors">
+        <h2 className="text-xl md:text-2xl font-bold text-[#0F172A] tracking-tight group-hover:text-[#0F172A] transition-colors">
           {recommendation.headline}
         </h2>
         <div className="flex items-center gap-2 text-xs text-[#A0A0B2] mt-1 font-mono">
@@ -177,15 +177,15 @@ export const RecommendedActionCard: React.FC<RecommendedActionCardProps> = ({
           {recommendation.problem_title && (
             <>
               <span>•</span>
-              <span className="text-[#8B5CF6]">Problem: {recommendation.problem_title}</span>
+              <span className="text-[#EF4444]">Problem: {recommendation.problem_title}</span>
             </>
           )}
         </div>
       </div>
 
       {/* Pedagogical Explanation */}
-      <div className="relative z-10 bg-[#09090F]/70 rounded-xl p-3.5 border border-[#1C1C28] mb-4 text-sm text-[#C4C4D4] leading-relaxed">
-        <p className="text-xs text-[#8E8EA0] uppercase tracking-wider font-semibold font-mono mb-1">
+      <div className="relative z-10 bg-[#09090F]/70 rounded-xl p-3.5 border border-[#E2E8F0] mb-4 text-sm text-[#C4C4D4] leading-relaxed">
+        <p className="text-xs text-[#64748B] uppercase tracking-wider font-semibold font-mono mb-1">
           Why this recommendation?
         </p>
         <p>{recommendation.explanation}</p>
@@ -205,7 +205,7 @@ export const RecommendedActionCard: React.FC<RecommendedActionCardProps> = ({
       <div className="relative z-10 flex items-center justify-between pt-2">
         <button
           onClick={handleAction}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#8B5CF6] to-[#7C3AED] hover:from-[#7C3AED] hover:to-[#6D28D9] text-white font-medium text-sm shadow-lg shadow-[#8B5CF6]/25 hover:shadow-[#8B5CF6]/40 transition-all active:scale-[0.98]"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#EF4444] to-[#7C3AED] hover:from-[#7C3AED] hover:to-[#6D28D9] text-white font-medium text-sm shadow-lg shadow-[#8B5CF6]/25 hover:shadow-[#8B5CF6]/40 transition-all active:scale-[0.98]"
         >
           <span>
             {recommendation.problem_id
@@ -216,7 +216,7 @@ export const RecommendedActionCard: React.FC<RecommendedActionCardProps> = ({
         </button>
 
         {!compact && (
-          <span className="text-xs text-[#5A5A6E] font-mono hidden sm:inline">
+          <span className="text-xs text-[#94A3B8] font-mono hidden sm:inline">
             Evaluated deterministically from learning memory
           </span>
         )}

@@ -47,21 +47,21 @@ export const PracticeQuizModal: React.FC<PracticeQuizModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-      <div className="w-full max-w-xl bg-[#0D0D14] border border-[#1C1C28] rounded-2xl p-6 font-mono max-h-[85vh] flex flex-col">
+      <div className="w-full max-w-xl bg-white border border-[#E2E8F0] rounded-2xl p-6 font-mono max-h-[85vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-[#1C1C28] pb-3 mb-4">
+        <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-3 mb-4">
           <div className="flex items-center gap-2">
-            <BrainCircuit className="w-5 h-5 text-[#8B5CF6]" />
+            <BrainCircuit className="w-5 h-5 text-[#EF4444]" />
             <div>
-              <h3 className="text-base font-bold text-[#F4F4F6] font-sans">
+              <h3 className="text-base font-bold text-[#0F172A] font-sans">
                 {algorithmName} Practice Quiz
               </h3>
-              <span className="text-[10px] text-[#8E8EA0]">
+              <span className="text-[10px] text-[#64748B]">
                 Conceptual & Complexity Calibration
               </span>
             </div>
           </div>
-          <button onClick={onClose} className="p-1.5 text-[#8E8EA0] hover:text-[#F4F4F6] rounded-lg">
+          <button onClick={onClose} className="p-1.5 text-[#64748B] hover:text-[#0F172A] rounded-lg">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -69,11 +69,11 @@ export const PracticeQuizModal: React.FC<PracticeQuizModalProps> = ({
         {/* Content */}
         <div className="flex-1 overflow-y-auto space-y-6 pr-1">
           {loading ? (
-            <div className="py-12 text-center text-xs text-[#5A5A6E]">
+            <div className="py-12 text-center text-xs text-[#94A3B8]">
               Loading algorithm practice questions…
             </div>
           ) : questions.length === 0 ? (
-            <div className="py-12 text-center text-xs text-[#8E8EA0]">
+            <div className="py-12 text-center text-xs text-[#64748B]">
               No practice questions registered for this algorithm yet.
             </div>
           ) : (
@@ -83,9 +83,9 @@ export const PracticeQuizModal: React.FC<PracticeQuizModalProps> = ({
               const isCorrect = userPick === q.correct_option_index;
 
               return (
-                <div key={q.id || qIdx} className="p-4 bg-[#12121B] rounded-xl border border-[#1C1C28] space-y-3">
+                <div key={q.id || qIdx} className="p-4 bg-[#F1F5F9] rounded-xl border border-[#E2E8F0] space-y-3">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-[10px] uppercase font-bold text-[#A78BFA]">
+                    <span className="text-[10px] uppercase font-bold text-[#DC2626]">
                       Question {qIdx + 1} · {q.difficulty}
                     </span>
                     {isSubmitted && (
@@ -98,12 +98,12 @@ export const PracticeQuizModal: React.FC<PracticeQuizModalProps> = ({
                     )}
                   </div>
 
-                  <p className="text-xs text-[#F4F4F6] font-sans font-medium">{q.question}</p>
+                  <p className="text-xs text-[#0F172A] font-sans font-medium">{q.question}</p>
 
                   <div className="space-y-1.5">
                     {q.options.map((opt, optIdx) => {
                       const isSelected = userPick === optIdx;
-                      let btnStyle = 'bg-[#181824] border-[#1C1C28] text-[#CBD5E1] hover:border-[#8B5CF6]/50';
+                      let btnStyle = 'bg-[#181824] border-[#E2E8F0] text-[#CBD5E1] hover:border-[#EF4444]/50';
 
                       if (isSubmitted) {
                         if (optIdx === q.correct_option_index) {
@@ -111,10 +111,10 @@ export const PracticeQuizModal: React.FC<PracticeQuizModalProps> = ({
                         } else if (isSelected) {
                           btnStyle = 'bg-rose-500/20 border-rose-500 text-rose-300';
                         } else {
-                          btnStyle = 'opacity-40 border-[#1C1C28] text-[#5A5A6E]';
+                          btnStyle = 'opacity-40 border-[#E2E8F0] text-[#94A3B8]';
                         }
                       } else if (isSelected) {
-                        btnStyle = 'bg-[#8B5CF6]/20 border-[#8B5CF6] text-white font-bold';
+                        btnStyle = 'bg-[#EF4444]/20 border-[#EF4444] text-white font-bold';
                       }
 
                       return (
@@ -140,7 +140,7 @@ export const PracticeQuizModal: React.FC<PracticeQuizModalProps> = ({
                       Check Answer
                     </Button>
                   ) : (
-                    <div className="p-3 bg-[#0D0D14] rounded-lg border border-[#1C1C28] text-[11px] text-[#A78BFA] font-sans">
+                    <div className="p-3 bg-white rounded-lg border border-[#E2E8F0] text-[11px] text-[#DC2626] font-sans">
                       <span className="font-bold text-white">Explanation: </span>
                       {q.explanation}
                     </div>

@@ -53,18 +53,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
   };
 
   const content = (
-    <div className="flex flex-col h-full bg-[#0D0D14] border-r border-[#1C1C28] w-64 select-none">
+    <div className="flex flex-col h-full bg-white border-r border-[#E2E8F0] w-64 select-none">
       {/* Brand Header */}
-      <div className="h-16 flex items-center justify-between px-5 border-b border-[#1C1C28]">
+      <div className="h-16 flex items-center justify-between px-5 border-b border-[#E2E8F0]">
         <NavLink to="/dashboard" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#8B5CF6] to-[#6366F1] flex items-center justify-center shadow-md shadow-[#8B5CF6]/30">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#EF4444] to-[#B91C1C] flex items-center justify-center shadow-md shadow-red-500/30">
             <Sparkles className="w-4 h-4 text-white" />
           </div>
           <div className="flex flex-col">
-            <span className="font-bold text-base text-[#F4F4F6] tracking-tight font-mono">
-              Learn<span className="text-[#8B5CF6]">X</span>
+            <span className="font-bold text-base text-[#0F172A] tracking-tight font-mono">
+              Learn<span className="text-[#EF4444]">X</span>
             </span>
-            <span className="text-[9px] font-mono tracking-widest text-[#5A5A6E] uppercase">
+            <span className="text-[9px] font-mono tracking-widest text-[#64748B] uppercase">
               Adaptive Engine
             </span>
           </div>
@@ -72,7 +72,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
         {onCloseMobile && (
           <button
             onClick={onCloseMobile}
-            className="md:hidden text-[#8E8EA0] hover:text-[#F4F4F6] p-1.5"
+            className="md:hidden text-[#475569] hover:text-[#0F172A] p-1.5"
           >
             <X className="w-5 h-5" />
           </button>
@@ -80,23 +80,23 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
       </div>
 
       {/* Streak & Consistency Bar */}
-      <div className="p-3 mx-3 my-3 bg-[#12121B] border border-[#1C1C28] rounded-xl space-y-2">
+      <div className="p-3 mx-3 my-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl space-y-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+            <div className="w-6 h-6 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500">
               <Flame className="w-3.5 h-3.5 animate-pulse" />
             </div>
-            <span className="text-xs font-mono font-semibold text-[#F4F4F6]">
+            <span className="text-xs font-mono font-semibold text-[#0F172A]">
               {profile?.streakDays ?? 0} Day{(profile?.streakDays ?? 0) !== 1 ? 's' : ''} Active
             </span>
           </div>
-          <span className="text-[10px] font-mono text-emerald-400">
+          <span className="text-[10px] font-mono text-emerald-600 font-medium">
             {(profile?.streakDays ?? 0) >= 7 ? 'Top 5%' : 'Building'}
           </span>
         </div>
-        <div className="w-full bg-[#1C1C28] h-1 rounded-full overflow-hidden">
+        <div className="w-full bg-[#E2E8F0] h-1 rounded-full overflow-hidden">
           <div
-            className="bg-gradient-to-r from-amber-500 to-[#8B5CF6] h-full transition-all duration-500"
+            className="bg-gradient-to-r from-amber-500 to-[#EF4444] h-full transition-all duration-500"
             style={{ width: `${Math.min(100, Math.round(((profile?.streakDays ?? 0) / 30) * 100))}%` }}
           />
         </div>
@@ -104,7 +104,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
 
       {/* Navigation Links */}
       <div className="flex-1 px-3 py-1 space-y-1 overflow-y-auto">
-        <div className="text-[10px] font-semibold uppercase tracking-widest text-[#5A5A6E] px-3 py-1.5 font-mono">
+        <div className="text-[10px] font-semibold uppercase tracking-widest text-[#64748B] px-3 py-1.5 font-mono">
           Cockpit
         </div>
         {navItems.map((item) => {
@@ -118,8 +118,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
                 clsx(
                   'flex items-center justify-between px-3 py-2 rounded-xl text-xs font-mono font-medium transition-all duration-150 group relative',
                   isActive
-                    ? 'bg-[#1C1C2B] text-[#A78BFA] border border-[#8B5CF6]/30 shadow-sm'
-                    : 'text-[#8E8EA0] hover:text-[#F4F4F6] hover:bg-[#14141E] border border-transparent'
+                    ? 'bg-[#FEF2F2] text-[#DC2626] border border-[#FCA5A5]/60 shadow-sm'
+                    : 'text-[#475569] hover:text-[#0F172A] hover:bg-[#F1F5F9] border border-transparent'
                 )
               }
             >
@@ -128,7 +128,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
                 <span>{item.label}</span>
               </div>
               {item.badge && (
-                <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[#181824] text-[#8E8EA0] border border-[#2B2B3C]">
+                <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-slate-100 text-[#475569] border border-[#E2E8F0]">
                   {item.badge}
                 </span>
               )}
@@ -136,7 +136,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
           );
         })}
 
-        <div className="text-[10px] font-semibold uppercase tracking-widest text-[#5A5A6E] px-3 pt-5 pb-1.5 font-mono">
+        <div className="text-[10px] font-semibold uppercase tracking-widest text-[#64748B] px-3 pt-5 pb-1.5 font-mono">
           Preferences
         </div>
         {bottomNavItems.map((item) => {
@@ -150,8 +150,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
                 clsx(
                   'flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-mono font-medium transition-all duration-150 group',
                   isActive
-                    ? 'bg-[#1C1C2B] text-[#A78BFA] border border-[#8B5CF6]/30'
-                    : 'text-[#8E8EA0] hover:text-[#F4F4F6] hover:bg-[#14141E] border border-transparent'
+                    ? 'bg-[#FEF2F2] text-[#DC2626] border border-[#FCA5A5]/60'
+                    : 'text-[#475569] hover:text-[#0F172A] hover:bg-[#F1F5F9] border border-transparent'
                 )
               }
             >
@@ -163,17 +163,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
       </div>
 
       {/* User profile footer & Logout */}
-      <div className="p-3 border-t border-[#1C1C28] bg-[#0A0A10]">
-        <div className="flex items-center justify-between p-2 rounded-xl hover:bg-[#14141E] transition-colors">
+      <div className="p-3 border-t border-[#E2E8F0] bg-[#F8FAFC]">
+        <div className="flex items-center justify-between p-2 rounded-xl hover:bg-[#F1F5F9] transition-colors">
           <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-[#6366F1] to-[#8B5CF6] flex items-center justify-center text-white font-bold text-xs shrink-0 font-mono">
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-[#EF4444] to-[#B91C1C] flex items-center justify-center text-white font-bold text-xs shrink-0 font-mono shadow-sm">
               {(user?.fullName || user?.full_name || 'U').charAt(0)}
             </div>
             <div className="min-w-0">
-              <div className="text-xs font-semibold text-[#F4F4F6] truncate font-mono">
+              <div className="text-xs font-semibold text-[#0F172A] truncate font-mono">
                 {user?.fullName || user?.full_name || 'Student'}
               </div>
-              <div className="text-[10px] text-[#5A5A6E] truncate font-mono">
+              <div className="text-[10px] text-[#64748B] truncate font-mono">
                 {user?.email || 'student@gmail.com'}
               </div>
             </div>
@@ -181,7 +181,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
           <button
             onClick={handleLogout}
             title="Log Out"
-            className="p-1.5 text-[#8E8EA0] hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors cursor-pointer"
+            className="p-1.5 text-[#475569] hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
           >
             <LogOut className="w-3.5 h-3.5" />
           </button>

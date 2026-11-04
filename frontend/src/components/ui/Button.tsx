@@ -22,14 +22,14 @@ export const Button: React.FC<ButtonProps> = ({
   disabled,
   ...props
 }) => {
-  const baseStyles = 'inline-flex items-center justify-center font-medium transition-all duration-200 select-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#08080D] active:scale-[0.98]';
+  const baseStyles = 'inline-flex items-center justify-center font-medium transition-all duration-200 select-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white active:scale-[0.98]';
 
   const variants = {
-    primary: 'bg-[#8B5CF6] hover:bg-[#7C3AED] text-white shadow-lg shadow-[#8B5CF6]/20 focus:ring-[#8B5CF6]',
-    secondary: 'bg-[#171722] hover:bg-[#1E1E2D] text-[#F5F5F7] border border-[#232336] hover:border-[#373752] focus:ring-[#6366F1]',
-    outline: 'bg-transparent border border-[#373752] text-[#F5F5F7] hover:bg-[#171722] hover:border-[#8B5CF6]/60 focus:ring-[#8B5CF6]',
-    ghost: 'bg-transparent hover:bg-[#171722] text-[#9292A3] hover:text-[#F5F5F7] focus:ring-zinc-700',
-    danger: 'bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20 focus:ring-red-500'
+    primary: 'bg-[#EF4444] hover:bg-[#DC2626] text-white shadow-md shadow-red-500/20 focus:ring-[#EF4444]',
+    secondary: 'bg-white hover:bg-[#F8FAFC] text-[#0F172A] border border-[#E2E8F0] hover:border-[#CBD5E1] focus:ring-[#EF4444]',
+    outline: 'bg-transparent border border-[#E2E8F0] text-[#0F172A] hover:bg-[#FEF2F2] hover:border-[#EF4444]/60 hover:text-[#EF4444] focus:ring-[#EF4444]',
+    ghost: 'bg-transparent hover:bg-[#F1F5F9] text-[#475569] hover:text-[#0F172A] focus:ring-slate-300',
+    danger: 'bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 focus:ring-red-500'
   };
 
   const sizes = {

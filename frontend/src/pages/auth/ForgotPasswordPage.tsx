@@ -41,13 +41,13 @@ export const ForgotPasswordPage: React.FC = () => {
   return (
     <div className="w-full space-y-6">
       <div className="space-y-1.5 text-center sm:text-left">
-        <div className="w-10 h-10 rounded-xl bg-[#8B5CF6]/15 border border-[#8B5CF6]/30 text-[#A78BFA] flex items-center justify-center mb-3">
+        <div className="w-10 h-10 rounded-xl bg-[#EF4444]/15 border border-[#EF4444]/30 text-[#DC2626] flex items-center justify-center mb-3">
           <KeyRound className="w-5 h-5" />
         </div>
-        <h1 className="text-2xl font-bold tracking-tight text-[#F5F5F7] font-mono">
+        <h1 className="text-2xl font-bold tracking-tight text-[#0F172A] font-mono">
           Reset Your Password
         </h1>
-        <p className="text-xs text-[#9292A3]">
+        <p className="text-xs text-[#64748B]">
           Enter your registered email address and we'll dispatch a 6-digit verification code.
         </p>
       </div>
@@ -79,9 +79,9 @@ export const ForgotPasswordPage: React.FC = () => {
         </Button>
       </form>
 
-      <p className="text-center text-xs text-[#9292A3]">
+      <p className="text-center text-xs text-[#64748B]">
         Remembered your password?{' '}
-        <Link to="/login" className="text-[#8B5CF6] hover:text-[#A78BFA] font-medium transition-colors">
+        <Link to="/login" className="text-[#EF4444] hover:text-[#DC2626] font-medium transition-colors">
           Return to login
         </Link>
       </p>

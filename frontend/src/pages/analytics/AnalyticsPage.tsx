@@ -45,11 +45,11 @@ export const AnalyticsPage: React.FC = () => {
     <div className="space-y-8 font-mono">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#F4F4F6] flex items-center gap-2">
-            <BarChart2 className="w-6 h-6 text-[#8B5CF6]" />
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#0F172A] flex items-center gap-2">
+            <BarChart2 className="w-6 h-6 text-[#EF4444]" />
             Telemetry & Performance Metrics
           </h1>
-          <p className="text-xs text-[#8E8EA0] mt-1 font-sans">
+          <p className="text-xs text-[#64748B] mt-1 font-sans">
             Live progress from your A2Z sheet — {stats.totalSolved} / {stats.totalProblems} solved
             {stats.needsRevision ? ` · ${stats.needsRevision} need revision` : ''}.
           </p>
@@ -57,34 +57,34 @@ export const AnalyticsPage: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-5 rounded-2xl bg-[#0D0D14] border border-[#1C1C28] space-y-1">
-          <span className="text-xs text-[#5A5A6E]">TOTAL_VERIFIED</span>
-          <div className="text-3xl font-bold text-[#F4F4F6]">{stats.totalSolved}</div>
+        <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] space-y-1">
+          <span className="text-xs text-[#94A3B8]">TOTAL_VERIFIED</span>
+          <div className="text-3xl font-bold text-[#0F172A]">{stats.totalSolved}</div>
           <span className="text-[11px] text-emerald-400">Accuracy: {stats.accuracyRate}%</span>
         </div>
-        <div className="p-5 rounded-2xl bg-[#0D0D14] border border-[#1C1C28] space-y-1">
-          <span className="text-xs text-[#5A5A6E]">COMPLETION</span>
+        <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] space-y-1">
+          <span className="text-xs text-[#94A3B8]">COMPLETION</span>
           <div className="text-3xl font-bold text-[#818CF8]">{stats.completionPercentage}%</div>
-          <span className="text-[11px] text-[#8E8EA0]">{stats.pendingProblems} still pending</span>
+          <span className="text-[11px] text-[#64748B]">{stats.pendingProblems} still pending</span>
         </div>
-        <div className="p-5 rounded-2xl bg-[#0D0D14] border border-[#1C1C28] space-y-1">
-          <span className="text-xs text-[#5A5A6E]">ACTIVE_STREAK</span>
+        <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] space-y-1">
+          <span className="text-xs text-[#94A3B8]">ACTIVE_STREAK</span>
           <div className="text-3xl font-bold text-amber-400">{stats.streakDays} Days</div>
           <span className="text-[11px] text-amber-400/80">Consecutive active days</span>
         </div>
-        <div className="p-5 rounded-2xl bg-[#0D0D14] border border-[#1C1C28] space-y-1">
-          <span className="text-xs text-[#5A5A6E]">TOTAL_HOURS</span>
-          <div className="text-3xl font-bold text-[#A78BFA]">{stats.hoursSpent}h</div>
-          <span className="text-[11px] text-[#8E8EA0]">{stats.attemptedProblems} attempts logged</span>
+        <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] space-y-1">
+          <span className="text-xs text-[#94A3B8]">TOTAL_HOURS</span>
+          <div className="text-3xl font-bold text-[#DC2626]">{stats.hoursSpent}h</div>
+          <span className="text-[11px] text-[#64748B]">{stats.attemptedProblems} attempts logged</span>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-8 p-6 rounded-2xl bg-[#0D0D14] border border-[#1C1C28] space-y-4">
-          <h3 className="text-sm font-bold text-[#F4F4F6]">Topic-Wise Completion</h3>
+        <div className="lg:col-span-8 p-6 rounded-2xl bg-white border border-[#E2E8F0] space-y-4">
+          <h3 className="text-sm font-bold text-[#0F172A]">Topic-Wise Completion</h3>
           <div className="h-64 w-full pt-2 flex items-center justify-center">
             {stats.topicProficiency.length === 0 ? (
-              <span className="text-xs text-[#5A5A6E]">No topic activity yet. Solve problems to populate scores.</span>
+              <span className="text-xs text-[#94A3B8]">No topic activity yet. Solve problems to populate scores.</span>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={stats.topicProficiency} layout="vertical">
@@ -106,10 +106,10 @@ export const AnalyticsPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="lg:col-span-4 p-6 rounded-2xl bg-[#0D0D14] border border-[#1C1C28] space-y-4 flex flex-col justify-between">
+        <div className="lg:col-span-4 p-6 rounded-2xl bg-white border border-[#E2E8F0] space-y-4 flex flex-col justify-between">
           <div>
-            <h3 className="text-sm font-bold text-[#F4F4F6]">Difficulty Split</h3>
-            <p className="text-xs text-[#8E8EA0] font-sans">Problems in your catalogue by difficulty</p>
+            <h3 className="text-sm font-bold text-[#0F172A]">Difficulty Split</h3>
+            <p className="text-xs text-[#64748B] font-sans">Problems in your catalogue by difficulty</p>
           </div>
           <div className="h-44 w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -137,26 +137,26 @@ export const AnalyticsPage: React.FC = () => {
               </PieChart>
             </ResponsiveContainer>
           </div>
-          <div className="grid grid-cols-3 gap-2 text-center text-xs pt-3 border-t border-[#1C1C28]">
+          <div className="grid grid-cols-3 gap-2 text-center text-xs pt-3 border-t border-[#E2E8F0]">
             <div>
               <span className="text-emerald-400 font-bold block">{stats.easySolved}</span>
-              <span className="text-[10px] text-[#5A5A6E]">EASY</span>
+              <span className="text-[10px] text-[#94A3B8]">EASY</span>
             </div>
             <div>
               <span className="text-amber-400 font-bold block">{stats.mediumSolved}</span>
-              <span className="text-[10px] text-[#5A5A6E]">MEDIUM</span>
+              <span className="text-[10px] text-[#94A3B8]">MEDIUM</span>
             </div>
             <div>
               <span className="text-red-400 font-bold block">{stats.hardSolved}</span>
-              <span className="text-[10px] text-[#5A5A6E]">HARD</span>
+              <span className="text-[10px] text-[#94A3B8]">HARD</span>
             </div>
           </div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-8 p-6 rounded-2xl bg-[#0D0D14] border border-[#1C1C28] space-y-4">
-          <h3 className="text-sm font-bold text-[#F4F4F6]">30-day activity</h3>
+        <div className="lg:col-span-8 p-6 rounded-2xl bg-white border border-[#E2E8F0] space-y-4">
+          <h3 className="text-sm font-bold text-[#0F172A]">30-day activity</h3>
           <div className="h-56 w-full pt-2">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={daily.length ? daily : stats.monthlyProgress.map((m) => ({ date: m.month, solved: m.solved, attempts: 0 }))}>
@@ -183,19 +183,19 @@ export const AnalyticsPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="lg:col-span-4 p-6 rounded-2xl bg-[#0D0D14] border border-[#1C1C28] space-y-4">
-          <h3 className="text-sm font-bold text-[#F4F4F6]">Competency Assessment</h3>
+        <div className="lg:col-span-4 p-6 rounded-2xl bg-white border border-[#E2E8F0] space-y-4">
+          <h3 className="text-sm font-bold text-[#0F172A]">Competency Assessment</h3>
           <div className="space-y-4 text-xs font-sans">
             <div className="p-3.5 bg-emerald-500/10 border border-emerald-500/20 rounded-xl space-y-1">
               <span className="text-emerald-400 font-bold flex items-center gap-1.5 font-mono">
                 <CheckCircle2 className="w-3.5 h-3.5" /> High Mastery Index
               </span>
-              <div className="text-sm font-semibold text-[#F4F4F6] font-mono">
+              <div className="text-sm font-semibold text-[#0F172A] font-mono">
                 {stats.strongestTopic
                   ? `${stats.strongestTopic.topic} (${stats.strongestTopic.score}%)`
                   : 'Not enough data yet'}
               </div>
-              <p className="text-[#8E8EA0] text-[11px]">
+              <p className="text-[#64748B] text-[11px]">
                 Highest completion among topics you have started.
               </p>
             </div>
@@ -203,12 +203,12 @@ export const AnalyticsPage: React.FC = () => {
               <span className="text-amber-400 font-bold flex items-center gap-1.5 font-mono">
                 <Flame className="w-3.5 h-3.5" /> Queued for Drill
               </span>
-              <div className="text-sm font-semibold text-[#F4F4F6] font-mono">
+              <div className="text-sm font-semibold text-[#0F172A] font-mono">
                 {stats.weakestTopic
                   ? `${stats.weakestTopic.topic} (${stats.weakestTopic.score}%)`
                   : 'Start more topics to rank weaknesses'}
               </div>
-              <p className="text-[#8E8EA0] text-[11px]">
+              <p className="text-[#64748B] text-[11px]">
                 Lowest completion — a good next practice target.
               </p>
             </div>

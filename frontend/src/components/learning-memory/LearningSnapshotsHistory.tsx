@@ -29,7 +29,7 @@ export const LearningSnapshotsHistory: React.FC<LearningSnapshotsHistoryProps> =
 }) => {
   if (loading) {
     return (
-      <div className="h-64 rounded-2xl bg-[#12121B] border border-[#1C1C28] animate-pulse" />
+      <div className="h-64 rounded-2xl bg-[#F1F5F9] border border-[#E2E8F0] animate-pulse" />
     );
   }
 
@@ -46,14 +46,14 @@ export const LearningSnapshotsHistory: React.FC<LearningSnapshotsHistoryProps> =
   const totalCorrected = snapshots.reduce((acc, s) => acc + s.corrected_mistake_count, 0);
 
   return (
-    <div className="rounded-2xl bg-[#0D0D14] border border-[#1C1C28] p-6 space-y-6 font-mono">
+    <div className="rounded-2xl bg-white border border-[#E2E8F0] p-6 space-y-6 font-mono">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#A78BFA]">
-            <History className="w-4 h-4 text-[#8B5CF6]" />
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#DC2626]">
+            <History className="w-4 h-4 text-[#EF4444]" />
             <span>Mastery Milestones & Snapshots</span>
           </div>
-          <p className="text-xs text-[#8E8EA0] mt-1 font-sans">
+          <p className="text-xs text-[#64748B] mt-1 font-sans">
             Longitudinal telemetry tracking independent vs AI-assisted problem solves and mistake resolution.
           </p>
         </div>
@@ -62,7 +62,7 @@ export const LearningSnapshotsHistory: React.FC<LearningSnapshotsHistoryProps> =
           <span className="px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
             {totalIndependent} Independent Solves
           </span>
-          <span className="px-2.5 py-1 rounded-lg bg-[#8B5CF6]/10 border border-[#8B5CF6]/20 text-[#A78BFA]">
+          <span className="px-2.5 py-1 rounded-lg bg-[#EF4444]/10 border border-[#EF4444]/20 text-[#DC2626]">
             {totalAssisted} AI-Assisted
           </span>
           <span className="px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-400">
@@ -117,8 +117,8 @@ export const LearningSnapshotsHistory: React.FC<LearningSnapshotsHistoryProps> =
           </ResponsiveContainer>
         </div>
       ) : (
-        <div className="p-8 text-center rounded-xl bg-[#12121B] border border-dashed border-[#2A2A3C] text-xs text-[#8E8EA0]">
-          <Brain className="w-8 h-8 text-[#5A5A6E] mx-auto mb-2" />
+        <div className="p-8 text-center rounded-xl bg-[#F1F5F9] border border-dashed border-[#2A2A3C] text-xs text-[#64748B]">
+          <Brain className="w-8 h-8 text-[#94A3B8] mx-auto mb-2" />
           <p>No snapshots logged yet. Solving problems logs your mastery milestones automatically.</p>
         </div>
       )}
@@ -126,21 +126,21 @@ export const LearningSnapshotsHistory: React.FC<LearningSnapshotsHistoryProps> =
       {/* Snapshot Log Cards */}
       {snapshots.length > 0 && (
         <div className="space-y-2 pt-2">
-          <div className="text-[11px] uppercase tracking-wider text-[#5A5A6E] font-semibold">
+          <div className="text-[11px] uppercase tracking-wider text-[#94A3B8] font-semibold">
             Historical Snapshots ({snapshots.length})
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {snapshots.slice(0, 6).map((snap) => (
               <div
                 key={snap.id || snap.snapshot_date}
-                className="p-3.5 rounded-xl bg-[#12121B] border border-[#1C1C28] flex items-center justify-between text-xs"
+                className="p-3.5 rounded-xl bg-[#F1F5F9] border border-[#E2E8F0] flex items-center justify-between text-xs"
               >
                 <div className="space-y-1">
-                  <div className="flex items-center gap-1.5 text-[#F4F4F6] font-semibold">
-                    <Calendar className="w-3.5 h-3.5 text-[#8B5CF6]" />
+                  <div className="flex items-center gap-1.5 text-[#0F172A] font-semibold">
+                    <Calendar className="w-3.5 h-3.5 text-[#EF4444]" />
                     <span>{snap.snapshot_date}</span>
                   </div>
-                  <div className="text-[11px] text-[#8E8EA0]">
+                  <div className="text-[11px] text-[#64748B]">
                     {snap.total_concepts_practised} concepts touched
                   </div>
                 </div>

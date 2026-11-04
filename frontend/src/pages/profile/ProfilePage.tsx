@@ -156,16 +156,16 @@ export const ProfilePage: React.FC = () => {
   return (
     <div className="space-y-8 max-w-5xl mx-auto pb-16">
       {/* Header Banner */}
-      <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-[#171722] via-[#1A1A28] to-[#101019] border border-[#232336] flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-[#171722] via-[#1A1A28] to-[#101019] border border-[#E2E8F0] flex flex-col sm:flex-row items-center justify-between gap-6">
         <div className="flex items-center gap-5">
           <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#6366F1] to-[#8B5CF6] flex items-center justify-center text-white font-bold text-2xl shadow-xl shadow-[#8B5CF6]/20">
             {formData.full_name?.charAt(0) || 'S'}
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-[#F5F5F7] font-mono">
+            <h1 className="text-2xl font-bold text-[#0F172A] font-mono">
               {formData.full_name}
             </h1>
-            <p className="text-xs text-[#9292A3] flex items-center gap-1.5 mt-0.5">
+            <p className="text-xs text-[#64748B] flex items-center gap-1.5 mt-0.5">
               <Mail className="w-3.5 h-3.5" />
               <span>{user?.email || 'student@gmail.com'}</span>
             </p>
@@ -197,13 +197,13 @@ export const ProfilePage: React.FC = () => {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex items-center gap-2 border-b border-[#1C1C28] pb-3 text-xs font-mono">
+      <div className="flex items-center gap-2 border-b border-[#E2E8F0] pb-3 text-xs font-mono">
         <button
           onClick={() => setActiveTab('profile')}
           className={`px-4 py-2 rounded-xl transition-all flex items-center gap-2 ${
             activeTab === 'profile'
-              ? 'bg-[#1C1C28] text-[#F4F4F6] font-semibold border border-[#2A2A3C]'
-              : 'text-[#8E8EA0] hover:text-[#F4F4F6]'
+              ? 'bg-[#F1F5F9] text-[#0F172A] font-semibold border border-[#2A2A3C]'
+              : 'text-[#64748B] hover:text-[#0F172A]'
           }`}
         >
           <User className="w-4 h-4" />
@@ -214,8 +214,8 @@ export const ProfilePage: React.FC = () => {
           onClick={() => setActiveTab('submissions')}
           className={`px-4 py-2 rounded-xl transition-all flex items-center gap-2 ${
             activeTab === 'submissions'
-              ? 'bg-[#1C1C28] text-[#F4F4F6] font-semibold border border-[#2A2A3C]'
-              : 'text-[#8E8EA0] hover:text-[#F4F4F6]'
+              ? 'bg-[#F1F5F9] text-[#0F172A] font-semibold border border-[#2A2A3C]'
+              : 'text-[#64748B] hover:text-[#0F172A]'
           }`}
         >
           <Code2 className="w-4 h-4" />
@@ -226,8 +226,8 @@ export const ProfilePage: React.FC = () => {
           onClick={() => setActiveTab('performance')}
           className={`px-4 py-2 rounded-xl transition-all flex items-center gap-2 ${
             activeTab === 'performance'
-              ? 'bg-[#1C1C28] text-[#F4F4F6] font-semibold border border-[#2A2A3C]'
-              : 'text-[#8E8EA0] hover:text-[#F4F4F6]'
+              ? 'bg-[#F1F5F9] text-[#0F172A] font-semibold border border-[#2A2A3C]'
+              : 'text-[#64748B] hover:text-[#0F172A]'
           }`}
         >
           <Activity className="w-4 h-4" />
@@ -239,136 +239,136 @@ export const ProfilePage: React.FC = () => {
       {activeTab === 'profile' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card className="p-6 space-y-4">
-            <div className="flex items-center gap-2 pb-2 border-b border-[#232336] text-[#A78BFA] font-mono text-xs font-bold">
-              <GraduationCap className="w-4 h-4 text-[#8B5CF6]" />
+            <div className="flex items-center gap-2 pb-2 border-b border-[#E2E8F0] text-[#DC2626] font-mono text-xs font-bold">
+              <GraduationCap className="w-4 h-4 text-[#EF4444]" />
               <span>Academic Credentials</span>
             </div>
 
             <div className="space-y-4 text-xs">
               <div className="space-y-1">
-                <label className="text-[#65657B] font-mono text-[10px] uppercase">College / University</label>
+                <label className="text-[#94A3B8] font-mono text-[10px] uppercase">College / University</label>
                 {isEditing ? (
                   <select
                     value={formData.college}
                     onChange={(e) => setFormData({ ...formData, college: e.target.value })}
-                    className="w-full bg-[#101019] text-[#F5F5F7] p-2.5 rounded-xl border border-[#232336] outline-none"
+                    className="w-full bg-white text-[#0F172A] p-2.5 rounded-xl border border-[#E2E8F0] outline-none"
                   >
                     {COLLEGES.map((c) => (
                       <option key={c} value={c}>{c}</option>
                     ))}
                   </select>
                 ) : (
-                  <p className="text-[#F5F5F7] font-medium p-1">{formData.college}</p>
+                  <p className="text-[#0F172A] font-medium p-1">{formData.college}</p>
                 )}
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
-                  <label className="text-[#65657B] font-mono text-[10px] uppercase">Course</label>
+                  <label className="text-[#94A3B8] font-mono text-[10px] uppercase">Course</label>
                   {isEditing ? (
                     <select
                       value={formData.course}
                       onChange={(e) => setFormData({ ...formData, course: e.target.value })}
-                      className="w-full bg-[#101019] text-[#F5F5F7] p-2.5 rounded-xl border border-[#232336] outline-none"
+                      className="w-full bg-white text-[#0F172A] p-2.5 rounded-xl border border-[#E2E8F0] outline-none"
                     >
                       {COURSES.map((c) => (
                         <option key={c} value={c}>{c}</option>
                       ))}
                     </select>
                   ) : (
-                    <p className="text-[#F5F5F7] font-medium p-1">{formData.course}</p>
+                    <p className="text-[#0F172A] font-medium p-1">{formData.course}</p>
                   )}
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[#65657B] font-mono text-[10px] uppercase">Year</label>
+                  <label className="text-[#94A3B8] font-mono text-[10px] uppercase">Year</label>
                   {isEditing ? (
                     <select
                       value={formData.current_year}
                       onChange={(e) => setFormData({ ...formData, current_year: e.target.value })}
-                      className="w-full bg-[#101019] text-[#F5F5F7] p-2.5 rounded-xl border border-[#232336] outline-none"
+                      className="w-full bg-white text-[#0F172A] p-2.5 rounded-xl border border-[#E2E8F0] outline-none"
                     >
                       {ACADEMIC_YEARS.map((y) => (
                         <option key={y} value={y}>{y}</option>
                       ))}
                     </select>
                   ) : (
-                    <p className="text-[#F5F5F7] font-medium p-1">{formData.current_year}</p>
+                    <p className="text-[#0F172A] font-medium p-1">{formData.current_year}</p>
                   )}
                 </div>
               </div>
 
               <div className="space-y-1">
-                <label className="text-[#65657B] font-mono text-[10px] uppercase">Department</label>
+                <label className="text-[#94A3B8] font-mono text-[10px] uppercase">Department</label>
                 {isEditing ? (
                   <select
                     value={formData.department}
                     onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                    className="w-full bg-[#101019] text-[#F5F5F7] p-2.5 rounded-xl border border-[#232336] outline-none"
+                    className="w-full bg-white text-[#0F172A] p-2.5 rounded-xl border border-[#E2E8F0] outline-none"
                   >
                     {DEPARTMENTS.map((d) => (
                       <option key={d} value={d}>{d}</option>
                     ))}
                   </select>
                 ) : (
-                  <p className="text-[#F5F5F7] font-medium p-1">{formData.department}</p>
+                  <p className="text-[#0F172A] font-medium p-1">{formData.department}</p>
                 )}
               </div>
             </div>
           </Card>
 
           <Card className="p-6 space-y-4">
-            <div className="flex items-center gap-2 pb-2 border-b border-[#232336] text-[#A78BFA] font-mono text-xs font-bold">
-              <Code2 className="w-4 h-4 text-[#8B5CF6]" />
+            <div className="flex items-center gap-2 pb-2 border-b border-[#E2E8F0] text-[#DC2626] font-mono text-xs font-bold">
+              <Code2 className="w-4 h-4 text-[#EF4444]" />
               <span>DSA & Programming Focus</span>
             </div>
 
             <div className="space-y-4 text-xs">
               <div className="space-y-1">
-                <label className="text-[#65657B] font-mono text-[10px] uppercase">Preferred Language</label>
+                <label className="text-[#94A3B8] font-mono text-[10px] uppercase">Preferred Language</label>
                 {isEditing ? (
                   <select
                     value={formData.preferred_language}
                     onChange={(e) => setFormData({ ...formData, preferred_language: e.target.value as ProgrammingLanguage })}
-                    className="w-full bg-[#101019] text-[#F5F5F7] p-2.5 rounded-xl border border-[#232336] outline-none"
+                    className="w-full bg-white text-[#0F172A] p-2.5 rounded-xl border border-[#E2E8F0] outline-none"
                   >
                     {PROGRAMMING_LANGUAGES.map((l: any) => (
                       <option key={l.id || l} value={l.name || l}>{l.name || l}</option>
                     ))}
                   </select>
                 ) : (
-                  <p className="text-[#F5F5F7] font-medium p-1">{formData.preferred_language}</p>
+                  <p className="text-[#0F172A] font-medium p-1">{formData.preferred_language}</p>
                 )}
               </div>
 
               <div className="space-y-1">
-                <label className="text-[#65657B] font-mono text-[10px] uppercase">Target Learning Goal</label>
+                <label className="text-[#94A3B8] font-mono text-[10px] uppercase">Target Learning Goal</label>
                 {isEditing ? (
                   <select
                     value={formData.learning_goal}
                     onChange={(e) => setFormData({ ...formData, learning_goal: e.target.value })}
-                    className="w-full bg-[#101019] text-[#F5F5F7] p-2.5 rounded-xl border border-[#232336] outline-none"
+                    className="w-full bg-white text-[#0F172A] p-2.5 rounded-xl border border-[#E2E8F0] outline-none"
                   >
                     {LEARNING_GOALS.map((g: any) => (
                       <option key={g.id || g} value={g.title || g}>{g.title || g}</option>
                     ))}
                   </select>
                 ) : (
-                  <p className="text-[#F5F5F7] font-medium p-1">{formData.learning_goal}</p>
+                  <p className="text-[#0F172A] font-medium p-1">{formData.learning_goal}</p>
                 )}
               </div>
 
               <div className="space-y-1">
-                <label className="text-[#65657B] font-mono text-[10px] uppercase">Bio / Purpose</label>
+                <label className="text-[#94A3B8] font-mono text-[10px] uppercase">Bio / Purpose</label>
                 {isEditing ? (
                   <textarea
                     rows={2}
                     value={formData.bio}
                     onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                    className="w-full bg-[#101019] text-[#F5F5F7] p-2.5 rounded-xl border border-[#232336] outline-none resize-none"
+                    className="w-full bg-white text-[#0F172A] p-2.5 rounded-xl border border-[#E2E8F0] outline-none resize-none"
                   />
                 ) : (
-                  <p className="text-[#9292A3] p-1 italic leading-relaxed">{formData.bio}</p>
+                  <p className="text-[#64748B] p-1 italic leading-relaxed">{formData.bio}</p>
                 )}
               </div>
             </div>
@@ -379,20 +379,20 @@ export const ProfilePage: React.FC = () => {
       {/* Tab 2: Global Submission History */}
       {activeTab === 'submissions' && (
         <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-[#0D0D14] border border-[#1C1C28]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-white border border-[#E2E8F0]">
             <div className="flex items-center gap-2">
-              <Code2 className="w-4 h-4 text-[#8B5CF6]" />
-              <span className="text-xs font-mono font-bold text-[#F4F4F6]">
+              <Code2 className="w-4 h-4 text-[#EF4444]" />
+              <span className="text-xs font-mono font-bold text-[#0F172A]">
                 All Submissions ({submissionTotal})
               </span>
             </div>
 
             <div className="flex items-center gap-2">
-              <Filter className="w-3.5 h-3.5 text-[#5A5A6E]" />
+              <Filter className="w-3.5 h-3.5 text-[#94A3B8]" />
               <select
                 value={submissionStatus}
                 onChange={(e) => setSubmissionStatus(e.target.value)}
-                className="bg-[#12121B] text-xs text-[#8E8EA0] px-3 py-1.5 rounded-lg border border-[#1C1C28] outline-none font-mono"
+                className="bg-[#F1F5F9] text-xs text-[#64748B] px-3 py-1.5 rounded-lg border border-[#E2E8F0] outline-none font-mono"
               >
                 <option value="">All Statuses</option>
                 <option value="Accepted">Accepted</option>
@@ -405,7 +405,7 @@ export const ProfilePage: React.FC = () => {
               <button
                 onClick={loadSubmissions}
                 disabled={submissionsLoading}
-                className="p-1.5 rounded-lg bg-[#12121B] border border-[#1C1C28] text-[#8E8EA0] hover:text-white"
+                className="p-1.5 rounded-lg bg-[#F1F5F9] border border-[#E2E8F0] text-[#64748B] hover:text-[#0F172A]"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${submissionsLoading ? 'animate-spin' : ''}`} />
               </button>
@@ -415,14 +415,14 @@ export const ProfilePage: React.FC = () => {
           {submissionsLoading ? (
             <div className="space-y-3">
               {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="h-16 rounded-xl bg-[#12121B] border border-[#1C1C28] animate-pulse" />
+                <div key={i} className="h-16 rounded-xl bg-[#F1F5F9] border border-[#E2E8F0] animate-pulse" />
               ))}
             </div>
           ) : submissions.length > 0 ? (
-            <div className="rounded-xl border border-[#1C1C28] overflow-hidden bg-[#0D0D14]">
+            <div className="rounded-xl border border-[#E2E8F0] overflow-hidden bg-white">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs font-mono">
-                  <thead className="bg-[#12121B] border-b border-[#1C1C28] text-[#5A5A6E] uppercase text-[10px]">
+                  <thead className="bg-[#F1F5F9] border-b border-[#E2E8F0] text-[#94A3B8] uppercase text-[10px]">
                     <tr>
                       <th className="px-4 py-3">Problem</th>
                       <th className="px-4 py-3">Status</th>
@@ -435,29 +435,29 @@ export const ProfilePage: React.FC = () => {
                   </thead>
                   <tbody className="divide-y divide-[#1C1C28]">
                     {submissions.map((sub) => (
-                      <tr key={sub.id || sub.submission_id} className="hover:bg-[#12121B]/60 transition-colors">
-                        <td className="px-4 py-3 text-[#F4F4F6] font-semibold">
+                      <tr key={sub.id || sub.submission_id} className="hover:bg-[#F1F5F9]/60 transition-colors">
+                        <td className="px-4 py-3 text-[#0F172A] font-semibold">
                           {sub.problem_title || sub.problem_id || 'Problem'}
                         </td>
                         <td className="px-4 py-3">
                           {getStatusBadge(sub.status)}
                         </td>
-                        <td className="px-4 py-3 text-[#8E8EA0] capitalize">
+                        <td className="px-4 py-3 text-[#64748B] capitalize">
                           {sub.language || 'python'}
                         </td>
-                        <td className="px-4 py-3 text-[#8E8EA0]">
+                        <td className="px-4 py-3 text-[#64748B]">
                           {sub.execution_time_ms ? `${sub.execution_time_ms}ms` : '—'}
                         </td>
-                        <td className="px-4 py-3 text-[#8E8EA0]">
+                        <td className="px-4 py-3 text-[#64748B]">
                           {sub.memory_used_kb ? `${Math.round(sub.memory_used_kb / 1024 * 10) / 10}MB` : '—'}
                         </td>
-                        <td className="px-4 py-3 text-[#5A5A6E] text-[11px]">
+                        <td className="px-4 py-3 text-[#94A3B8] text-[11px]">
                           {sub.submitted_at ? new Date(sub.submitted_at).toLocaleString() : '—'}
                         </td>
                         <td className="px-4 py-3 text-right">
                           <button
                             onClick={() => navigate(`/practice/${sub.problem_id}`)}
-                            className="inline-flex items-center gap-1 text-[11px] text-[#8B5CF6] hover:text-[#A78BFA]"
+                            className="inline-flex items-center gap-1 text-[11px] text-[#EF4444] hover:text-[#DC2626]"
                           >
                             <span>Open</span>
                             <ExternalLink className="w-3 h-3" />
@@ -470,8 +470,8 @@ export const ProfilePage: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="p-12 text-center rounded-xl bg-[#0D0D14] border border-dashed border-[#2A2A3C] text-xs text-[#8E8EA0] space-y-2">
-              <Code2 className="w-8 h-8 text-[#5A5A6E] mx-auto mb-2" />
+            <div className="p-12 text-center rounded-xl bg-white border border-dashed border-[#2A2A3C] text-xs text-[#64748B] space-y-2">
+              <Code2 className="w-8 h-8 text-[#94A3B8] mx-auto mb-2" />
               <p>No submissions recorded for this filter.</p>
               <Button size="sm" variant="outline" onClick={() => navigate('/practice')}>
                 Go to Practice Arena
@@ -487,65 +487,65 @@ export const ProfilePage: React.FC = () => {
           {analyticsLoading || !analytics ? (
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="h-28 rounded-2xl bg-[#12121B] border border-[#1C1C28] animate-pulse" />
+                <div key={i} className="h-28 rounded-2xl bg-[#F1F5F9] border border-[#E2E8F0] animate-pulse" />
               ))}
             </div>
           ) : (
             <>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 font-mono">
-                <div className="p-5 rounded-2xl bg-[#0D0D14] border border-[#1C1C28] space-y-1">
-                  <div className="flex items-center justify-between text-xs text-[#5A5A6E]">
+                <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] space-y-1">
+                  <div className="flex items-center justify-between text-xs text-[#94A3B8]">
                     <span>TOTAL_SOLVED</span>
                     <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                   </div>
-                  <div className="text-3xl font-bold text-[#F4F4F6]">{analytics.totalSolved}</div>
+                  <div className="text-3xl font-bold text-[#0F172A]">{analytics.totalSolved}</div>
                   <span className="text-[11px] text-emerald-400">
                     Accuracy: {analytics.accuracyRate}%
                   </span>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-[#0D0D14] border border-[#1C1C28] space-y-1">
-                  <div className="flex items-center justify-between text-xs text-[#5A5A6E]">
+                <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] space-y-1">
+                  <div className="flex items-center justify-between text-xs text-[#94A3B8]">
                     <span>ACTIVE_STREAK</span>
                     <Flame className="w-4 h-4 text-amber-400" />
                   </div>
                   <div className="text-3xl font-bold text-amber-400">{analytics.streakDays}d</div>
-                  <span className="text-[11px] text-[#8E8EA0]">Consistent practice</span>
+                  <span className="text-[11px] text-[#64748B]">Consistent practice</span>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-[#0D0D14] border border-[#1C1C28] space-y-1">
-                  <div className="flex items-center justify-between text-xs text-[#5A5A6E]">
+                <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] space-y-1">
+                  <div className="flex items-center justify-between text-xs text-[#94A3B8]">
                     <span>HOURS_INVESTED</span>
                     <Clock className="w-4 h-4 text-[#818CF8]" />
                   </div>
                   <div className="text-3xl font-bold text-[#818CF8]">{analytics.hoursSpent}h</div>
-                  <span className="text-[11px] text-[#8E8EA0]">{analytics.attemptedProblems} total attempts</span>
+                  <span className="text-[11px] text-[#64748B]">{analytics.attemptedProblems} total attempts</span>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-[#0D0D14] border border-[#1C1C28] space-y-1">
-                  <div className="flex items-center justify-between text-xs text-[#5A5A6E]">
+                <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] space-y-1">
+                  <div className="flex items-center justify-between text-xs text-[#94A3B8]">
                     <span>REVISION_QUEUE</span>
-                    <Activity className="w-4 h-4 text-[#A78BFA]" />
+                    <Activity className="w-4 h-4 text-[#DC2626]" />
                   </div>
-                  <div className="text-3xl font-bold text-[#A78BFA]">{analytics.needsRevision}</div>
-                  <span className="text-[11px] text-[#8E8EA0]">Marked for review</span>
+                  <div className="text-3xl font-bold text-[#DC2626]">{analytics.needsRevision}</div>
+                  <span className="text-[11px] text-[#64748B]">Marked for review</span>
                 </div>
               </div>
 
               {/* Difficulty Breakdown */}
-              <div className="p-6 rounded-2xl bg-[#0D0D14] border border-[#1C1C28] space-y-4 font-mono">
-                <h3 className="text-sm font-bold text-[#F4F4F6]">Difficulty Distribution</h3>
+              <div className="p-6 rounded-2xl bg-white border border-[#E2E8F0] space-y-4 font-mono">
+                <h3 className="text-sm font-bold text-[#0F172A]">Difficulty Distribution</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {analytics.difficultyDistribution.map((d) => (
                     <div
                       key={d.name}
-                      className="p-4 rounded-xl bg-[#12121B] border border-[#1C1C28] space-y-2"
+                      className="p-4 rounded-xl bg-[#F1F5F9] border border-[#E2E8F0] space-y-2"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-[#F4F4F6]">{d.name}</span>
-                        <span className="text-xs text-[#8E8EA0]">{d.count} solved</span>
+                        <span className="text-xs font-bold text-[#0F172A]">{d.name}</span>
+                        <span className="text-xs text-[#64748B]">{d.count} solved</span>
                       </div>
-                      <div className="w-full bg-[#1C1C28] h-1.5 rounded-full overflow-hidden">
+                      <div className="w-full bg-[#F1F5F9] h-1.5 rounded-full overflow-hidden">
                         <div
                           className={`h-full ${
                             d.name === 'Easy'

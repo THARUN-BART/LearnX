@@ -47,10 +47,10 @@ export const LoginPage: React.FC = () => {
   return (
     <div className="w-full space-y-6">
       <div className="space-y-1.5">
-        <h1 className="text-2xl font-bold tracking-tight text-[#F5F5F7] font-mono">
+        <h1 className="text-2xl font-bold tracking-tight text-[#0F172A] font-mono">
           Welcome Back
         </h1>
-        <p className="text-xs text-[#9292A3]">
+        <p className="text-xs text-[#64748B]">
           Enter your credentials to access your adaptive learning cockpit.
         </p>
       </div>
@@ -81,17 +81,17 @@ export const LoginPage: React.FC = () => {
             {...register('password')}
           />
           <div className="flex items-center justify-between pt-1">
-            <label className="flex items-center gap-2 cursor-pointer select-none text-xs text-[#9292A3]">
+            <label className="flex items-center gap-2 cursor-pointer select-none text-xs text-[#64748B]">
               <input
                 type="checkbox"
-                className="w-3.5 h-3.5 rounded bg-[#101019] border-[#232336] text-[#8B5CF6] focus:ring-0 focus:ring-offset-0 accent-[#8B5CF6]"
+                className="w-3.5 h-3.5 rounded bg-white border-[#E2E8F0] text-[#EF4444] focus:ring-0 focus:ring-offset-0 accent-[#8B5CF6]"
                 {...register('rememberMe')}
               />
               <span>Remember me</span>
             </label>
             <Link
               to="/forgot-password"
-              className="text-xs text-[#8B5CF6] hover:text-[#A78BFA] transition-colors"
+              className="text-xs text-[#EF4444] hover:text-[#DC2626] transition-colors"
             >
               Forgot password?
             </Link>
@@ -109,9 +109,9 @@ export const LoginPage: React.FC = () => {
         </Button>
       </form>
 
-      <p className="text-center text-xs text-[#9292A3]">
+      <p className="text-center text-xs text-[#64748B]">
         New to LearnX?{' '}
-        <Link to="/signup" className="text-[#8B5CF6] hover:text-[#A78BFA] font-medium transition-colors">
+        <Link to="/signup" className="text-[#EF4444] hover:text-[#DC2626] font-medium transition-colors">
           Create an account
         </Link>
       </p>

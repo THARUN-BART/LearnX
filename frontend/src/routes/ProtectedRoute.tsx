@@ -18,8 +18,8 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#07070B] flex flex-col items-center justify-center gap-3 text-[#8E8EA0]">
-        <Loader2 className="w-8 h-8 animate-spin text-[#8B5CF6]" />
+      <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center gap-3 text-[#64748B]">
+        <Loader2 className="w-8 h-8 animate-spin text-[#EF4444]" />
         <span className="text-xs font-mono tracking-wide">Restoring secure session...</span>
       </div>
     );

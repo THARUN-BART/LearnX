@@ -182,12 +182,12 @@ export const VisualizerPage: React.FC = () => {
     executionData?.steps?.[currentStepIndex] || null;
 
   return (
-    <div className="flex flex-col gap-6 font-mono text-[#F4F4F6] pb-12">
+    <div className="flex flex-col gap-6 font-mono text-[#0F172A] pb-12">
       {/* Top Banner / Hero */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 bg-gradient-to-r from-[#12121B] via-[#0D0D14] to-[#12121B] border border-[#1C1C28] rounded-2xl relative overflow-hidden">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 bg-gradient-to-r from-[#12121B] via-[#0D0D14] to-[#12121B] border border-[#E2E8F0] rounded-2xl relative overflow-hidden">
         <div className="space-y-1 relative z-10">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] uppercase font-bold tracking-widest text-[#8B5CF6] bg-[#8B5CF6]/10 px-2 py-0.5 rounded border border-[#8B5CF6]/20">
+            <span className="text-[10px] uppercase font-bold tracking-widest text-[#EF4444] bg-[#EF4444]/10 px-2 py-0.5 rounded border border-[#EF4444]/20">
               Interactive Engine
             </span>
             <span className="text-[10px] text-emerald-400 font-bold">
@@ -197,7 +197,7 @@ export const VisualizerPage: React.FC = () => {
           <h1 className="text-xl sm:text-2xl font-bold font-sans tracking-tight text-white">
             Algorithm Visualizer & Execution Trace
           </h1>
-          <p className="text-xs text-[#8E8EA0] font-sans max-w-xl">
+          <p className="text-xs text-[#64748B] font-sans max-w-xl">
             Step through real algorithm executions, inspect active pointers and memory states in real-time, and get Socratic AI assistance.
           </p>
         </div>
@@ -207,12 +207,12 @@ export const VisualizerPage: React.FC = () => {
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-3">
           <div className="relative flex-1 max-w-sm">
-            <Search className="w-4 h-4 text-[#5A5A6E] absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-[#94A3B8] absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search algorithms, data structures, tags..."
-              className="w-full bg-[#0D0D14] text-[#F4F4F6] text-xs pl-9 pr-3 py-2 rounded-xl border border-[#1C1C28] outline-none font-sans"
+              className="w-full bg-white text-[#0F172A] text-xs pl-9 pr-3 py-2 rounded-xl border border-[#E2E8F0] outline-none font-sans"
             />
           </div>
         </div>
@@ -225,8 +225,8 @@ export const VisualizerPage: React.FC = () => {
               onClick={() => setSelectedCategory(cat)}
               className={`text-xs px-3 py-1.5 rounded-xl whitespace-nowrap transition-all font-sans font-medium ${
                 selectedCategory === cat
-                  ? 'bg-[#8B5CF6] text-white shadow-md shadow-[#8B5CF6]/30 font-bold'
-                  : 'bg-[#0D0D14] text-[#8E8EA0] hover:text-[#F4F4F6] border border-[#1C1C28]'
+                  ? 'bg-[#EF4444] text-white shadow-md shadow-[#8B5CF6]/30 font-bold'
+                  : 'bg-white text-[#64748B] hover:text-[#0F172A] border border-[#E2E8F0]'
               }`}
             >
               {cat}
@@ -238,8 +238,8 @@ export const VisualizerPage: React.FC = () => {
       {/* Main Grid: Left Sidebar Selector (col-span-3) + Right Arena (col-span-9) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
         {/* Left: Algorithm Catalog List */}
-        <div className="lg:col-span-4 bg-[#0D0D14] border border-[#1C1C28] rounded-2xl p-4 flex flex-col gap-3 max-h-[780px] overflow-y-auto">
-          <div className="flex items-center justify-between text-xs text-[#8E8EA0] pb-2 border-b border-[#1C1C28]">
+        <div className="lg:col-span-4 bg-white border border-[#E2E8F0] rounded-2xl p-4 flex flex-col gap-3 max-h-[780px] overflow-y-auto">
+          <div className="flex items-center justify-between text-xs text-[#64748B] pb-2 border-b border-[#E2E8F0]">
             <span className="font-bold uppercase tracking-wider text-[10px]">
               Algorithms ({filteredAlgorithms.length})
             </span>
@@ -254,22 +254,22 @@ export const VisualizerPage: React.FC = () => {
                   onClick={() => handleSelectAlgo(algo)}
                   className={`w-full text-left p-3 rounded-xl border transition-all flex flex-col gap-1.5 ${
                     isSelected
-                      ? 'bg-[#8B5CF6]/15 border-[#8B5CF6] text-white shadow-md shadow-[#8B5CF6]/20'
-                      : 'bg-[#12121B] border-[#1C1C28] text-[#8E8EA0] hover:border-[#8B5CF6]/40 hover:text-[#F4F4F6]'
+                      ? 'bg-[#EF4444]/15 border-[#EF4444] text-white shadow-md shadow-[#8B5CF6]/20'
+                      : 'bg-[#F1F5F9] border-[#E2E8F0] text-[#64748B] hover:border-[#EF4444]/40 hover:text-[#0F172A]'
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold font-sans text-[#F4F4F6]">
+                    <span className="text-xs font-bold font-sans text-[#0F172A]">
                       {algo.name}
                     </span>
-                    <span className="text-[9px] uppercase font-bold text-[#A78BFA] bg-[#8B5CF6]/10 px-1.5 py-0.5 rounded">
+                    <span className="text-[9px] uppercase font-bold text-[#DC2626] bg-[#EF4444]/10 px-1.5 py-0.5 rounded">
                       {algo.category}
                     </span>
                   </div>
-                  <p className="text-[11px] text-[#8E8EA0] font-sans line-clamp-2">
+                  <p className="text-[11px] text-[#64748B] font-sans line-clamp-2">
                     {algo.description}
                   </p>
-                  <div className="flex items-center gap-2 pt-1 text-[10px] text-[#5A5A6E]">
+                  <div className="flex items-center gap-2 pt-1 text-[10px] text-[#94A3B8]">
                     <span>Avg: {algo.complexity.average}</span>
                     <span>·</span>
                     <span>Space: {algo.complexity.space}</span>
@@ -285,13 +285,13 @@ export const VisualizerPage: React.FC = () => {
           {selectedAlgo && (
             <>
               {/* Workspace Action Toolbar */}
-              <div className="flex flex-wrap items-center justify-between gap-3 bg-[#0D0D14] border border-[#1C1C28] px-4 py-2.5 rounded-2xl">
+              <div className="flex flex-wrap items-center justify-between gap-3 bg-white border border-[#E2E8F0] px-4 py-2.5 rounded-2xl">
                 <div className="flex items-center gap-2">
-                  <Layers className="w-4 h-4 text-[#8B5CF6]" />
+                  <Layers className="w-4 h-4 text-[#EF4444]" />
                   <span className="text-sm font-bold text-white font-sans">
                     {selectedAlgo.name}
                   </span>
-                  <span className="text-[10px] text-[#8E8EA0] hidden sm:inline">
+                  <span className="text-[10px] text-[#64748B] hidden sm:inline">
                     ({executionData?.total_steps ?? 0} Steps)
                   </span>
                 </div>
@@ -311,7 +311,7 @@ export const VisualizerPage: React.FC = () => {
                     size="sm"
                     onClick={() => runAlgorithm(selectedAlgo)}
                     leftIcon={<RotateCcw className="w-3.5 h-3.5" />}
-                    className="text-xs h-8 text-[#8E8EA0]"
+                    className="text-xs h-8 text-[#64748B]"
                   >
                     Reset
                   </Button>

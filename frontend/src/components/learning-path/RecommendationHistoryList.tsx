@@ -35,7 +35,7 @@ export const RecommendationHistoryList: React.FC<RecommendationHistoryListProps>
 
   if (loading) {
     return (
-      <div className="rounded-2xl border border-[#1C1C28] bg-[#0D0D14] p-5 space-y-3 animate-pulse">
+      <div className="rounded-2xl border border-[#E2E8F0] bg-white p-5 space-y-3 animate-pulse">
         {[...Array(3)].map((_, i) => (
           <div key={i} className="h-16 bg-[#161622] rounded-xl" />
         ))}
@@ -45,21 +45,21 @@ export const RecommendationHistoryList: React.FC<RecommendationHistoryListProps>
 
   if (history.length === 0) {
     return (
-      <div className="rounded-2xl border border-[#1C1C28] bg-[#0D0D14] p-8 text-center text-xs text-[#8E8EA0] font-mono">
-        <History className="w-8 h-8 text-[#5A5A6E] mx-auto mb-2" />
+      <div className="rounded-2xl border border-[#E2E8F0] bg-white p-8 text-center text-xs text-[#64748B] font-mono">
+        <History className="w-8 h-8 text-[#94A3B8] mx-auto mb-2" />
         No previous recommendation history yet. Complete problems to see adaptive transitions over time.
       </div>
     );
   }
 
   return (
-    <div className="rounded-2xl border border-[#1C1C28] bg-[#0D0D14] p-5">
-      <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#1C1C28]">
-        <h3 className="text-sm font-semibold text-[#F4F4F6] flex items-center gap-2">
-          <History className="w-4 h-4 text-[#8B5CF6]" />
+    <div className="rounded-2xl border border-[#E2E8F0] bg-white p-5">
+      <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#E2E8F0]">
+        <h3 className="text-sm font-semibold text-[#0F172A] flex items-center gap-2">
+          <History className="w-4 h-4 text-[#EF4444]" />
           <span>Adaptive Recommendation Timeline</span>
         </h3>
-        <span className="text-xs font-mono text-[#8E8EA0]">{history.length} records</span>
+        <span className="text-xs font-mono text-[#64748B]">{history.length} records</span>
       </div>
 
       <div className="space-y-3">
@@ -75,7 +75,7 @@ export const RecommendationHistoryList: React.FC<RecommendationHistoryListProps>
           return (
             <div
               key={item.id}
-              className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-[#141420] border border-[#1C1C28] hover:border-[#252538] transition-colors"
+              className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-[#141420] border border-[#E2E8F0] hover:border-[#252538] transition-colors"
             >
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
@@ -84,7 +84,7 @@ export const RecommendationHistoryList: React.FC<RecommendationHistoryListProps>
                   >
                     {badge.label}
                   </span>
-                  <span className="text-xs font-semibold text-[#F4F4F6]">
+                  <span className="text-xs font-semibold text-[#0F172A]">
                     {item.headline || item.concept_name}
                   </span>
                   {item.is_active && (
@@ -93,8 +93,8 @@ export const RecommendationHistoryList: React.FC<RecommendationHistoryListProps>
                     </span>
                   )}
                 </div>
-                <p className="text-xs text-[#8E8EA0] line-clamp-1">{item.explanation}</p>
-                <div className="flex items-center gap-3 text-[10px] font-mono text-[#5A5A6E]">
+                <p className="text-xs text-[#64748B] line-clamp-1">{item.explanation}</p>
+                <div className="flex items-center gap-3 text-[10px] font-mono text-[#94A3B8]">
                   <span>{date}</span>
                   {item.problem_title && <span>Problem: {item.problem_title}</span>}
                   <span>Diff: {item.recommended_difficulty}</span>
@@ -104,7 +104,7 @@ export const RecommendationHistoryList: React.FC<RecommendationHistoryListProps>
               {item.problem_id && (
                 <button
                   onClick={() => navigate(`/practice/${item.problem_id}`)}
-                  className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1C1C28] hover:bg-[#252538] text-xs font-mono text-[#C4C4D4] hover:text-white transition-colors"
+                  className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#F1F5F9] hover:bg-[#252538] text-xs font-mono text-[#C4C4D4] hover:text-[#0F172A] transition-colors"
                 >
                   <span>Solve</span>
                   <ArrowRight className="w-3 h-3" />

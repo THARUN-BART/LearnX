@@ -70,10 +70,10 @@ export const TopicDetailPage: React.FC = () => {
     <div
       key={prob.id}
       onClick={() => navigate(`/practice/${prob.id}`)}
-      className="p-4 rounded-xl bg-[#171722] hover:bg-[#1C1C2A] border border-[#232336] hover:border-[#8B5CF6]/50 transition-all flex items-center justify-between cursor-pointer group"
+      className="p-4 rounded-xl bg-[#F8FAFC] hover:bg-[#1C1C2A] border border-[#E2E8F0] hover:border-[#EF4444]/50 transition-all flex items-center justify-between cursor-pointer group"
     >
       <div className="space-y-1 min-w-0">
-        <div className="text-sm font-bold text-[#F5F5F7] group-hover:text-[#A78BFA] truncate">
+        <div className="text-sm font-bold text-[#0F172A] group-hover:text-[#DC2626] truncate">
           {prob.title}
         </div>
         <div className="flex items-center gap-2.5 text-xs">
@@ -83,7 +83,7 @@ export const TopicDetailPage: React.FC = () => {
           >
             {prob.difficulty}
           </Badge>
-          <span className="text-[#65657B] font-mono text-[11px]">{prob.progress_status || 'Not Started'}</span>
+          <span className="text-[#94A3B8] font-mono text-[11px]">{prob.progress_status || 'Not Started'}</span>
         </div>
       </div>
       <Button
@@ -104,13 +104,13 @@ export const TopicDetailPage: React.FC = () => {
     <div className="space-y-8 max-w-5xl mx-auto">
       <Link
         to="/roadmap"
-        className="inline-flex items-center gap-1.5 text-xs text-[#9292A3] hover:text-[#F5F5F7] font-mono"
+        className="inline-flex items-center gap-1.5 text-xs text-[#64748B] hover:text-[#0F172A] font-mono"
       >
         <ArrowLeft className="w-3.5 h-3.5" />
         Back to Roadmap
       </Link>
 
-      <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-[#171722] via-[#1A1A28] to-[#101019] border border-[#232336] space-y-4">
+      <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-[#171722] via-[#1A1A28] to-[#101019] border border-[#E2E8F0] space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <Badge variant={topic.difficulty === 'Easy' ? 'easy' : topic.difficulty === 'Hard' ? 'hard' : 'medium'}>
@@ -120,17 +120,17 @@ export const TopicDetailPage: React.FC = () => {
               ~{topic.estimatedHours} Hours
             </Badge>
           </div>
-          <span className="text-xs font-mono text-[#A78BFA] bg-[#8B5CF6]/10 px-3 py-1 rounded-full border border-[#8B5CF6]/20">
+          <span className="text-xs font-mono text-[#DC2626] bg-[#EF4444]/10 px-3 py-1 rounded-full border border-[#EF4444]/20">
             {completedProbs} / {totalProbs} Solved ({percent}%)
           </span>
         </div>
-        <h1 className="text-2xl sm:text-4xl font-bold tracking-tight text-[#F5F5F7] font-mono">{topic.title}</h1>
-        <p className="text-sm text-[#9292A3] leading-relaxed max-w-3xl">{topic.description}</p>
+        <h1 className="text-2xl sm:text-4xl font-bold tracking-tight text-[#0F172A] font-mono">{topic.title}</h1>
+        <p className="text-sm text-[#64748B] leading-relaxed max-w-3xl">{topic.description}</p>
         {prereqs.length > 0 && (
-          <div className="flex items-center gap-2 pt-2 text-xs text-[#65657B]">
-            <span className="font-semibold text-[#9292A3]">Prerequisites:</span>
+          <div className="flex items-center gap-2 pt-2 text-xs text-[#94A3B8]">
+            <span className="font-semibold text-[#64748B]">Prerequisites:</span>
             {prereqs.map((p, i) => (
-              <span key={i} className="px-2 py-0.5 rounded bg-[#101019] text-[#9292A3] border border-[#232336] font-mono text-[11px]">
+              <span key={i} className="px-2 py-0.5 rounded bg-white text-[#64748B] border border-[#E2E8F0] font-mono text-[11px]">
                 {p}
               </span>
             ))}
@@ -141,34 +141,34 @@ export const TopicDetailPage: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-8 space-y-6">
           <Card className="p-6 space-y-4">
-            <div className="flex items-center gap-2 text-[#A78BFA] font-mono text-xs font-semibold">
-              <BookOpen className="w-4 h-4 text-[#8B5CF6]" />
+            <div className="flex items-center gap-2 text-[#DC2626] font-mono text-xs font-semibold">
+              <BookOpen className="w-4 h-4 text-[#EF4444]" />
               Core Conceptual Mechanics
             </div>
-            <p className="text-sm text-[#F5F5F7] leading-relaxed">{topic.explanation}</p>
+            <p className="text-sm text-[#0F172A] leading-relaxed">{topic.explanation}</p>
           </Card>
 
           <div className="space-y-6">
-            <h3 className="text-base font-bold text-[#F5F5F7] font-mono flex items-center gap-2">
-              <Code2 className="w-4 h-4 text-[#8B5CF6]" />
+            <h3 className="text-base font-bold text-[#0F172A] font-mono flex items-center gap-2">
+              <Code2 className="w-4 h-4 text-[#EF4444]" />
               Practice Problems ({problems.length})
             </h3>
             {grouped.map(({ sub, items }, idx) => (
               <div key={sub?.id || `group-${idx}`} className="space-y-3">
                 {sub && (
-                  <h4 className="text-xs font-mono text-[#A78BFA] uppercase tracking-wider">
+                  <h4 className="text-xs font-mono text-[#DC2626] uppercase tracking-wider">
                     {sub.title} · {items.length || sub.problem_count} problems
                   </h4>
                 )}
                 {items.length === 0 && sub && (
-                  <p className="text-xs text-[#65657B] font-mono">No problems loaded for this subtopic yet.</p>
+                  <p className="text-xs text-[#94A3B8] font-mono">No problems loaded for this subtopic yet.</p>
                 )}
                 {items.map(renderProblem)}
               </div>
             ))}
             {ungrouped.length > 0 && (
               <div className="space-y-3">
-                <h4 className="text-xs font-mono text-[#A78BFA] uppercase tracking-wider">Other</h4>
+                <h4 className="text-xs font-mono text-[#DC2626] uppercase tracking-wider">Other</h4>
                 {ungrouped.map(renderProblem)}
               </div>
             )}
@@ -177,12 +177,12 @@ export const TopicDetailPage: React.FC = () => {
 
         <div className="lg:col-span-4 space-y-6">
           <Card className="p-5 space-y-4">
-            <h4 className="text-xs font-bold text-[#F5F5F7] uppercase tracking-wider font-mono">
+            <h4 className="text-xs font-bold text-[#0F172A] uppercase tracking-wider font-mono">
               Key Subtopics Checklist
             </h4>
             <div className="space-y-2.5">
               {(subtopics.length ? subtopics.map((s) => s.title) : topic.subtopics || []).map((sub, i) => (
-                <div key={i} className="flex items-center gap-2.5 text-xs text-[#9292A3]">
+                <div key={i} className="flex items-center gap-2.5 text-xs text-[#64748B]">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                   <span>{sub}</span>
                 </div>

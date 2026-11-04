@@ -13,9 +13,9 @@ export const LearningMetricCards: React.FC<Props> = ({ summary }) => {
       value: summary.total_concepts_practised,
       subtext: `${summary.mastered_concepts} mastered, ${summary.struggling_concepts} focusing`,
       icon: Brain,
-      gradient: 'from-[#8B5CF6]/20 to-[#6366F1]/10',
-      border: 'border-[#8B5CF6]/30',
-      textColor: 'text-[#8B5CF6]',
+      gradient: 'from-[#EF4444]/20 to-[#B91C1C]/10',
+      border: 'border-[#EF4444]/30',
+      textColor: 'text-[#EF4444]',
     },
     {
       label: 'Independent Solves',
@@ -71,10 +71,10 @@ export const LearningMetricCards: React.FC<Props> = ({ summary }) => {
         return (
           <div
             key={i}
-            className={`p-5 rounded-2xl bg-[#0D0D14] border ${c.border} bg-gradient-to-br ${c.gradient} flex flex-col justify-between transition-all duration-200 hover:scale-[1.01]`}
+            className={`p-5 rounded-2xl bg-white border ${c.border} bg-gradient-to-br ${c.gradient} flex flex-col justify-between transition-all duration-200 hover:scale-[1.01]`}
           >
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-mono uppercase tracking-wider text-[#8E8EA0]">
+              <span className="text-xs font-mono uppercase tracking-wider text-[#64748B]">
                 {c.label}
               </span>
               <div className={`p-2 rounded-xl bg-[#161622] ${c.textColor}`}>
@@ -82,10 +82,10 @@ export const LearningMetricCards: React.FC<Props> = ({ summary }) => {
               </div>
             </div>
             <div>
-              <div className="text-3xl font-extrabold text-[#F4F4F6] font-mono tracking-tight">
+              <div className="text-3xl font-extrabold text-[#0F172A] font-mono tracking-tight">
                 {c.value}
               </div>
-              <p className="text-xs text-[#8E8EA0] mt-1">{c.subtext}</p>
+              <p className="text-xs text-[#64748B] mt-1">{c.subtext}</p>
             </div>
           </div>
         );

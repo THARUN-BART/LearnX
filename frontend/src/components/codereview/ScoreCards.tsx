@@ -28,38 +28,38 @@ export const ScoreCards: React.FC<ScoreCardsProps> = ({ scores }) => {
       </div>
 
       {/* Readability */}
-      <div className="p-4 rounded-2xl border border-[#1C1C28] bg-[#12121B] flex flex-col justify-between">
-        <div className="flex items-center justify-between text-[#8E8EA0]">
+      <div className="p-4 rounded-2xl border border-[#E2E8F0] bg-[#F1F5F9] flex flex-col justify-between">
+        <div className="flex items-center justify-between text-[#64748B]">
           <span className="text-[10px] uppercase font-bold tracking-wider">Readability</span>
           <CheckCircle2 className="w-4 h-4 text-blue-400" />
         </div>
         <div className="mt-2 flex items-baseline gap-1">
           <span className="text-2xl font-bold font-sans text-blue-400">{scores.readability}</span>
-          <span className="text-xs text-[#5A5A6E]">/ 100</span>
+          <span className="text-xs text-[#94A3B8]">/ 100</span>
         </div>
       </div>
 
       {/* Efficiency */}
-      <div className="p-4 rounded-2xl border border-[#1C1C28] bg-[#12121B] flex flex-col justify-between">
-        <div className="flex items-center justify-between text-[#8E8EA0]">
+      <div className="p-4 rounded-2xl border border-[#E2E8F0] bg-[#F1F5F9] flex flex-col justify-between">
+        <div className="flex items-center justify-between text-[#64748B]">
           <span className="text-[10px] uppercase font-bold tracking-wider">Efficiency</span>
           <Zap className="w-4 h-4 text-amber-400" />
         </div>
         <div className="mt-2 flex items-baseline gap-1">
           <span className="text-2xl font-bold font-sans text-amber-400">{scores.efficiency}</span>
-          <span className="text-xs text-[#5A5A6E]">/ 100</span>
+          <span className="text-xs text-[#94A3B8]">/ 100</span>
         </div>
       </div>
 
       {/* Maintainability */}
-      <div className="p-4 rounded-2xl border border-[#1C1C28] bg-[#12121B] flex flex-col justify-between">
-        <div className="flex items-center justify-between text-[#8E8EA0]">
+      <div className="p-4 rounded-2xl border border-[#E2E8F0] bg-[#F1F5F9] flex flex-col justify-between">
+        <div className="flex items-center justify-between text-[#64748B]">
           <span className="text-[10px] uppercase font-bold tracking-wider">Maintainability</span>
-          <ShieldCheck className="w-4 h-4 text-[#A78BFA]" />
+          <ShieldCheck className="w-4 h-4 text-[#DC2626]" />
         </div>
         <div className="mt-2 flex items-baseline gap-1">
-          <span className="text-2xl font-bold font-sans text-[#A78BFA]">{scores.maintainability}</span>
-          <span className="text-xs text-[#5A5A6E]">/ 100</span>
+          <span className="text-2xl font-bold font-sans text-[#DC2626]">{scores.maintainability}</span>
+          <span className="text-xs text-[#94A3B8]">/ 100</span>
         </div>
       </div>
     </div>

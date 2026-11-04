@@ -47,20 +47,20 @@ export const RoadmapPage: React.FC = () => {
       {/* Header & Stats Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#F5F5F7] font-mono">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#0F172A] font-mono">
             DSA Mastery Roadmap
           </h1>
-          <p className="text-xs text-[#9292A3] mt-1">
+          <p className="text-xs text-[#64748B] mt-1">
             Official Striver A2Z sheet — {topics.length} pillars with live progress from your account.
           </p>
         </div>
 
         {/* Milestone Summary Pill */}
-        <div className="flex items-center gap-3 bg-[#101019] p-2 rounded-xl border border-[#232336] text-xs font-mono">
+        <div className="flex items-center gap-3 bg-white p-2 rounded-xl border border-[#E2E8F0] text-xs font-mono">
           <div className="px-3 py-1 bg-emerald-500/10 text-emerald-400 rounded-lg border border-emerald-500/20">
             {completedCount} Completed
           </div>
-          <div className="px-3 py-1 bg-[#8B5CF6]/10 text-[#A78BFA] rounded-lg border border-[#8B5CF6]/20">
+          <div className="px-3 py-1 bg-[#EF4444]/10 text-[#DC2626] rounded-lg border border-[#EF4444]/20">
             {inProgressCount} In Progress
           </div>
           <button
@@ -73,25 +73,25 @@ export const RoadmapPage: React.FC = () => {
       </div>
 
       {/* Filter toolbar */}
-      <div className="flex items-center justify-between bg-[#171722] p-3 rounded-xl border border-[#232336]">
+      <div className="flex items-center justify-between bg-[#F8FAFC] p-3 rounded-xl border border-[#E2E8F0]">
         <div className="flex items-center gap-2">
-          <Filter className="w-4 h-4 text-[#9292A3]" />
-          <span className="text-xs text-[#9292A3] font-medium hidden sm:inline">Filter Difficulty:</span>
+          <Filter className="w-4 h-4 text-[#64748B]" />
+          <span className="text-xs text-[#64748B] font-medium hidden sm:inline">Filter Difficulty:</span>
           {['all', 'easy', 'medium', 'hard'].map((diff) => (
             <button
               key={diff}
               onClick={() => setFilterDifficulty(diff)}
               className={`px-3 py-1 rounded-lg text-xs font-mono capitalize transition-all ${
                 filterDifficulty === diff
-                  ? 'bg-[#8B5CF6] text-white shadow-sm'
-                  : 'bg-[#101019] text-[#9292A3] hover:text-white border border-[#232336]'
+                  ? 'bg-[#EF4444] text-white shadow-sm'
+                  : 'bg-white text-[#64748B] hover:text-[#0F172A] border border-[#E2E8F0]'
               }`}
             >
               {diff}
             </button>
           ))}
         </div>
-        <span className="text-xs font-mono text-[#65657B]">
+        <span className="text-xs font-mono text-[#94A3B8]">
           Showing {filteredTopics.length} of {topics.length} Pillars
         </span>
       </div>
@@ -111,15 +111,15 @@ export const RoadmapPage: React.FC = () => {
               onClick={() => {
                 navigate(`/roadmap/${topic.slug || topic.id}`);
               }}
-              className={`p-6 flex flex-col justify-between transition-all duration-200 hover:border-[#8B5CF6]/50 hover:bg-[#1A1A28] cursor-pointer ${
-                isInProgress ? 'border-[#8B5CF6]/40 glow-purple' : ''
+              className={`p-6 flex flex-col justify-between transition-all duration-200 hover:border-[#EF4444]/50 hover:bg-[#1A1A28] cursor-pointer ${
+                isInProgress ? 'border-[#EF4444]/40 glow-purple' : ''
               }`}
             >
               <div className="space-y-3">
                 {/* Status pill & Difficulty */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-mono text-[#65657B] font-bold">
+                    <span className="text-xs font-mono text-[#94A3B8] font-bold">
                       #{String(topic.topic_order || index + 1).padStart(2, '0')}
                     </span>
                     <Badge
@@ -150,10 +150,10 @@ export const RoadmapPage: React.FC = () => {
 
                 {/* Title & Description */}
                 <div>
-                  <h3 className="text-base font-bold text-[#F5F5F7] font-mono group-hover:text-[#A78BFA] transition-colors">
+                  <h3 className="text-base font-bold text-[#0F172A] font-mono group-hover:text-[#DC2626] transition-colors">
                     {topic.title}
                   </h3>
-                  <p className="text-xs text-[#9292A3] mt-1.5 leading-relaxed line-clamp-2">
+                  <p className="text-xs text-[#64748B] mt-1.5 leading-relaxed line-clamp-2">
                     {topic.description}
                   </p>
                 </div>
@@ -163,13 +163,13 @@ export const RoadmapPage: React.FC = () => {
                   {(topic.subtopics || []).slice(0, 2).map((sub, i) => (
                     <span
                       key={i}
-                      className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#101019] text-[#9292A3] border border-[#232336]"
+                      className="text-[10px] font-mono px-2 py-0.5 rounded bg-white text-[#64748B] border border-[#E2E8F0]"
                     >
                       {sub}
                     </span>
                   ))}
                   {(topic.subtopics || []).length > 2 && (
-                    <span className="text-[10px] font-mono text-[#65657B] px-1 py-0.5">
+                    <span className="text-[10px] font-mono text-[#94A3B8] px-1 py-0.5">
                       +{(topic.subtopics || []).length - 2}
                     </span>
                   )}
@@ -177,17 +177,17 @@ export const RoadmapPage: React.FC = () => {
               </div>
 
               {/* Progress Bar & Footer */}
-              <div className="pt-5 mt-4 border-t border-[#232336] space-y-2">
+              <div className="pt-5 mt-4 border-t border-[#E2E8F0] space-y-2">
                 <div className="flex justify-between text-xs font-mono">
-                  <span className="text-[#9292A3]">
+                  <span className="text-[#64748B]">
                     {completedProbs} / {totalProbs} Solved
                   </span>
-                  <span className="text-[#F5F5F7] font-semibold">{percent}%</span>
+                  <span className="text-[#0F172A] font-semibold">{percent}%</span>
                 </div>
-                <div className="w-full bg-[#101019] h-1.5 rounded-full overflow-hidden">
+                <div className="w-full bg-white h-1.5 rounded-full overflow-hidden">
                   <div
                     className={`h-full transition-all duration-300 ${
-                      isCompleted ? 'bg-emerald-500' : 'bg-[#8B5CF6]'
+                      isCompleted ? 'bg-emerald-500' : 'bg-[#EF4444]'
                     }`}
                     style={{ width: `${percent}%` }}
                   />

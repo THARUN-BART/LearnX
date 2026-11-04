@@ -20,13 +20,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full flex flex-col gap-1.5">
         {label && (
-          <label htmlFor={inputId} className="text-xs font-medium text-[#9292A3]">
+          <label htmlFor={inputId} className="text-xs font-medium text-[#64748B]">
             {label}
           </label>
         )}
         <div className="relative flex items-center">
           {leftIcon && (
-            <div className="absolute left-3.5 text-[#9292A3] pointer-events-none flex items-center">
+            <div className="absolute left-3.5 text-[#64748B] pointer-events-none flex items-center">
               {leftIcon}
             </div>
           )}
@@ -36,8 +36,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             type={resolvedType}
             className={twMerge(
               clsx(
-                'w-full bg-[#101019] text-[#F5F5F7] placeholder-[#65657B] text-sm rounded-xl px-4 py-2.5 border border-[#232336] transition-all duration-200 outline-none',
-                'focus:border-[#8B5CF6] focus:ring-1 focus:ring-[#8B5CF6]/50',
+                'w-full bg-white text-[#0F172A] placeholder-[#94A3B8] text-sm rounded-xl px-4 py-2.5 border border-[#E2E8F0] transition-all duration-200 outline-none',
+                'focus:border-[#EF4444] focus:ring-1 focus:ring-[#EF4444]/40',
                 leftIcon && 'pl-10',
                 isPassword && 'pr-11',
                 error && 'border-red-500/80 focus:border-red-500 focus:ring-red-500/30',
@@ -51,14 +51,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               type="button"
               tabIndex={-1}
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3.5 text-[#9292A3] hover:text-[#F5F5F7] p-1 transition-colors"
+              className="absolute right-3.5 text-[#64748B] hover:text-[#0F172A] p-1 transition-colors"
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           )}
         </div>
         {error && <span className="text-xs text-red-400 font-medium">{error}</span>}
-        {hint && !error && <span className="text-xs text-[#65657B]">{hint}</span>}
+        {hint && !error && <span className="text-xs text-[#94A3B8]">{hint}</span>}
       </div>
     );
   }

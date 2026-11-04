@@ -40,7 +40,7 @@ export const DashboardLayout: React.FC = () => {
   const { title, subtitle } = getPageInfo();
 
   return (
-    <div className="min-h-screen bg-[#07070B] flex text-[#F4F4F6] relative selection:bg-[#8B5CF6]/30">
+    <div className="min-h-screen bg-[#F8FAFC] flex text-[#0F172A] relative selection:bg-[#EF4444]/20">
       <Sidebar
         mobileOpen={mobileSidebarOpen}
         onCloseMobile={() => setMobileSidebarOpen(false)}

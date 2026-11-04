@@ -27,14 +27,14 @@ export const IssueList: React.FC<IssueListProps> = ({ issues }) => {
   };
 
   return (
-    <div className="bg-[#0D0D14] border border-[#1C1C28] rounded-2xl p-5 flex flex-col gap-4 font-mono">
+    <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5 flex flex-col gap-4 font-mono">
       {/* Header and Filter Tabs */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#1C1C28] pb-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#E2E8F0] pb-3">
         <div className="flex items-center gap-2">
           <span className="text-sm font-bold text-white font-sans">
             Detected Code Issues & Warnings
           </span>
-          <span className="text-[10px] text-[#A78BFA] bg-[#8B5CF6]/10 px-2 py-0.5 rounded border border-[#8B5CF6]/20">
+          <span className="text-[10px] text-[#DC2626] bg-[#EF4444]/10 px-2 py-0.5 rounded border border-[#EF4444]/20">
             {issues.length} Total
           </span>
         </div>
@@ -46,8 +46,8 @@ export const IssueList: React.FC<IssueListProps> = ({ issues }) => {
               onClick={() => setFilter(f)}
               className={`px-2.5 py-1 rounded-lg capitalize transition-colors ${
                 filter === f
-                  ? 'bg-[#8B5CF6] text-white font-bold'
-                  : 'bg-[#12121B] text-[#8E8EA0] hover:text-[#F4F4F6] border border-[#1C1C28]'
+                  ? 'bg-[#EF4444] text-white font-bold'
+                  : 'bg-[#F1F5F9] text-[#64748B] hover:text-[#0F172A] border border-[#E2E8F0]'
               }`}
             >
               {f}
@@ -67,18 +67,18 @@ export const IssueList: React.FC<IssueListProps> = ({ issues }) => {
           filteredIssues.map((iss) => (
             <div
               key={iss.id}
-              className="p-4 bg-[#12121B] border border-[#1C1C28] rounded-xl flex flex-col gap-2.5"
+              className="p-4 bg-[#F1F5F9] border border-[#E2E8F0] rounded-xl flex flex-col gap-2.5"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-start gap-2.5">
                   {getSeverityIcon(iss.severity)}
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-[#F4F4F6] font-sans">
+                      <span className="text-xs font-bold text-[#0F172A] font-sans">
                         {iss.title}
                       </span>
                       {iss.line_number > 0 && (
-                        <span className="text-[10px] text-[#8E8EA0] bg-[#181824] px-1.5 py-0.2 rounded border border-[#1C1C28]">
+                        <span className="text-[10px] text-[#64748B] bg-[#181824] px-1.5 py-0.2 rounded border border-[#E2E8F0]">
                           Line {iss.line_number}
                         </span>
                       )}
@@ -97,7 +97,7 @@ export const IssueList: React.FC<IssueListProps> = ({ issues }) => {
                   >
                     {iss.severity}
                   </span>
-                  <span className="text-[9px] text-[#5A5A6E] capitalize font-mono">
+                  <span className="text-[9px] text-[#94A3B8] capitalize font-mono">
                     {iss.source_type.replace(/_/g, ' ')}
                   </span>
                 </div>
@@ -105,14 +105,14 @@ export const IssueList: React.FC<IssueListProps> = ({ issues }) => {
 
               {/* Code Snippet */}
               {iss.code_snippet && (
-                <pre className="p-2.5 bg-[#07070B] border border-[#1C1C28] rounded-lg text-[11px] text-[#E2E8F0] overflow-x-auto whitespace-pre-wrap">
+                <pre className="p-2.5 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg text-[11px] text-[#E2E8F0] overflow-x-auto whitespace-pre-wrap">
                   {iss.code_snippet}
                 </pre>
               )}
 
               {/* Recommendation */}
-              <div className="p-2.5 bg-[#8B5CF6]/5 border border-[#8B5CF6]/20 rounded-lg text-xs font-sans text-[#D8B4FE]">
-                <span className="font-bold text-[#A78BFA]">Recommendation: </span>
+              <div className="p-2.5 bg-[#EF4444]/5 border border-[#EF4444]/20 rounded-lg text-xs font-sans text-[#D8B4FE]">
+                <span className="font-bold text-[#DC2626]">Recommendation: </span>
                 {iss.recommendation}
               </div>
             </div>

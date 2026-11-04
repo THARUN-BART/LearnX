@@ -18,18 +18,18 @@ interface Props {
 export const MistakeCorrectionChart: React.FC<Props> = ({ data }) => {
   if (!data || data.length === 0) {
     return (
-      <div className="h-64 flex items-center justify-center text-xs text-[#8E8EA0] italic bg-[#0D0D14] rounded-2xl border border-[#1C1C28]">
+      <div className="h-64 flex items-center justify-center text-xs text-[#64748B] italic bg-white rounded-2xl border border-[#E2E8F0]">
         No mistake telemetry available.
       </div>
     );
   }
 
   return (
-    <div className="p-5 rounded-2xl bg-[#0D0D14] border border-[#1C1C28]">
+    <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0]">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-sm font-bold text-[#F4F4F6]">Mistake Detection vs Resolution</h3>
-          <p className="text-xs text-[#8E8EA0]">Monitoring whether errors are successfully corrected</p>
+          <h3 className="text-sm font-bold text-[#0F172A]">Mistake Detection vs Resolution</h3>
+          <p className="text-xs text-[#64748B]">Monitoring whether errors are successfully corrected</p>
         </div>
       </div>
 
@@ -55,7 +55,7 @@ export const MistakeCorrectionChart: React.FC<Props> = ({ data }) => {
             />
             <Legend
               wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }}
-              formatter={(val) => <span className="text-[#8E8EA0] capitalize">{val}</span>}
+              formatter={(val) => <span className="text-[#64748B] capitalize">{val}</span>}
             />
             <Bar
               dataKey="mistakes_detected"

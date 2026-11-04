@@ -19,7 +19,7 @@ export const LearningTimeline: React.FC<Props> = ({ events, loading }) => {
     return (
       <div className="space-y-3">
         {[1, 2, 3].map((n) => (
-          <div key={n} className="h-12 bg-[#12121B] rounded-xl animate-pulse" />
+          <div key={n} className="h-12 bg-[#F1F5F9] rounded-xl animate-pulse" />
         ))}
       </div>
     );
@@ -27,7 +27,7 @@ export const LearningTimeline: React.FC<Props> = ({ events, loading }) => {
 
   if (!events || events.length === 0) {
     return (
-      <p className="text-xs text-[#8E8EA0] italic py-4 text-center">
+      <p className="text-xs text-[#64748B] italic py-4 text-center">
         No learning activity events logged yet.
       </p>
     );
@@ -72,21 +72,21 @@ export const LearningTimeline: React.FC<Props> = ({ events, loading }) => {
   };
 
   return (
-    <div className="relative pl-6 space-y-4 before:content-[''] before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-[#1C1C28]">
+    <div className="relative pl-6 space-y-4 before:content-[''] before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-[#F1F5F9]">
       {events.map((e) => (
         <div key={e.id} className="relative flex items-start gap-3 text-xs">
-          <div className="absolute -left-6 mt-0.5 w-5 h-5 rounded-full bg-[#12121B] border border-[#1C1C28] flex items-center justify-center">
+          <div className="absolute -left-6 mt-0.5 w-5 h-5 rounded-full bg-[#F1F5F9] border border-[#E2E8F0] flex items-center justify-center">
             {getEventIcon(e.event_type)}
           </div>
-          <div className="flex-1 bg-[#12121B] p-3 rounded-xl border border-[#1C1C28]">
+          <div className="flex-1 bg-[#F1F5F9] p-3 rounded-xl border border-[#E2E8F0]">
             <div className="flex items-center justify-between">
-              <span className="font-medium text-[#F4F4F6]">{getEventLabel(e)}</span>
-              <span className="text-[10px] text-[#5A5A6E] font-mono">
+              <span className="font-medium text-[#0F172A]">{getEventLabel(e)}</span>
+              <span className="text-[10px] text-[#94A3B8] font-mono">
                 {new Date(e.occurred_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </span>
             </div>
             {e.concept_key && (
-              <span className="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-mono bg-[#161622] text-[#8B5CF6]">
+              <span className="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-mono bg-[#161622] text-[#EF4444]">
                 {e.concept_key}
               </span>
             )}

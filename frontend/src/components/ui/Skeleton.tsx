@@ -1,7 +1,7 @@
 import React from 'react';
 
 export const Skeleton: React.FC<{ className?: string }> = ({ className = '' }) => (
-  <div className={`animate-pulse rounded-xl bg-[#181824] border border-[#1C1C28] ${className}`} />
+  <div className={`animate-pulse rounded-xl bg-[#181824] border border-[#E2E8F0] ${className}`} />
 );
 
 export const PageSkeleton: React.FC<{ rows?: number }> = ({ rows = 4 }) => (

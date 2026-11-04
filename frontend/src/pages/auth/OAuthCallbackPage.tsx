@@ -61,11 +61,11 @@ export const OAuthCallbackPage: React.FC = () => {
   }, [searchParams, navigate, updateLocalUser]);
 
   return (
-    <div className="min-h-screen bg-[#08080D] flex flex-col items-center justify-center gap-3 text-[#9292A3]">
-      <Loader2 className="w-8 h-8 animate-spin text-[#8B5CF6]" />
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center gap-3 text-[#64748B]">
+      <Loader2 className="w-8 h-8 animate-spin text-[#EF4444]" />
       <div className="text-center space-y-1">
-        <p className="text-sm font-medium text-[#F5F5F7]">Finalizing Secure Handshake</p>
-        <p className="text-xs font-mono text-[#65657B]">Connecting with Supabase Auth & PostgreSQL...</p>
+        <p className="text-sm font-medium text-[#0F172A]">Finalizing Secure Handshake</p>
+        <p className="text-xs font-mono text-[#94A3B8]">Connecting with Supabase Auth & PostgreSQL...</p>
       </div>
     </div>
   );

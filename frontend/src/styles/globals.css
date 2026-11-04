@@ -2,19 +2,19 @@
 
 @layer base {
   :root {
-    --bg-primary: #07070B;
-    --bg-secondary: #0D0D14;
-    --card-surface: #12121B;
-    --card-surface-hover: #181824;
-    --card-surface-elevated: #1E1E2C;
-    --primary-accent: #8B5CF6;
-    --secondary-accent: #6366F1;
-    --highlight: #A78BFA;
-    --text-primary: #F4F4F6;
-    --text-secondary: #8E8EA0;
-    --text-muted: #5A5A6E;
-    --border-subtle: #1C1C28;
-    --border-hover: #2D2D3E;
+    --bg-primary: #F8FAFC;
+    --bg-secondary: #FFFFFF;
+    --card-surface: #FFFFFF;
+    --card-surface-hover: #F1F5F9;
+    --card-surface-elevated: #FFFFFF;
+    --primary-accent: #EF4444;    /* Vibrant Red */
+    --secondary-accent: #DC2626;  /* Deep Crimson Red */
+    --highlight: #F87171;         /* Bright Coral Red */
+    --text-primary: #0F172A;      /* Slate-900 */
+    --text-secondary: #475569;    /* Slate-600 */
+    --text-muted: #94A3B8;        /* Slate-400 */
+    --border-subtle: #E2E8F0;     /* Slate-200 */
+    --border-hover: #CBD5E1;      /* Slate-300 */
     --success: #10B981;
     --warning: #F59E0B;
     --error: #EF4444;
@@ -32,6 +32,7 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Space Grotesk', -apple-system, sans-serif;
     letter-spacing: -0.03em;
+    color: #0F172A;
   }
 
   code, pre, .font-mono {
@@ -40,29 +41,170 @@
   }
 }
 
-/* Technical grid patterns & hairline textures */
+/* ==========================================================
+   LIGHT MODE & RED ACCENT COMPREHENSIVE OVERRIDES
+   ========================================================== */
+
+/* 1. Global Page and Surface Backgrounds */
+.bg-\[\#07070B\], .bg-\[\#07070b\],
+.bg-\[\#08080D\], .bg-\[\#08080d\],
+.bg-\[\#08080C\], .bg-\[\#08080c\],
+.bg-\[\#050508\], .bg-\[\#0A0A10\], .bg-\[\#0a0a10\] {
+  background-color: #F8FAFC !important;
+}
+
+.bg-\[\#0D0D14\], .bg-\[\#0d0d14\],
+.bg-\[\#101019\], .bg-\[\#12121B\], .bg-\[\#12121b\],
+.bg-\[\#12121C\], .bg-\[\#12121D\],
+.bg-\[\#171722\], .bg-\[\#161622\], .bg-\[\#161626\],
+.bg-\[\#1A1A27\], .bg-\[\#1a1a27\], .bg-\[\#1A1A28\],
+.bg-\[\#1C1C28\], .bg-\[\#1c1c28\], .bg-\[\#1C1C2B\],
+.bg-\[\#181824\], .bg-\[\#14141E\],
+.bg-\[\#1E1E2C\], .bg-\[\#1e1e2c\], .bg-\[\#1E1E2D\] {
+  background-color: #FFFFFF !important;
+}
+
+/* Hover background states */
+.hover\:bg-\[\#12121B\]:hover,
+.hover\:bg-\[\#181824\]:hover,
+.hover\:bg-\[\#1A1A28\]:hover,
+.hover\:bg-\[\#1B1B26\]:hover,
+.hover\:bg-\[\#1C1C28\]:hover,
+.hover\:bg-\[\#14141E\]:hover,
+.hover\:bg-\[\#1E1E2D\]:hover,
+.hover\:bg-\[\#1C1C2C\]:hover {
+  background-color: #F1F5F9 !important;
+}
+
+/* 2. Global Borders (Dark lines -> Clean Slate lines) */
+.border-\[\#1C1C28\], .border-\[\#1c1c28\],
+.border-\[\#232336\], .border-\[\#232338\],
+.border-\[\#27273F\], .border-\[\#2B2B3C\],
+.border-\[\#2D2D3E\], .border-\[\#2E2E48\],
+.border-\[\#373752\], .border-\[\#373752\]\/40 {
+  border-color: #E2E8F0 !important;
+}
+
+/* 3. Global Text Overrides (High-contrast Slate readability) */
+.text-\[\#F4F4F6\], .text-\[\#f4f4f6\],
+.text-\[\#F5F5F7\], .text-\[\#f5f5f7\],
+.text-\[\#CBD5E1\], .text-\[\#E2E8F0\],
+.text-\[\#D1D1DE\] {
+  color: #0F172A !important;
+}
+
+.text-\[\#8E8EA0\], .text-\[\#8e8ea0\],
+.text-\[\#9292A3\], .text-\[\#94A3B8\],
+.text-\[\#A1A1B5\] {
+  color: #475569 !important;
+}
+
+.text-\[\#5A5A6E\], .text-\[\#65657B\] {
+  color: #64748B !important;
+}
+
+/* 4. RED COLOR ACCENT (Replacing Violet & Purple) */
+/* Primary Red Backgrounds */
+.bg-\[\#8B5CF6\], .bg-\[\#8b5cf6\],
+.bg-\[\#7C3AED\], .bg-\[\#7c3aed\],
+.bg-\[\#6366F1\], .bg-\[\#6366f1\],
+.bg-purple-600, .bg-purple-500,
+.bg-violet-600, .bg-violet-500,
+.bg-indigo-600, .bg-indigo-500 {
+  background-color: #EF4444 !important;
+}
+
+.hover\:bg-\[\#8B5CF6\]:hover,
+.hover\:bg-\[\#7C3AED\]:hover,
+.hover\:bg-purple-700:hover,
+.hover\:bg-violet-700:hover,
+.hover\:bg-indigo-700:hover {
+  background-color: #DC2626 !important;
+}
+
+/* Red Text Highlights */
+.text-\[\#8B5CF6\], .text-\[\#8b5cf6\],
+.text-\[\#A78BFA\], .text-\[\#a78bfa\],
+.text-\[\#6366F1\], .text-\[\#6366f1\],
+.text-\[\#C4B5FD\], .text-\[\#E9D5FF\],
+.text-\[\#D8B4FE\], .text-\[\#818CF8\],
+.text-purple-400, .text-purple-500, .text-purple-600,
+.text-violet-400, .text-violet-500, .text-violet-600,
+.text-indigo-400, .text-indigo-500, .text-indigo-600 {
+  color: #EF4444 !important;
+}
+
+/* Red Borders */
+.border-\[\#8B5CF6\], .border-\[\#8b5cf6\],
+.border-\[\#6366F1\], .border-\[\#6366f1\],
+.border-purple-500, .border-violet-500, .border-indigo-500 {
+  border-color: #EF4444 !important;
+}
+
+.border-\[\#8B5CF6\]\/20, .border-\[\#8B5CF6\]\/30, .border-\[\#8B5CF6\]\/40,
+.border-\[\#6366F1\]\/20, .border-\[\#6366F1\]\/30 {
+  border-color: rgba(239, 68, 68, 0.25) !important;
+}
+
+/* Red Soft Backgrounds (Pills / Badges / Containers) */
+.bg-\[\#8B5CF6\]\/10, .bg-\[\#8B5CF6\]\/15, .bg-\[\#8B5CF6\]\/20, .bg-\[\#8B5CF6\]\/30,
+.bg-\[\#6366F1\]\/10, .bg-\[\#6366F1\]\/15, .bg-\[\#6366F1\]\/20,
+.bg-purple-500\/10, .bg-violet-500\/10, .bg-indigo-500\/10 {
+  background-color: #FEF2F2 !important;
+}
+
+/* Red Gradients */
+.from-\[\#8B5CF6\], .from-purple-600, .from-violet-600 {
+  --tw-gradient-from: #EF4444 var(--tw-gradient-from-position) !important;
+  --tw-gradient-to: rgb(239 68 68 / 0) var(--tw-gradient-to-position) !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+}
+
+.to-\[\#6366F1\], .to-indigo-600, .to-purple-600, .to-violet-600 {
+  --tw-gradient-to: #B91C1C var(--tw-gradient-to-position) !important;
+}
+
+/* Red Focus & Shadows */
+.focus\:ring-\[\#8B5CF6\]:focus,
+.focus\:ring-\[\#6366F1\]:focus {
+  --tw-ring-color: #EF4444 !important;
+}
+
+.shadow-\[\#8B5CF6\]\/20, .shadow-\[\#8B5CF6\]\/30 {
+  --tw-shadow-color: rgba(239, 68, 68, 0.25) !important;
+}
+
+.glow-purple {
+  box-shadow: 0 4px 20px -2px rgba(239, 68, 68, 0.15) !important;
+}
+
+/* Selection highlight */
+::selection {
+  background-color: rgba(239, 68, 68, 0.2) !important;
+  color: #0F172A !important;
+}
+
+/* Technical grid patterns in light mode */
 .bg-tech-grid {
   background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px) !important;
   background-size: 32px 32px;
 }
 
 .bg-dot-matrix {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(0, 0, 0, 0.07) 1px, transparent 1px) !important;
   background-size: 20px 20px;
 }
 
-/* Hairline borders with subtle metallic specular highlight */
 .hairline-border {
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  border: 1px solid #E2E8F0 !important;
 }
 
 .hairline-border-hover:hover {
-  border-color: rgba(139, 92, 246, 0.4);
+  border-color: rgba(239, 68, 68, 0.4) !important;
 }
 
-/* Precision technical badge */
 .tech-pill {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
@@ -70,52 +212,48 @@
   text-transform: uppercase;
   padding: 2px 8px;
   border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(18, 18, 27, 0.8);
+  border: 1px solid #E2E8F0 !important;
+  background: #FFFFFF !important;
+  color: #475569 !important;
 }
 
-/* Precision custom scrollbar */
+/* Light mode custom scrollbar */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #F1F5F9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #232332;
+  background: #CBD5E1;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #36364A;
+  background: #94A3B8;
 }
 
-/* Code Diff Line Highlighting */
+/* Code Diff */
 .diff-del {
-  background: rgba(239, 68, 68, 0.12);
-  border-left: 2px solid #EF4444;
-  color: #FCA5A5;
+  background: #FEF2F2 !important;
+  border-left: 2px solid #EF4444 !important;
+  color: #DC2626 !important;
 }
 
 .diff-add {
-  background: rgba(16, 185, 129, 0.12);
-  border-left: 2px solid #10B981;
-  color: #6EE7B7;
+  background: #ECFDF5 !important;
+  border-left: 2px solid #10B981 !important;
+  color: #059669 !important;
 }
 
-/* Raycast / Linear Glass Panel */
+/* Panels */
 .cockpit-panel {
-  background: linear-gradient(180deg, rgba(18, 18, 27, 0.85) 0%, rgba(13, 13, 20, 0.95) 100%);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-}
-
-.glow-purple {
-  box-shadow: 0 0 35px -5px rgba(139, 92, 246, 0.12);
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05) !important;
 }
 
 .keycap {
@@ -123,8 +261,8 @@
   font-size: 10px;
   padding: 1px 5px;
   border-radius: 4px;
-  background: #1C1C28;
-  border: 1px solid #2B2B3C;
-  color: #8E8EA0;
-  box-shadow: 0 1px 0 1px rgba(0,0,0,0.4);
+  background: #F1F5F9 !important;
+  border: 1px solid #CBD5E1 !important;
+  color: #475569 !important;
+  box-shadow: 0 1px 0 1px rgba(0, 0, 0, 0.05) !important;
 }

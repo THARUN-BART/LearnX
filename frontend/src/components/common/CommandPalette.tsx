@@ -134,21 +134,21 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
       />
 
       {/* Palette Container */}
-      <div className="relative w-full max-w-xl bg-[#0D0D14] border border-[#2B2B3C] rounded-2xl shadow-2xl shadow-black overflow-hidden z-10 animate-in zoom-in-95 duration-150">
+      <div className="relative w-full max-w-xl bg-white border border-[#2B2B3C] rounded-2xl shadow-2xl shadow-black overflow-hidden z-10 animate-in zoom-in-95 duration-150">
         {/* Search Input Bar */}
-        <div className="flex items-center px-4 py-3.5 border-b border-[#1C1C28] gap-3">
-          <Search className="w-4 h-4 text-[#8B5CF6] shrink-0" />
+        <div className="flex items-center px-4 py-3.5 border-b border-[#E2E8F0] gap-3">
+          <Search className="w-4 h-4 text-[#EF4444] shrink-0" />
           <input
             autoFocus
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Type a command, problem title, or DSA topic..."
-            className="flex-1 bg-transparent text-sm text-[#F4F4F6] placeholder-[#5A5A6E] outline-none font-mono"
+            className="flex-1 bg-transparent text-sm text-[#0F172A] placeholder-[#5A5A6E] outline-none font-mono"
           />
           <button
             onClick={onClose}
-            className="p-1 rounded-md text-[#5A5A6E] hover:text-[#F4F4F6] transition-colors"
+            className="p-1 rounded-md text-[#94A3B8] hover:text-[#0F172A] transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -157,7 +157,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
         {/* Results List */}
         <div className="max-h-80 overflow-y-auto p-2 space-y-1">
           {filtered.length === 0 ? (
-            <div className="py-8 text-center text-xs font-mono text-[#5A5A6E]">
+            <div className="py-8 text-center text-xs font-mono text-[#94A3B8]">
               No matching commands or modules found.
             </div>
           ) : (
@@ -173,16 +173,16 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
                   }}
                   className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl cursor-pointer transition-all ${
                     isSelected
-                      ? 'bg-[#1C1C2B] text-white border border-[#8B5CF6]/40'
-                      : 'text-[#8E8EA0] hover:bg-[#14141E] border border-transparent'
+                      ? 'bg-[#1C1C2B] text-white border border-[#EF4444]/40'
+                      : 'text-[#64748B] hover:bg-[#14141E] border border-transparent'
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <div
                       className={`w-6 h-6 rounded-lg flex items-center justify-center ${
                         isSelected
-                          ? 'bg-[#8B5CF6] text-white'
-                          : 'bg-[#181824] text-[#8E8EA0]'
+                          ? 'bg-[#EF4444] text-white'
+                          : 'bg-[#181824] text-[#64748B]'
                       }`}
                     >
                       <Icon className="w-3.5 h-3.5" />
@@ -191,10 +191,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-mono text-[#5A5A6E] uppercase tracking-wider">
+                    <span className="text-[10px] font-mono text-[#94A3B8] uppercase tracking-wider">
                       {item.category}
                     </span>
-                    <ArrowRight className="w-3 h-3 text-[#5A5A6E]" />
+                    <ArrowRight className="w-3 h-3 text-[#94A3B8]" />
                   </div>
                 </div>
               );
@@ -203,7 +203,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
         </div>
 
         {/* Footer shortcuts hint */}
-        <div className="px-4 py-2.5 bg-[#08080C] border-t border-[#1C1C28] flex items-center justify-between text-[11px] font-mono text-[#5A5A6E]">
+        <div className="px-4 py-2.5 bg-[#F8FAFC] border-t border-[#E2E8F0] flex items-center justify-between text-[11px] font-mono text-[#94A3B8]">
           <div className="flex items-center gap-3">
             <span>
               <kbd className="keycap mr-1">↑</kbd>
@@ -216,7 +216,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
               <kbd className="keycap mr-1">ESC</kbd> Close
             </span>
           </div>
-          <div className="flex items-center gap-1.5 text-[#A78BFA]">
+          <div className="flex items-center gap-1.5 text-[#DC2626]">
             <Sparkles className="w-3 h-3" />
             <span>LearnX Global Action Bus</span>
           </div>

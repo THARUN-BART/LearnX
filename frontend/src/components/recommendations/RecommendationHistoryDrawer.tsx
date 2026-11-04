@@ -51,20 +51,20 @@ export const RecommendationHistoryDrawer: React.FC<RecommendationHistoryDrawerPr
       <div className="fixed inset-0 bg-black/70 backdrop-blur-xs transition-opacity" onClick={onClose} />
 
       {/* Drawer content */}
-      <div className="relative w-full max-w-md bg-[#0D0D14] border-l border-[#1C1C28] h-full flex flex-col z-10 animate-in slide-in-from-right duration-200">
+      <div className="relative w-full max-w-md bg-white border-l border-[#E2E8F0] h-full flex flex-col z-10 animate-in slide-in-from-right duration-200">
         {/* Header */}
-        <div className="h-16 px-6 border-b border-[#1C1C28] flex items-center justify-between shrink-0">
+        <div className="h-16 px-6 border-b border-[#E2E8F0] flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2 font-mono">
-            <History className="w-4 h-4 text-[#8B5CF6]" />
-            <h3 className="text-sm font-bold text-[#F4F4F6]">Recommendation Log</h3>
-            <span className="text-[10px] text-[#5A5A6E] px-2 py-0.5 rounded bg-[#161622] border border-[#232336]">
+            <History className="w-4 h-4 text-[#EF4444]" />
+            <h3 className="text-sm font-bold text-[#0F172A]">Recommendation Log</h3>
+            <span className="text-[10px] text-[#94A3B8] px-2 py-0.5 rounded bg-[#161622] border border-[#E2E8F0]">
               {total} Total
             </span>
           </div>
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-[#8E8EA0] hover:text-[#F4F4F6] hover:bg-[#14141E] transition-colors"
+            className="p-1.5 rounded-lg text-[#64748B] hover:text-[#0F172A] hover:bg-[#14141E] transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -73,13 +73,13 @@ export const RecommendationHistoryDrawer: React.FC<RecommendationHistoryDrawerPr
         {/* List of items */}
         <div className="flex-1 overflow-y-auto p-6 space-y-4 font-mono">
           {loading ? (
-            <div className="py-20 text-center text-xs text-[#5A5A6E]">
+            <div className="py-20 text-center text-xs text-[#94A3B8]">
               Loading historical log...
             </div>
           ) : history.length === 0 ? (
             <div className="py-20 text-center space-y-2">
               <History className="w-8 h-8 text-[#2B2B3C] mx-auto" />
-              <p className="text-xs text-[#5A5A6E]">No recommendation history logged yet.</p>
+              <p className="text-xs text-[#94A3B8]">No recommendation history logged yet.</p>
               <p className="text-[11px] text-[#4A4A5E]">
                 As you receive and practice problem picks, your history will populate here.
               </p>
@@ -90,14 +90,14 @@ export const RecommendationHistoryDrawer: React.FC<RecommendationHistoryDrawerPr
               return (
                 <div
                   key={rec.id}
-                  className="p-4 rounded-xl bg-[#12121A] border border-[#1C1C28] space-y-2 hover:border-[#2B2B3C] transition-all"
+                  className="p-4 rounded-xl bg-[#12121A] border border-[#E2E8F0] space-y-2 hover:border-[#2B2B3C] transition-all"
                 >
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-[10px] uppercase tracking-wider text-[#A78BFA] bg-[#8B5CF6]/15 px-2 py-0.5 rounded border border-[#8B5CF6]/20">
+                    <span className="text-[10px] uppercase tracking-wider text-[#DC2626] bg-[#EF4444]/15 px-2 py-0.5 rounded border border-[#EF4444]/20">
                       {rec.category.replace(/_/g, ' ')}
                     </span>
 
-                    <span className="text-[10px] text-[#5A5A6E]">
+                    <span className="text-[10px] text-[#94A3B8]">
                       {new Date(rec.created_at).toLocaleDateString()}
                     </span>
                   </div>
@@ -108,22 +108,22 @@ export const RecommendationHistoryDrawer: React.FC<RecommendationHistoryDrawerPr
                         onClose();
                         navigate(`/practice/${rec.problem_id || rec.problem_slug}`);
                       }}
-                      className="text-sm font-bold text-[#F4F4F6] hover:text-[#A78BFA] cursor-pointer transition-colors"
+                      className="text-sm font-bold text-[#0F172A] hover:text-[#DC2626] cursor-pointer transition-colors"
                     >
                       {rec.problem_title || 'DSA Problem'}
                     </h4>
-                    <p className="text-[11px] text-[#8E8EA0] line-clamp-2 mt-1">
+                    <p className="text-[11px] text-[#64748B] line-clamp-2 mt-1">
                       {rec.headline}
                     </p>
                   </div>
 
-                  <div className="flex items-center justify-between pt-2 border-t border-[#1C1C28] text-xs">
+                  <div className="flex items-center justify-between pt-2 border-t border-[#E2E8F0] text-xs">
                     <div className="flex items-center gap-2">
                       <span
                         className={`text-[10px] px-2 py-0.5 rounded flex items-center gap-1 ${
                           isCompleted
                             ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                            : 'bg-[#181824] text-[#5A5A6E]'
+                            : 'bg-[#181824] text-[#94A3B8]'
                         }`}
                       >
                         {isCompleted ? (
@@ -148,7 +148,7 @@ export const RecommendationHistoryDrawer: React.FC<RecommendationHistoryDrawerPr
                         onClose();
                         navigate(`/practice/${rec.problem_id || rec.problem_slug}`);
                       }}
-                      className="text-xs text-[#8B5CF6] hover:text-[#A78BFA] flex items-center gap-1"
+                      className="text-xs text-[#EF4444] hover:text-[#DC2626] flex items-center gap-1"
                     >
                       <span>Open</span>
                       <ArrowRight className="w-3 h-3" />

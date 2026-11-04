@@ -156,20 +156,20 @@ export const OTPVerificationPage: React.FC = () => {
   return (
     <div className="w-full space-y-6">
       <div className="space-y-1.5 text-center">
-        <div className="w-12 h-12 rounded-2xl bg-[#8B5CF6]/15 border border-[#8B5CF6]/30 text-[#A78BFA] flex items-center justify-center mx-auto mb-3 shadow-lg shadow-[#8B5CF6]/10">
+        <div className="w-12 h-12 rounded-2xl bg-[#EF4444]/15 border border-[#EF4444]/30 text-[#DC2626] flex items-center justify-center mx-auto mb-3 shadow-lg shadow-[#8B5CF6]/10">
           {isSuccess ? (
             <CheckCircle2 className="w-6 h-6 text-emerald-400" />
           ) : (
             <ShieldCheck className="w-6 h-6" />
           )}
         </div>
-        <h1 className="text-2xl font-bold tracking-tight text-[#F5F5F7] font-mono">
+        <h1 className="text-2xl font-bold tracking-tight text-[#0F172A] font-mono">
           {isResetMode ? 'Verify Reset Code' : 'Verify Your Email'}
         </h1>
-        <p className="text-xs text-[#9292A3]">
+        <p className="text-xs text-[#64748B]">
           We have dispatched a 6-digit verification code to
         </p>
-        <p className="text-xs font-mono font-medium text-[#A78BFA]">{email}</p>
+        <p className="text-xs font-mono font-medium text-[#DC2626]">{email}</p>
       </div>
 
       {error && (
@@ -193,14 +193,14 @@ export const OTPVerificationPage: React.FC = () => {
             onChange={(e) => handleChange(idx, e.target.value)}
             onKeyDown={(e) => handleKeyDown(idx, e)}
             onFocus={() => setActiveInput(idx)}
-            className={`w-11 h-13 sm:w-12 sm:h-14 text-center text-xl font-mono font-bold rounded-xl bg-[#101019] border transition-all duration-150 outline-none select-none ${
+            className={`w-11 h-13 sm:w-12 sm:h-14 text-center text-xl font-mono font-bold rounded-xl bg-white border transition-all duration-150 outline-none select-none ${
               error
                 ? 'border-red-500 text-red-400'
                 : digit
-                ? 'border-[#8B5CF6] text-white bg-[#171722] shadow-sm shadow-[#8B5CF6]/20'
+                ? 'border-[#EF4444] text-white bg-[#F8FAFC] shadow-sm shadow-[#8B5CF6]/20'
                 : activeInput === idx
-                ? 'border-[#8B5CF6] ring-1 ring-[#8B5CF6]/50'
-                : 'border-[#232336] text-[#F5F5F7]'
+                ? 'border-[#EF4444] ring-1 ring-[#8B5CF6]/50'
+                : 'border-[#E2E8F0] text-[#0F172A]'
             }`}
           />
         ))}
@@ -218,15 +218,15 @@ export const OTPVerificationPage: React.FC = () => {
       </Button>
 
       {/* Resend cooldown & back navigation */}
-      <div className="flex flex-col items-center gap-3 pt-2 text-xs text-[#9292A3]">
+      <div className="flex flex-col items-center gap-3 pt-2 text-xs text-[#64748B]">
         <div className="flex items-center gap-1.5">
           <span>Didn't receive the code?</span>
           {cooldown > 0 ? (
-            <span className="font-mono text-[#65657B]">Resend in {cooldown}s</span>
+            <span className="font-mono text-[#94A3B8]">Resend in {cooldown}s</span>
           ) : (
             <button
               onClick={handleResend}
-              className="text-[#8B5CF6] hover:text-[#A78BFA] font-medium flex items-center gap-1 transition-colors"
+              className="text-[#EF4444] hover:text-[#DC2626] font-medium flex items-center gap-1 transition-colors"
             >
               <RotateCcw className="w-3 h-3" />
               <span>Resend OTP</span>
@@ -236,7 +236,7 @@ export const OTPVerificationPage: React.FC = () => {
 
         <Link
           to={isResetMode ? '/forgot-password' : '/signup'}
-          className="text-[#65657B] hover:text-[#9292A3] transition-colors"
+          className="text-[#94A3B8] hover:text-[#64748B] transition-colors"
         >
           ← Change email address
         </Link>

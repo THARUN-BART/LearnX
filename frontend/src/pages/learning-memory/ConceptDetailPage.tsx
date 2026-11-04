@@ -34,8 +34,8 @@ export const ConceptDetailPage: React.FC = () => {
   if (loading) {
     return (
       <div className="space-y-4 animate-pulse">
-        <div className="h-8 w-48 bg-[#12121B] rounded-lg" />
-        <div className="h-48 bg-[#12121B] rounded-2xl" />
+        <div className="h-8 w-48 bg-[#F1F5F9] rounded-lg" />
+        <div className="h-48 bg-[#F1F5F9] rounded-2xl" />
       </div>
     );
   }
@@ -43,8 +43,8 @@ export const ConceptDetailPage: React.FC = () => {
   if (!detail) {
     return (
       <div className="text-center py-12">
-        <p className="text-xs text-[#8E8EA0]">Concept not found.</p>
-        <Link to="/dashboard/learning-memory" className="text-xs text-[#8B5CF6] hover:underline mt-2 inline-block">
+        <p className="text-xs text-[#64748B]">Concept not found.</p>
+        <Link to="/dashboard/learning-memory" className="text-xs text-[#EF4444] hover:underline mt-2 inline-block">
           Return to Learning Memory
         </Link>
       </div>
@@ -58,35 +58,35 @@ export const ConceptDetailPage: React.FC = () => {
       {/* Back Link */}
       <Link
         to="/dashboard/learning-memory"
-        className="inline-flex items-center gap-1.5 text-xs text-[#8E8EA0] hover:text-[#F4F4F6] transition-colors"
+        className="inline-flex items-center gap-1.5 text-xs text-[#64748B] hover:text-[#0F172A] transition-colors"
       >
         <ArrowLeft className="w-3.5 h-3.5" />
         Back to Learning Memory
       </Link>
 
       {/* Header Profile */}
-      <div className="p-6 rounded-3xl bg-[#0D0D14] border border-[#1C1C28] flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="p-6 rounded-3xl bg-white border border-[#E2E8F0] flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-start gap-4">
-          <div className="p-3 rounded-2xl bg-[#161622] text-[#8B5CF6]">
+          <div className="p-3 rounded-2xl bg-[#161622] text-[#EF4444]">
             <Brain className="w-6 h-6" />
           </div>
           <div>
             <div className="flex items-center gap-3">
-              <h2 className="text-xl font-bold text-[#F4F4F6]">{concept.concept_name}</h2>
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase bg-[#8B5CF6]/10 text-[#8B5CF6] border border-[#8B5CF6]/20">
+              <h2 className="text-xl font-bold text-[#0F172A]">{concept.concept_name}</h2>
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase bg-[#EF4444]/10 text-[#EF4444] border border-[#EF4444]/20">
                 {concept.learning_state}
               </span>
             </div>
-            <p className="text-xs text-[#8E8EA0] mt-1">
+            <p className="text-xs text-[#64748B] mt-1">
               Topic: {concept.topic_name || 'DSA Core'} • Concept Identifier:{' '}
-              <span className="font-mono text-[#5A5A6E]">{concept.concept_key}</span>
+              <span className="font-mono text-[#94A3B8]">{concept.concept_key}</span>
             </p>
           </div>
         </div>
 
         <Link
           to={`/practice`}
-          className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#8B5CF6] to-[#6366F1] text-white text-xs font-semibold flex items-center justify-center gap-2 hover:opacity-95 transition-opacity"
+          className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#EF4444] to-[#B91C1C] text-white text-xs font-semibold flex items-center justify-center gap-2 hover:opacity-95 transition-opacity"
         >
           <Play className="w-4 h-4 fill-white" />
           Practice Related Problems
@@ -95,32 +95,32 @@ export const ConceptDetailPage: React.FC = () => {
 
       {/* Metric Breakdown Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="p-4 rounded-xl bg-[#0D0D14] border border-[#1C1C28]">
-          <span className="text-[10px] uppercase font-mono text-[#8E8EA0]">Estimated Mastery</span>
-          <div className="text-2xl font-bold text-[#F4F4F6] font-mono mt-1">
+        <div className="p-4 rounded-xl bg-white border border-[#E2E8F0]">
+          <span className="text-[10px] uppercase font-mono text-[#64748B]">Estimated Mastery</span>
+          <div className="text-2xl font-bold text-[#0F172A] font-mono mt-1">
             {normalizePercentage(concept.estimated_mastery)}%
           </div>
-          <span className="text-[10px] text-[#5A5A6E]">Provisional calculation</span>
+          <span className="text-[10px] text-[#94A3B8]">Provisional calculation</span>
         </div>
 
-        <div className="p-4 rounded-xl bg-[#0D0D14] border border-[#1C1C28]">
-          <span className="text-[10px] uppercase font-mono text-[#8E8EA0]">Independent Solves</span>
+        <div className="p-4 rounded-xl bg-white border border-[#E2E8F0]">
+          <span className="text-[10px] uppercase font-mono text-[#64748B]">Independent Solves</span>
           <div className="text-2xl font-bold text-emerald-400 font-mono mt-1">
             {concept.independent_solves}
           </div>
-          <span className="text-[10px] text-[#5A5A6E]">Unassisted verification</span>
+          <span className="text-[10px] text-[#94A3B8]">Unassisted verification</span>
         </div>
 
-        <div className="p-4 rounded-xl bg-[#0D0D14] border border-[#1C1C28]">
-          <span className="text-[10px] uppercase font-mono text-[#8E8EA0]">Assisted Solves</span>
+        <div className="p-4 rounded-xl bg-white border border-[#E2E8F0]">
+          <span className="text-[10px] uppercase font-mono text-[#64748B]">Assisted Solves</span>
           <div className="text-2xl font-bold text-blue-400 font-mono mt-1">
             {concept.assisted_solves}
           </div>
-          <span className="text-[10px] text-[#5A5A6E]">{concept.hint_requests} hints requested</span>
+          <span className="text-[10px] text-[#94A3B8]">{concept.hint_requests} hints requested</span>
         </div>
 
-        <div className="p-4 rounded-xl bg-[#0D0D14] border border-[#1C1C28]">
-          <span className="text-[10px] uppercase font-mono text-[#8E8EA0]">Mistakes</span>
+        <div className="p-4 rounded-xl bg-white border border-[#E2E8F0]">
+          <span className="text-[10px] uppercase font-mono text-[#64748B]">Mistakes</span>
           <div className="text-2xl font-bold text-rose-400 font-mono mt-1">
             {concept.mistake_count}
           </div>
@@ -130,12 +130,12 @@ export const ConceptDetailPage: React.FC = () => {
 
       {/* Recommended Next Steps */}
       {next_steps && next_steps.length > 0 && (
-        <div className="p-5 rounded-2xl bg-[#0D0D14] border border-[#1C1C28] space-y-2">
-          <div className="flex items-center gap-2 text-xs font-semibold text-[#F4F4F6]">
+        <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] space-y-2">
+          <div className="flex items-center gap-2 text-xs font-semibold text-[#0F172A]">
             <Lightbulb className="w-4 h-4 text-amber-400" />
             AI Tutor Pedagogical Next Steps
           </div>
-          <ul className="space-y-1.5 pl-6 list-disc text-xs text-[#8E8EA0]">
+          <ul className="space-y-1.5 pl-6 list-disc text-xs text-[#64748B]">
             {next_steps.map((step, idx) => (
               <li key={idx}>{step}</li>
             ))}
@@ -145,26 +145,26 @@ export const ConceptDetailPage: React.FC = () => {
 
       {/* Mistake Pattern History */}
       <div className="space-y-3">
-        <h3 className="text-sm font-bold text-[#F4F4F6] flex items-center gap-2">
+        <h3 className="text-sm font-bold text-[#0F172A] flex items-center gap-2">
           <AlertTriangle className="w-4 h-4 text-rose-400" />
           Recurring Mistake Memory for this Concept
         </h3>
         {mistakes.length === 0 ? (
-          <p className="text-xs text-[#8E8EA0] italic bg-[#0D0D14] p-4 rounded-xl border border-[#1C1C28]">
+          <p className="text-xs text-[#64748B] italic bg-white p-4 rounded-xl border border-[#E2E8F0]">
             No recurring mistake patterns logged for this concept.
           </p>
         ) : (
           <div className="space-y-2">
             {mistakes.map((m) => (
-              <div key={m.id} className="p-3.5 rounded-xl bg-[#0D0D14] border border-[#1C1C28] flex items-center justify-between">
+              <div key={m.id} className="p-3.5 rounded-xl bg-white border border-[#E2E8F0] flex items-center justify-between">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-semibold text-[#F4F4F6]">{m.category}</span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#161622] text-[#8E8EA0]">
+                    <span className="text-xs font-semibold text-[#0F172A]">{m.category}</span>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#161622] text-[#64748B]">
                       {m.subtype}
                     </span>
                   </div>
-                  <p className="text-[11px] text-[#5A5A6E] mt-0.5">
+                  <p className="text-[11px] text-[#94A3B8] mt-0.5">
                     Occurrences: {m.occurrence_count} • Corrected: {m.corrected_count}
                   </p>
                 </div>
@@ -187,8 +187,8 @@ export const ConceptDetailPage: React.FC = () => {
 
       {/* Activity Timeline */}
       <div className="space-y-3">
-        <h3 className="text-sm font-bold text-[#F4F4F6] flex items-center gap-2">
-          <Clock className="w-4 h-4 text-[#8B5CF6]" />
+        <h3 className="text-sm font-bold text-[#0F172A] flex items-center gap-2">
+          <Clock className="w-4 h-4 text-[#EF4444]" />
           Recent Cognitive Activity Timeline
         </h3>
         <LearningTimeline events={timeline} />

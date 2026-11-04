@@ -71,7 +71,7 @@ export const ProblemRecommendationCard: React.FC<ProblemRecommendationCardProps>
       default:
         return {
           label: 'Recommended',
-          color: 'bg-[#8B5CF6]/10 text-[#A78BFA] border-[#8B5CF6]/20'
+          color: 'bg-[#EF4444]/10 text-[#DC2626] border-[#EF4444]/20'
         };
     }
   };
@@ -79,7 +79,7 @@ export const ProblemRecommendationCard: React.FC<ProblemRecommendationCardProps>
   const meta = getCategoryMeta(recommendation.category);
 
   return (
-    <div className="p-5 sm:p-6 rounded-2xl bg-[#0D0D14] hover:bg-[#12121D] border border-[#1C1C28] hover:border-[#8B5CF6]/40 transition-all duration-200 flex flex-col justify-between group relative overflow-hidden">
+    <div className="p-5 sm:p-6 rounded-2xl bg-white hover:bg-[#12121D] border border-[#E2E8F0] hover:border-[#EF4444]/40 transition-all duration-200 flex flex-col justify-between group relative overflow-hidden">
       <div className="space-y-4">
         {/* Header tags */}
         <div className="flex items-center justify-between gap-2 flex-wrap">
@@ -104,8 +104,8 @@ export const ProblemRecommendationCard: React.FC<ProblemRecommendationCardProps>
             </Badge>
           </div>
 
-          <span className="text-[11px] font-mono text-[#5A5A6E] flex items-center gap-1">
-            <Target className="w-3 h-3 text-[#8B5CF6]" />
+          <span className="text-[11px] font-mono text-[#94A3B8] flex items-center gap-1">
+            <Target className="w-3 h-3 text-[#EF4444]" />
             {Math.round(recommendation.match_score)}% match
           </span>
         </div>
@@ -114,19 +114,19 @@ export const ProblemRecommendationCard: React.FC<ProblemRecommendationCardProps>
         <div>
           <h3
             onClick={handleStartPractice}
-            className="text-base sm:text-lg font-bold text-[#F4F4F6] group-hover:text-[#A78BFA] font-mono cursor-pointer transition-colors"
+            className="text-base sm:text-lg font-bold text-[#0F172A] group-hover:text-[#DC2626] font-mono cursor-pointer transition-colors"
           >
             {recommendation.problem_title || 'DSA Problem'}
           </h3>
-          <p className="text-xs font-semibold text-[#8E8EA0] mt-1 font-mono line-clamp-1">
+          <p className="text-xs font-semibold text-[#64748B] mt-1 font-mono line-clamp-1">
             {recommendation.headline}
           </p>
         </div>
 
         {/* Pedagogical Explanation */}
         <div className="p-3.5 rounded-xl bg-[#08080E] border border-[#181824] space-y-2">
-          <div className="flex items-center gap-1.5 text-[10px] font-mono text-[#5A5A6E] uppercase tracking-wider font-semibold">
-            <BrainCircuit className="w-3 h-3 text-[#8B5CF6]" />
+          <div className="flex items-center gap-1.5 text-[10px] font-mono text-[#94A3B8] uppercase tracking-wider font-semibold">
+            <BrainCircuit className="w-3 h-3 text-[#EF4444]" />
             <span>Why this problem</span>
           </div>
           <p className="text-xs text-[#C4C4D0] leading-relaxed line-clamp-3 font-sans">
@@ -134,7 +134,7 @@ export const ProblemRecommendationCard: React.FC<ProblemRecommendationCardProps>
           </p>
 
           {recommendation.learning_objective && (
-            <div className="pt-2 border-t border-[#181824] flex items-start gap-1.5 text-[11px] text-[#8E8EA0]">
+            <div className="pt-2 border-t border-[#181824] flex items-start gap-1.5 text-[11px] text-[#64748B]">
               <CheckCircle2 className="w-3 h-3 text-emerald-400 shrink-0 mt-0.5" />
               <span className="line-clamp-2">{recommendation.learning_objective}</span>
             </div>
@@ -143,13 +143,13 @@ export const ProblemRecommendationCard: React.FC<ProblemRecommendationCardProps>
 
         {/* Concept pills */}
         <div className="flex flex-wrap gap-1.5 pt-1">
-          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#161622] text-[#A78BFA] border border-[#8B5CF6]/20">
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#161622] text-[#DC2626] border border-[#EF4444]/20">
             {recommendation.primary_concept}
           </span>
           {(recommendation.related_concepts || []).slice(0, 2).map((c, i) => (
             <span
               key={i}
-              className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#101018] text-[#8E8EA0] border border-[#232336]"
+              className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#101018] text-[#64748B] border border-[#E2E8F0]"
             >
               {c}
             </span>
@@ -158,7 +158,7 @@ export const ProblemRecommendationCard: React.FC<ProblemRecommendationCardProps>
       </div>
 
       {/* Footer controls & Feedback */}
-      <div className="pt-4 mt-4 border-t border-[#1C1C28] flex items-center justify-between gap-3">
+      <div className="pt-4 mt-4 border-t border-[#E2E8F0] flex items-center justify-between gap-3">
         {/* Quick Feedback Pills */}
         <div className="flex items-center gap-1 text-xs">
           <button
@@ -167,7 +167,7 @@ export const ProblemRecommendationCard: React.FC<ProblemRecommendationCardProps>
             className={`p-1.5 rounded-lg border transition-all text-xs ${
               rated === 'helpful'
                 ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40'
-                : 'bg-[#12121A] text-[#5A5A6E] hover:text-[#F4F4F6] border-[#1C1C28]'
+                : 'bg-[#12121A] text-[#94A3B8] hover:text-[#0F172A] border-[#E2E8F0]'
             }`}
           >
             <ThumbsUp className="w-3 h-3" />
@@ -178,7 +178,7 @@ export const ProblemRecommendationCard: React.FC<ProblemRecommendationCardProps>
             className={`p-1.5 rounded-lg border transition-all text-xs ${
               rated === 'too_easy'
                 ? 'bg-amber-500/20 text-amber-400 border-amber-500/40'
-                : 'bg-[#12121A] text-[#5A5A6E] hover:text-[#F4F4F6] border-[#1C1C28]'
+                : 'bg-[#12121A] text-[#94A3B8] hover:text-[#0F172A] border-[#E2E8F0]'
             }`}
           >
             <Zap className="w-3 h-3" />
@@ -189,7 +189,7 @@ export const ProblemRecommendationCard: React.FC<ProblemRecommendationCardProps>
             className={`p-1.5 rounded-lg border transition-all text-xs ${
               rated === 'too_difficult'
                 ? 'bg-rose-500/20 text-rose-400 border-rose-500/40'
-                : 'bg-[#12121A] text-[#5A5A6E] hover:text-[#F4F4F6] border-[#1C1C28]'
+                : 'bg-[#12121A] text-[#94A3B8] hover:text-[#0F172A] border-[#E2E8F0]'
             }`}
           >
             <Flame className="w-3 h-3" />

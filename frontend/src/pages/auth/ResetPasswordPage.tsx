@@ -52,10 +52,10 @@ export const ResetPasswordPage: React.FC = () => {
   return (
     <div className="w-full space-y-6">
       <div className="space-y-1.5">
-        <h1 className="text-2xl font-bold tracking-tight text-[#F5F5F7] font-mono">
+        <h1 className="text-2xl font-bold tracking-tight text-[#0F172A] font-mono">
           Set New Password
         </h1>
-        <p className="text-xs text-[#9292A3]">
+        <p className="text-xs text-[#64748B]">
           Create a secure password with at least 8 characters, numbers and uppercase letters.
         </p>
       </div>
@@ -78,11 +78,11 @@ export const ResetPasswordPage: React.FC = () => {
           />
           {passwordValue && (
             <div className="pt-1 space-y-1">
-              <div className="flex items-center justify-between text-[11px] text-[#9292A3]">
+              <div className="flex items-center justify-between text-[11px] text-[#64748B]">
                 <span>Strength:</span>
-                <span className="font-medium text-[#F5F5F7]">{strength.label}</span>
+                <span className="font-medium text-[#0F172A]">{strength.label}</span>
               </div>
-              <div className="grid grid-cols-5 gap-1 h-1 w-full bg-[#101019] rounded-full overflow-hidden">
+              <div className="grid grid-cols-5 gap-1 h-1 w-full bg-white rounded-full overflow-hidden">
                 {[1, 2, 3, 4, 5].map((level) => (
                   <div
                     key={level}
@@ -116,8 +116,8 @@ export const ResetPasswordPage: React.FC = () => {
         </Button>
       </form>
 
-      <p className="text-center text-xs text-[#9292A3]">
-        <Link to="/login" className="text-[#8B5CF6] hover:text-[#A78BFA] transition-colors">
+      <p className="text-center text-xs text-[#64748B]">
+        <Link to="/login" className="text-[#EF4444] hover:text-[#DC2626] transition-colors">
           Cancel and return to login
         </Link>
       </p>

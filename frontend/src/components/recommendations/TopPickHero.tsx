@@ -30,17 +30,17 @@ export const TopPickHero: React.FC<TopPickHeroProps> = ({
   };
 
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#12121D] via-[#151522] to-[#0D0D14] border border-[#8B5CF6]/40 p-6 sm:p-8 shadow-xl shadow-[#8B5CF6]/5 glow-purple">
+    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#12121D] via-[#151522] to-[#0D0D14] border border-[#EF4444]/40 p-6 sm:p-8 shadow-xl shadow-[#8B5CF6]/5 glow-purple">
       {/* Background glow & subtle tech grid */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-[#8B5CF6]/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
+      <div className="absolute top-0 right-0 w-96 h-96 bg-[#EF4444]/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
       <div className="absolute inset-0 bg-tech-grid opacity-20 pointer-events-none" />
 
       <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
         <div className="space-y-4 max-w-3xl">
           {/* Top badges bar */}
           <div className="flex flex-wrap items-center gap-2.5 font-mono text-xs">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#8B5CF6]/20 text-[#A78BFA] border border-[#8B5CF6]/40 font-bold uppercase tracking-wider text-[10px]">
-              <Sparkles className="w-3.5 h-3.5 text-[#8B5CF6]" />
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EF4444]/20 text-[#DC2626] border border-[#EF4444]/40 font-bold uppercase tracking-wider text-[10px]">
+              <Sparkles className="w-3.5 h-3.5 text-[#EF4444]" />
               Top Priority Pick
             </span>
 
@@ -62,25 +62,25 @@ export const TopPickHero: React.FC<TopPickHeroProps> = ({
               {recommendation.recommended_difficulty}
             </Badge>
 
-            <span className="text-[#65657B] hidden sm:inline">//</span>
-            <span className="text-xs text-[#8E8EA0]">{recommendation.primary_concept}</span>
+            <span className="text-[#94A3B8] hidden sm:inline">//</span>
+            <span className="text-xs text-[#64748B]">{recommendation.primary_concept}</span>
           </div>
 
           {/* Title & Headline */}
           <div>
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#F4F4F6] font-mono group cursor-pointer hover:text-[#A78BFA] transition-colors"
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#0F172A] font-mono group cursor-pointer hover:text-[#DC2626] transition-colors"
                 onClick={handleStartPractice}>
               {recommendation.problem_title || 'Target DSA Problem'}
             </h2>
-            <p className="text-sm font-semibold text-[#A78BFA] mt-1 font-mono">
+            <p className="text-sm font-semibold text-[#DC2626] mt-1 font-mono">
               {recommendation.headline}
             </p>
           </div>
 
           {/* Explanation rationale */}
-          <div className="p-4 rounded-xl bg-[#09090F]/70 border border-[#1C1C28] space-y-2">
-            <div className="flex items-center gap-2 text-xs font-mono text-[#8E8EA0]">
-              <BrainCircuit className="w-3.5 h-3.5 text-[#8B5CF6]" />
+          <div className="p-4 rounded-xl bg-[#09090F]/70 border border-[#E2E8F0] space-y-2">
+            <div className="flex items-center gap-2 text-xs font-mono text-[#64748B]">
+              <BrainCircuit className="w-3.5 h-3.5 text-[#EF4444]" />
               <span className="uppercase tracking-wider font-semibold">Pedagogical Rationale</span>
             </div>
             <p className="text-xs sm:text-sm text-[#D4D4D8] leading-relaxed font-sans">
@@ -88,7 +88,7 @@ export const TopPickHero: React.FC<TopPickHeroProps> = ({
             </p>
 
             {recommendation.learning_objective && (
-              <div className="pt-2 border-t border-[#1C1C28]/80 flex items-start gap-2 text-xs text-[#9292A3]">
+              <div className="pt-2 border-t border-[#E2E8F0]/80 flex items-start gap-2 text-xs text-[#64748B]">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
                 <span>
                   <strong className="text-white font-mono">Learning Goal:</strong>{' '}
@@ -126,7 +126,7 @@ export const TopPickHero: React.FC<TopPickHeroProps> = ({
           {onFeedbackClick && (
             <button
               onClick={() => onFeedbackClick(recommendation)}
-              className="text-[11px] font-mono text-[#8E8EA0] hover:text-[#F4F4F6] text-center pt-1 transition-colors underline underline-offset-4 decoration-[#2D2D3E]"
+              className="text-[11px] font-mono text-[#64748B] hover:text-[#0F172A] text-center pt-1 transition-colors underline underline-offset-4 decoration-[#2D2D3E]"
             >
               Rate this suggestion
             </button>

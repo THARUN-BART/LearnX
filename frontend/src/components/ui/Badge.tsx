@@ -18,14 +18,14 @@ export const Badge: React.FC<BadgeProps> = ({
   icon
 }) => {
   const variants = {
-    default: 'bg-[#232336] text-[#9292A3] border border-[#373752]/40',
-    easy: 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20',
-    medium: 'bg-amber-500/10 text-amber-400 border border-amber-500/20',
-    hard: 'bg-red-500/10 text-red-400 border border-red-500/20',
-    purple: 'bg-[#8B5CF6]/15 text-[#A78BFA] border border-[#8B5CF6]/30',
-    indigo: 'bg-[#6366F1]/15 text-[#818CF8] border border-[#6366F1]/30',
-    cyan: 'bg-cyan-500/15 text-cyan-400 border border-cyan-500/30',
-    outline: 'bg-transparent text-[#9292A3] border border-[#232336]'
+    default: 'bg-[#F1F5F9] text-[#475569] border border-[#E2E8F0]',
+    easy: 'bg-emerald-50 text-emerald-600 border border-emerald-200',
+    medium: 'bg-amber-50 text-amber-600 border border-amber-200',
+    hard: 'bg-red-50 text-red-600 border border-red-200',
+    purple: 'bg-red-50 text-red-600 border border-red-200',
+    indigo: 'bg-rose-50 text-rose-600 border border-rose-200',
+    cyan: 'bg-cyan-50 text-cyan-600 border border-cyan-200',
+    outline: 'bg-transparent text-[#475569] border border-[#E2E8F0]'
   };
 
   const sizes = {

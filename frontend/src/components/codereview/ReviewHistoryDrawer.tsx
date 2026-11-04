@@ -31,14 +31,14 @@ export const ReviewHistoryDrawer: React.FC<ReviewHistoryDrawerProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm">
-      <div className="w-full max-w-md bg-[#0D0D14] border-l border-[#1C1C28] h-full flex flex-col p-5 font-mono overflow-y-auto">
+      <div className="w-full max-w-md bg-white border-l border-[#E2E8F0] h-full flex flex-col p-5 font-mono overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-[#1C1C28] pb-3 mb-4">
+        <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-3 mb-4">
           <div className="flex items-center gap-2">
-            <History className="w-4 h-4 text-[#8B5CF6]" />
-            <h4 className="text-sm font-bold text-[#F4F4F6] font-sans">Code Review History</h4>
+            <History className="w-4 h-4 text-[#EF4444]" />
+            <h4 className="text-sm font-bold text-[#0F172A] font-sans">Code Review History</h4>
           </div>
-          <button onClick={onClose} className="p-1.5 text-[#8E8EA0] hover:text-[#F4F4F6] rounded-lg">
+          <button onClick={onClose} className="p-1.5 text-[#64748B] hover:text-[#0F172A] rounded-lg">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -46,9 +46,9 @@ export const ReviewHistoryDrawer: React.FC<ReviewHistoryDrawerProps> = ({
         {/* List */}
         <div className="space-y-2.5 flex-1 overflow-y-auto">
           {loading ? (
-            <div className="py-12 text-center text-xs text-[#5A5A6E]">Loading reviews…</div>
+            <div className="py-12 text-center text-xs text-[#94A3B8]">Loading reviews…</div>
           ) : reviews.length === 0 ? (
-            <div className="py-12 text-center text-xs text-[#8E8EA0]">
+            <div className="py-12 text-center text-xs text-[#64748B]">
               No past code reviews found.
             </div>
           ) : (
@@ -59,13 +59,13 @@ export const ReviewHistoryDrawer: React.FC<ReviewHistoryDrawerProps> = ({
                   onSelectReview(r.id);
                   onClose();
                 }}
-                className="w-full text-left p-3.5 bg-[#12121B] hover:bg-[#181824] border border-[#1C1C28] hover:border-[#8B5CF6]/50 rounded-xl transition-all flex items-center justify-between group"
+                className="w-full text-left p-3.5 bg-[#F1F5F9] hover:bg-[#181824] border border-[#E2E8F0] hover:border-[#EF4444]/50 rounded-xl transition-all flex items-center justify-between group"
               >
                 <div>
-                  <div className="text-xs font-bold text-[#F4F4F6] font-sans group-hover:text-[#A78BFA] transition-colors">
+                  <div className="text-xs font-bold text-[#0F172A] font-sans group-hover:text-[#DC2626] transition-colors">
                     {r.problem_title || 'General Code Review'}
                   </div>
-                  <div className="text-[10px] text-[#5A5A6E] mt-1">
+                  <div className="text-[10px] text-[#94A3B8] mt-1">
                     {r.language} · {r.created_at ? new Date(r.created_at).toLocaleDateString() : 'Recent'}
                   </div>
                 </div>
@@ -82,7 +82,7 @@ export const ReviewHistoryDrawer: React.FC<ReviewHistoryDrawerProps> = ({
                   >
                     {r.overall_score}/100
                   </span>
-                  <ChevronRight className="w-4 h-4 text-[#5A5A6E] group-hover:text-white" />
+                  <ChevronRight className="w-4 h-4 text-[#94A3B8] group-hover:text-[#0F172A]" />
                 </div>
               </button>
             ))
