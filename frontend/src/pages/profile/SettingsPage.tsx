@@ -62,7 +62,7 @@ export const SettingsPage: React.FC = () => {
               type="checkbox"
               checked={emailAlerts}
               onChange={(e) => setEmailAlerts(e.target.checked)}
-              className="w-4 h-4 rounded bg-white border-[#E2E8F0] accent-[#8B5CF6]"
+              className="w-4 h-4 rounded bg-white border-[#E2E8F0] accent-[#EF4444]"
             />
           </label>
 
@@ -75,7 +75,7 @@ export const SettingsPage: React.FC = () => {
               type="checkbox"
               checked={mistakeNotifications}
               onChange={(e) => setMistakeNotifications(e.target.checked)}
-              className="w-4 h-4 rounded bg-white border-[#E2E8F0] accent-[#8B5CF6]"
+              className="w-4 h-4 rounded bg-white border-[#E2E8F0] accent-[#EF4444]"
             />
           </label>
 
@@ -88,7 +88,7 @@ export const SettingsPage: React.FC = () => {
               type="checkbox"
               checked={weeklyDigest}
               onChange={(e) => setWeeklyDigest(e.target.checked)}
-              className="w-4 h-4 rounded bg-white border-[#E2E8F0] accent-[#8B5CF6]"
+              className="w-4 h-4 rounded bg-white border-[#E2E8F0] accent-[#EF4444]"
             />
           </label>
         </div>

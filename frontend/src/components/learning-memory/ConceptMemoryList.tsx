@@ -53,7 +53,7 @@ export const ConceptMemoryList: React.FC<Props> = ({ concepts, loading }) => {
           className="p-4 rounded-xl bg-white border border-[#E2E8F0] hover:border-[#EF4444]/40 transition-all duration-200 flex flex-col md:flex-row md:items-center justify-between gap-4"
         >
           <div className="flex items-start gap-3">
-            <div className="mt-0.5 p-2 rounded-lg bg-[#161622] text-[#EF4444]">
+            <div className="mt-0.5 p-2 rounded-lg bg-[#F1F5F9] text-[#EF4444]">
               {c.learning_state === 'mastered' ? (
                 <CheckCircle2 className="w-4 h-4 text-emerald-400" />
               ) : c.learning_state === 'struggling' ? (
@@ -92,7 +92,7 @@ export const ConceptMemoryList: React.FC<Props> = ({ concepts, loading }) => {
 
             <Link
               to={`/dashboard/learning-memory/concepts/${encodeURIComponent(c.concept_key)}`}
-              className="p-2 rounded-lg bg-[#161622] text-[#64748B] hover:text-[#0F172A] hover:bg-[#EF4444]/20 transition-colors"
+              className="p-2 rounded-lg bg-[#F1F5F9] text-[#64748B] hover:text-[#0F172A] hover:bg-[#EF4444]/20 transition-colors"
               title="View full concept cognitive memory"
             >
               <ArrowRight className="w-4 h-4" />

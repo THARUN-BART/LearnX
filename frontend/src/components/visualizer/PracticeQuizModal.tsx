@@ -103,7 +103,7 @@ export const PracticeQuizModal: React.FC<PracticeQuizModalProps> = ({
                   <div className="space-y-1.5">
                     {q.options.map((opt, optIdx) => {
                       const isSelected = userPick === optIdx;
-                      let btnStyle = 'bg-[#181824] border-[#E2E8F0] text-[#CBD5E1] hover:border-[#EF4444]/50';
+                      let btnStyle = 'bg-[#E2E8F0] border-[#E2E8F0] text-[#CBD5E1] hover:border-[#EF4444]/50';
 
                       if (isSubmitted) {
                         if (optIdx === q.correct_option_index) {

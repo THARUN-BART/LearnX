@@ -118,7 +118,7 @@ export const CustomInputModal: React.FC<CustomInputModalProps> = ({
             max={12}
             value={arraySize}
             onChange={(e) => setArraySize(Number(e.target.value))}
-            className="w-full accent-[#8B5CF6] h-1.5 bg-[#F1F5F9] rounded cursor-pointer"
+            className="w-full accent-[#EF4444] h-1.5 bg-[#F1F5F9] rounded cursor-pointer"
           />
         </div>
 

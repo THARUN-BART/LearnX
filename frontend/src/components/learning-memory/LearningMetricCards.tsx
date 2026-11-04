@@ -77,7 +77,7 @@ export const LearningMetricCards: React.FC<Props> = ({ summary }) => {
               <span className="text-xs font-mono uppercase tracking-wider text-[#64748B]">
                 {c.label}
               </span>
-              <div className={`p-2 rounded-xl bg-[#161622] ${c.textColor}`}>
+              <div className={`p-2 rounded-xl bg-[#F1F5F9] ${c.textColor}`}>
                 <Icon className="w-5 h-5" />
               </div>
             </div>

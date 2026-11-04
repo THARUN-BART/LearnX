@@ -290,7 +290,7 @@ export const AssistantPage: React.FC = () => {
             }
           }}
           placeholder={`Formulate prompt in ${mode} mode... (Enter to send)`}
-          className="flex-1 bg-transparent px-3 py-1.5 text-xs text-[#0F172A] placeholder-[#5A5A6E] outline-none resize-none font-mono"
+          className="flex-1 bg-transparent px-3 py-1.5 text-xs text-[#0F172A] placeholder-[#94A3B8] outline-none resize-none font-mono"
         />
         <Button
           variant="primary"

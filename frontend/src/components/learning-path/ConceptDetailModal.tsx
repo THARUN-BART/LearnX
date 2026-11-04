@@ -67,7 +67,7 @@ export const ConceptDetailModal: React.FC<ConceptDetailModalProps> = ({ node, on
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
-      <div className="relative w-full max-w-2xl rounded-2xl border border-[#252538] bg-[#0E0E17] p-6 shadow-2xl overflow-y-auto max-h-[90vh]">
+      <div className="relative w-full max-w-2xl rounded-2xl border border-[#E2E8F0] bg-[#0E0E17] p-6 shadow-2xl overflow-y-auto max-h-[90vh]">
         {/* Header */}
         <div className="flex items-start justify-between gap-4 pb-4 border-b border-[#E2E8F0]">
           <div>
@@ -111,7 +111,7 @@ export const ConceptDetailModal: React.FC<ConceptDetailModalProps> = ({ node, on
           </div>
 
           {/* Prerequisites Chain */}
-          <div className="p-4 rounded-xl bg-[#12121D] border border-[#E2E8F0]">
+          <div className="p-4 rounded-xl bg-[#F1F5F9] border border-[#E2E8F0]">
             <h4 className="text-xs font-semibold text-[#64748B] uppercase tracking-wider font-mono mb-2">
               Prerequisite Dependencies
             </h4>
@@ -120,7 +120,7 @@ export const ConceptDetailModal: React.FC<ConceptDetailModalProps> = ({ node, on
                 {node.prerequisite_concept_keys.map((prereq) => (
                   <span
                     key={prereq}
-                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#F1F5F9] text-xs font-mono text-[#C4C4D4] border border-[#252538]"
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#F1F5F9] text-xs font-mono text-[#475569] border border-[#E2E8F0]"
                   >
                     <BookOpen className="w-3.5 h-3.5 text-[#EF4444]" />
                     {prereq}
@@ -190,7 +190,7 @@ export const ConceptDetailModal: React.FC<ConceptDetailModalProps> = ({ node, on
 
           {/* Recommended Problem */}
           {node.recommended_problem_name && (
-            <div className="p-4 rounded-xl bg-[#12121E] border border-[#EF4444]/30">
+            <div className="p-4 rounded-xl bg-[#F1F5F9] border border-[#EF4444]/30">
               <span className="text-[10px] font-mono uppercase tracking-wider text-[#EF4444] font-semibold block mb-1">
                 Suggested Next Target
               </span>
@@ -216,7 +216,7 @@ export const ConceptDetailModal: React.FC<ConceptDetailModalProps> = ({ node, on
             className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold shadow-lg transition-all ${
               isLocked
                 ? 'bg-[#F1F5F9] text-zinc-500 cursor-not-allowed'
-                : 'bg-gradient-to-r from-[#EF4444] to-[#7C3AED] hover:from-[#7C3AED] hover:to-[#6D28D9] text-white shadow-[#8B5CF6]/25'
+                : 'bg-gradient-to-r from-[#EF4444] to-[#EF4444] hover:from-[#EF4444] hover:to-[#6D28D9] text-white shadow-[#EF4444]/25'
             }`}
           >
             {isLocked ? (

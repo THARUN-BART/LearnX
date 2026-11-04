@@ -69,7 +69,7 @@ export const LearningMemoryPage: React.FC = () => {
   return (
     <div className="space-y-8 pb-12">
       {/* Top Narrative Banner */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-[#EF4444]/15 via-[#6366F1]/10 to-transparent border border-[#EF4444]/30 relative overflow-hidden">
+      <div className="p-6 rounded-3xl bg-gradient-to-r from-[#EF4444]/15 via-[#DC2626]/10 to-transparent border border-[#EF4444]/30 relative overflow-hidden">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1.5 max-w-2xl">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono uppercase bg-[#EF4444]/20 text-[#EF4444] border border-[#EF4444]/40">
@@ -86,7 +86,7 @@ export const LearningMemoryPage: React.FC = () => {
 
           <button
             onClick={loadData}
-            className="self-start md:self-auto px-4 py-2 rounded-xl bg-[#F1F5F9] hover:bg-[#161622] text-[#64748B] hover:text-[#0F172A] border border-[#E2E8F0] text-xs font-mono flex items-center gap-2 transition-all"
+            className="self-start md:self-auto px-4 py-2 rounded-xl bg-[#F1F5F9] hover:bg-[#F1F5F9] text-[#64748B] hover:text-[#0F172A] border border-[#E2E8F0] text-xs font-mono flex items-center gap-2 transition-all"
           >
             <RefreshCcw className="w-3.5 h-3.5" />
             Refresh Telemetry
@@ -113,7 +113,7 @@ export const LearningMemoryPage: React.FC = () => {
       <div className="space-y-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#E2E8F0] pb-4">
           <div className="flex items-center gap-2">
-            <div className="p-2 rounded-xl bg-[#161622] text-[#EF4444]">
+            <div className="p-2 rounded-xl bg-[#F1F5F9] text-[#EF4444]">
               <Brain className="w-5 h-5" />
             </div>
             <div>
@@ -130,7 +130,7 @@ export const LearningMemoryPage: React.FC = () => {
                 placeholder="Search concepts..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-9 pr-3 py-1.5 rounded-xl bg-white border border-[#E2E8F0] text-xs text-[#0F172A] placeholder-[#5A5A6E] focus:outline-none focus:border-[#EF4444]"
+                className="pl-9 pr-3 py-1.5 rounded-xl bg-white border border-[#E2E8F0] text-xs text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:border-[#EF4444]"
               />
             </form>
 

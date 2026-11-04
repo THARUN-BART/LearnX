@@ -39,7 +39,7 @@ export const LandingPage: React.FC = () => {
       <div className="absolute inset-0 bg-tech-grid opacity-25 pointer-events-none" />
 
       {/* Ambient glowing radial lights */}
-      <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[650px] h-[350px] bg-gradient-to-b from-[#EF4444]/15 via-[#6366F1]/5 to-transparent blur-[140px] pointer-events-none -z-10" />
+      <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[650px] h-[350px] bg-gradient-to-b from-[#EF4444]/15 via-[#DC2626]/5 to-transparent blur-[140px] pointer-events-none -z-10" />
 
       {/* HERO SECTION */}
       <section className="pt-24 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center relative z-10">
@@ -140,11 +140,11 @@ export const LandingPage: React.FC = () => {
                   <div className="p-3 bg-[#F1F5F9] rounded-xl border border-[#E2E8F0] space-y-1">
                     <span className="text-[#94A3B8]">Runtime Constraints:</span>
                     <div className="text-emerald-400">3 &lt;= nums.length &lt;= 3000</div>
-                    <div className="text-[#818CF8]">Target Complexity: O(N^2)</div>
+                    <div className="text-[#DC2626]">Target Complexity: O(N^2)</div>
                   </div>
                 </div>
 
-                <div className="md:col-span-8 flex flex-col justify-between font-mono text-xs bg-[#09090E] p-4 rounded-xl border border-[#E2E8F0]">
+                <div className="md:col-span-8 flex flex-col justify-between font-mono text-xs bg-[#F8FAFC] p-4 rounded-xl border border-[#E2E8F0]">
                   <pre className="text-emerald-300 leading-relaxed overflow-x-auto">
 {`class Solution:
     def threeSum(self, nums: list[int]) -> list[list[int]]:
@@ -213,7 +213,7 @@ export const LandingPage: React.FC = () => {
                   </span>
                   <h4 className="font-bold text-sm text-[#0F172A]">Arrays & Two Pointers</h4>
                   <p className="text-xs text-[#64748B]">18 / 18 problems solved</p>
-                  <div className="w-full bg-[#181824] h-1.5 rounded-full overflow-hidden">
+                  <div className="w-full bg-[#E2E8F0] h-1.5 rounded-full overflow-hidden">
                     <div className="bg-emerald-500 h-full w-full" />
                   </div>
                 </div>
@@ -224,19 +224,19 @@ export const LandingPage: React.FC = () => {
                   </span>
                   <h4 className="font-bold text-sm text-[#0F172A]">Binary Search & Answers</h4>
                   <p className="text-xs text-[#64748B]">14 / 22 problems solved (63%)</p>
-                  <div className="w-full bg-[#181824] h-1.5 rounded-full overflow-hidden">
+                  <div className="w-full bg-[#E2E8F0] h-1.5 rounded-full overflow-hidden">
                     <div className="bg-[#EF4444] h-full w-[63%]" />
                   </div>
                 </div>
 
                 <div className="p-4 bg-[#F1F5F9] rounded-xl border border-[#E2E8F0] opacity-60 space-y-2">
-                  <span className="text-[10px] px-2 py-0.5 rounded bg-[#181824] text-[#64748B] border border-[#2B2B3C]">
+                  <span className="text-[10px] px-2 py-0.5 rounded bg-[#F1F5F9] text-[#64748B] border border-[#E2E8F0]">
                     Locked
                   </span>
                   <h4 className="font-bold text-sm text-[#0F172A]">Dynamic Programming</h4>
                   <p className="text-xs text-[#64748B]">Requires tree recursion mastery</p>
-                  <div className="w-full bg-[#181824] h-1.5 rounded-full overflow-hidden">
-                    <div className="bg-[#2B2B3C] h-full w-0" />
+                  <div className="w-full bg-[#E2E8F0] h-1.5 rounded-full overflow-hidden">
+                    <div className="bg-[#E2E8F0] h-full w-0" />
                   </div>
                 </div>
               </div>
@@ -245,16 +245,16 @@ export const LandingPage: React.FC = () => {
             {activeTab === 'stats' && (
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center font-mono">
                 <div className="p-5 bg-[#F1F5F9] rounded-xl border border-[#E2E8F0]">
-                  <div className="text-3xl font-bold text-emerald-400">79.4%</div>
-                  <div className="text-xs text-[#64748B] mt-1">First-Try Pass Velocity</div>
+                  <div className="text-3xl font-bold text-emerald-600">1,200+</div>
+                  <div className="text-xs text-[#64748B] mt-1">Problems in Question Bank</div>
                 </div>
                 <div className="p-5 bg-[#F1F5F9] rounded-xl border border-[#E2E8F0]">
-                  <div className="text-3xl font-bold text-[#DC2626]">14 Days</div>
-                  <div className="text-xs text-[#64748B] mt-1">Unbroken Solving Consistency</div>
+                  <div className="text-3xl font-bold text-[#DC2626]">5</div>
+                  <div className="text-xs text-[#64748B] mt-1">Languages Supported</div>
                 </div>
                 <div className="p-5 bg-[#F1F5F9] rounded-xl border border-[#E2E8F0]">
-                  <div className="text-2xl font-bold text-amber-400">Edge Cases</div>
-                  <div className="text-xs text-[#64748B] mt-1">Top Addressed Anti-Pattern</div>
+                  <div className="text-2xl font-bold text-amber-600">AI-Powered</div>
+                  <div className="text-xs text-[#64748B] mt-1">Personalised Hint Engine</div>
                 </div>
               </div>
             )}
@@ -330,7 +330,7 @@ export const LandingPage: React.FC = () => {
 
               {/* Step 2 */}
               <div className="p-5 rounded-xl bg-[#F1F5F9] border border-[#E2E8F0] space-y-2.5">
-                <div className="w-8 h-8 rounded-lg bg-[#DC2626]/20 text-[#818CF8] flex items-center justify-center font-bold">
+                <div className="w-8 h-8 rounded-lg bg-[#DC2626]/20 text-[#DC2626] flex items-center justify-center font-bold">
                   02
                 </div>
                 <h4 className="text-sm font-bold text-[#0F172A]">Cognitive Gap Detection</h4>
@@ -402,8 +402,8 @@ export const LandingPage: React.FC = () => {
                 onClick={() => setActiveHowStep(s.step)}
                 className={`p-5 rounded-2xl border cursor-pointer transition-all ${
                   activeHowStep === s.step
-                    ? 'bg-[#F1F5F9] border-[#EF4444]/50 shadow-lg shadow-[#8B5CF6]/10'
-                    : 'bg-white border-[#E2E8F0] hover:border-[#2B2B3C]'
+                    ? 'bg-[#F1F5F9] border-[#EF4444]/50 shadow-lg shadow-[#EF4444]/10'
+                    : 'bg-white border-[#E2E8F0] hover:border-[#CBD5E1]'
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -411,7 +411,7 @@ export const LandingPage: React.FC = () => {
                     className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold ${
                       activeHowStep === s.step
                         ? 'bg-[#EF4444] text-white'
-                        : 'bg-[#181824] text-[#64748B]'
+                        : 'bg-[#E2E8F0] text-[#64748B]'
                     }`}
                   >
                     0{s.step}
@@ -483,7 +483,7 @@ export const LandingPage: React.FC = () => {
       <section id="showcase" className="py-24 border-t border-[#E2E8F0] bg-[#0A0A10] px-4 sm:px-6 lg:px-8 scroll-mt-20">
         <div className="max-w-7xl mx-auto space-y-16">
           <div className="max-w-3xl mx-auto text-center space-y-3">
-            <span className="tech-pill text-[#818CF8] border-[#6366F1]/30">Product Showcase</span>
+            <span className="tech-pill text-[#DC2626] border-[#DC2626]/30">Product Showcase</span>
             <h2 className="text-3xl sm:text-4xl font-bold font-mono text-[#0F172A]">
               Engineered Like a High-End Developer Tool
             </h2>
@@ -501,8 +501,8 @@ export const LandingPage: React.FC = () => {
               </p>
             </div>
 
-            <div className="p-6 rounded-2xl bg-white border border-[#E2E8F0] space-y-3 hover:border-[#6366F1]/50 transition-all">
-              <Bot className="w-6 h-6 text-[#6366F1]" />
+            <div className="p-6 rounded-2xl bg-white border border-[#E2E8F0] space-y-3 hover:border-[#DC2626]/50 transition-all">
+              <Bot className="w-6 h-6 text-[#DC2626]" />
               <h4 className="font-bold text-sm text-[#0F172A]">Socratic Copilot</h4>
               <p className="text-[#64748B] font-sans leading-relaxed">
                 Choose Hint Mode, Explain Mode, or Debug Mode depending on how deep you want guidance. Features one-click code copy and prompt history.
@@ -547,7 +547,7 @@ export const LandingPage: React.FC = () => {
                   <th className="p-4">Generic Problem Platforms</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#1C1C28] text-[#D1D1DE]">
+              <tbody className="divide-y divide-[#E2E8F0] text-[#D1D1DE]">
                 <tr>
                   <td className="p-4 font-semibold text-[#0F172A]">Hint Methodology</td>
                   <td className="p-4 text-emerald-400 flex items-center gap-2">

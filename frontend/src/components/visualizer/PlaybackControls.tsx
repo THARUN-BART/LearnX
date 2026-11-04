@@ -48,7 +48,7 @@ export const PlaybackControls: React.FC<PlaybackControlsProps> = ({
           max={Math.max(0, totalSteps - 1)}
           value={currentStep}
           onChange={(e) => onSeek(Number(e.target.value))}
-          className="flex-1 accent-[#8B5CF6] h-1.5 bg-[#F1F5F9] rounded-lg cursor-pointer"
+          className="flex-1 accent-[#EF4444] h-1.5 bg-[#F1F5F9] rounded-lg cursor-pointer"
         />
         <span className="text-[11px] text-[#DC2626] w-12 text-left">
           {totalSteps > 0 ? `${Math.round(((currentStep + 1) / totalSteps) * 100)}%` : '0%'}
@@ -61,7 +61,7 @@ export const PlaybackControls: React.FC<PlaybackControlsProps> = ({
           <button
             onClick={onRestart}
             title="Restart from beginning"
-            className="p-2 text-[#64748B] hover:text-[#0F172A] bg-[#F1F5F9] hover:bg-[#181824] border border-[#E2E8F0] rounded-lg transition-colors"
+            className="p-2 text-[#64748B] hover:text-[#0F172A] bg-[#F1F5F9] hover:bg-[#E2E8F0] border border-[#E2E8F0] rounded-lg transition-colors"
           >
             <RotateCcw className="w-4 h-4" />
           </button>
@@ -69,7 +69,7 @@ export const PlaybackControls: React.FC<PlaybackControlsProps> = ({
             onClick={onPrev}
             disabled={currentStep <= 0}
             title="Previous Step"
-            className="p-2 text-[#64748B] hover:text-[#0F172A] disabled:opacity-30 disabled:pointer-events-none bg-[#F1F5F9] hover:bg-[#181824] border border-[#E2E8F0] rounded-lg transition-colors"
+            className="p-2 text-[#64748B] hover:text-[#0F172A] disabled:opacity-30 disabled:pointer-events-none bg-[#F1F5F9] hover:bg-[#E2E8F0] border border-[#E2E8F0] rounded-lg transition-colors"
           >
             <SkipBack className="w-4 h-4" />
           </button>
@@ -78,7 +78,7 @@ export const PlaybackControls: React.FC<PlaybackControlsProps> = ({
             className={`px-4 py-2 rounded-lg flex items-center gap-2 text-xs font-bold transition-all shadow-md ${
               isPlaying
                 ? 'bg-amber-500 text-black hover:bg-amber-400'
-                : 'bg-[#EF4444] text-white hover:bg-[#7C3AED] shadow-[#8B5CF6]/30'
+                : 'bg-[#EF4444] text-white hover:bg-[#EF4444] shadow-[#EF4444]/30'
             }`}
           >
             {isPlaying ? (
@@ -95,7 +95,7 @@ export const PlaybackControls: React.FC<PlaybackControlsProps> = ({
             onClick={onNext}
             disabled={currentStep >= totalSteps - 1}
             title="Next Step"
-            className="p-2 text-[#64748B] hover:text-[#0F172A] disabled:opacity-30 disabled:pointer-events-none bg-[#F1F5F9] hover:bg-[#181824] border border-[#E2E8F0] rounded-lg transition-colors"
+            className="p-2 text-[#64748B] hover:text-[#0F172A] disabled:opacity-30 disabled:pointer-events-none bg-[#F1F5F9] hover:bg-[#E2E8F0] border border-[#E2E8F0] rounded-lg transition-colors"
           >
             <SkipForward className="w-4 h-4" />
           </button>

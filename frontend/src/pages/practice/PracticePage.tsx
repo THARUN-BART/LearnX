@@ -51,7 +51,7 @@ function formatInlineCode(text: string) {
   return parts.map((part, idx) => {
     if (part.startsWith('`') && part.endsWith('`')) {
       return (
-        <code key={idx} className="px-1.5 py-0.5 rounded bg-[#181824] text-[#DC2626] font-mono text-[11px] border border-[#E2E8F0]">
+        <code key={idx} className="px-1.5 py-0.5 rounded bg-[#E2E8F0] text-[#DC2626] font-mono text-[11px] border border-[#E2E8F0]">
           {part.slice(1, -1)}
         </code>
       );
@@ -450,7 +450,7 @@ export const PracticePage: React.FC = () => {
                   key={tab}
                   onClick={() => setActiveTab(tab)}
                   className={`px-2.5 py-1 rounded-lg text-[11px] capitalize ${
-                    activeTab === tab ? 'bg-[#181824] text-[#DC2626] border border-[#EF4444]/30' : 'text-[#64748B]'
+                    activeTab === tab ? 'bg-[#E2E8F0] text-[#DC2626] border border-[#EF4444]/30' : 'text-[#64748B]'
                   }`}
                 >
                   {tab === 'hints' ? `Hints (${unlockedHints.length}/5)` : tab}
@@ -669,10 +669,10 @@ export const PracticePage: React.FC = () => {
           <div className="h-56 bg-white border border-[#E2E8F0] rounded-xl flex flex-col overflow-hidden shrink-0">
             <div className="h-8 px-4 bg-[#0A0A10] border-b border-[#E2E8F0] flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <button onClick={() => setActiveBottomTab('testcases')} className={`px-2.5 py-1 rounded text-xs ${activeBottomTab === 'testcases' ? 'bg-[#181824] text-[#0F172A]' : 'text-[#64748B]'}`}>
+                <button onClick={() => setActiveBottomTab('testcases')} className={`px-2.5 py-1 rounded text-xs ${activeBottomTab === 'testcases' ? 'bg-[#E2E8F0] text-[#0F172A]' : 'text-[#64748B]'}`}>
                   Test Cases
                 </button>
-                <button onClick={() => setActiveBottomTab('console')} className={`px-2.5 py-1 rounded text-xs flex items-center gap-1 ${activeBottomTab === 'console' ? 'bg-[#181824] text-[#0F172A]' : 'text-[#64748B]'}`}>
+                <button onClick={() => setActiveBottomTab('console')} className={`px-2.5 py-1 rounded text-xs flex items-center gap-1 ${activeBottomTab === 'console' ? 'bg-[#E2E8F0] text-[#0F172A]' : 'text-[#64748B]'}`}>
                   <Terminal className="w-3 h-3 text-[#EF4444]" /> Output
                 </button>
               </div>
@@ -727,7 +727,7 @@ export const PracticePage: React.FC = () => {
                       {executionResult.stderr && <div className="text-amber-400 whitespace-pre-wrap">{executionResult.stderr}</div>}
                       {executionResult.stdout && <div className="text-[#0F172A] whitespace-pre-wrap">{executionResult.stdout}</div>}
                       {executionResult.diagnosis && (
-                        <div className="mt-3 p-3.5 bg-[#17122B] border border-[#EF4444]/40 rounded-xl space-y-2">
+                        <div className="mt-3 p-3.5 bg-[#FFF1F2] border border-[#EF4444]/40 rounded-xl space-y-2">
                           <div className="flex items-center gap-2 text-[#E9D5FF]">
                             <Sparkles className="w-4 h-4" />
                             {executionResult.diagnosis.category} / {executionResult.diagnosis.subtype}
@@ -787,7 +787,7 @@ export const PracticePage: React.FC = () => {
                 <>
                   {aiModal.type === 'explain' && aiModal.explain && (
                     <div className="space-y-3 font-sans">
-                      <div className="p-3 bg-[#16122B] border border-[#EF4444]/30 rounded-xl">
+                      <div className="p-3 bg-[#FFF1F2] border border-[#EF4444]/30 rounded-xl">
                         <span className="text-[11px] font-bold text-[#DC2626] font-mono uppercase">What Went Wrong</span>
                         <p className="text-[#E9D5FF]">{aiModal.explain.what_went_wrong}</p>
                       </div>
@@ -831,7 +831,7 @@ export const PracticePage: React.FC = () => {
                         Runner: {pedagogy.runner_result?.passed ? 'passed' : pedagogy.runner_result?.error_type || 'failed'}
                         {pedagogy.runner_result?.output && <pre className="mt-2 whitespace-pre-wrap">{pedagogy.runner_result.output}</pre>}
                       </div>
-                      <div className="p-3 bg-[#16122B] border border-[#EF4444]/30 rounded-xl">
+                      <div className="p-3 bg-[#FFF1F2] border border-[#EF4444]/30 rounded-xl">
                         {pedagogy.diagnosis?.misconception} ({normalizePercentage(pedagogy.diagnosis?.confidence)}%)
                         <p className="text-[#64748B] mt-1">{pedagogy.diagnosis?.evidence}</p>
                       </div>

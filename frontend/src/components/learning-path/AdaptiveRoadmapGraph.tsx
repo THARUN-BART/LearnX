@@ -55,7 +55,7 @@ const stateConfig: Record<
     border: 'border-purple-500/40',
     bg: 'bg-purple-950/20',
     icon: Sparkles,
-    accentColor: '#8B5CF6',
+    accentColor: '#EF4444',
   },
   in_progress: {
     label: 'In Progress',
@@ -149,7 +149,7 @@ export const AdaptiveRoadmapGraph: React.FC<AdaptiveRoadmapGraphProps> = ({
               onClick={() => onSelectConcept(node)}
               className={`relative cursor-pointer rounded-xl border p-4 transition-all duration-200 flex flex-col justify-between ${
                 cfg.bg
-              } ${isSelected ? 'ring-2 ring-[#8B5CF6] border-[#EF4444]' : cfg.border} ${
+              } ${isSelected ? 'ring-2 ring-[#EF4444] border-[#EF4444]' : cfg.border} ${
                 isLocked
                   ? 'hover:border-zinc-700'
                   : 'hover:scale-[1.01] hover:border-[#EF4444]/50 shadow-lg shadow-black/20'

@@ -64,7 +64,7 @@ export const AnalyticsPage: React.FC = () => {
         </div>
         <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] space-y-1">
           <span className="text-xs text-[#94A3B8]">COMPLETION</span>
-          <div className="text-3xl font-bold text-[#818CF8]">{stats.completionPercentage}%</div>
+          <div className="text-3xl font-bold text-[#DC2626]">{stats.completionPercentage}%</div>
           <span className="text-[11px] text-[#64748B]">{stats.pendingProblems} still pending</span>
         </div>
         <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] space-y-1">
@@ -92,14 +92,14 @@ export const AnalyticsPage: React.FC = () => {
                   <YAxis dataKey="topic" type="category" stroke="#8E8EA0" fontSize={11} width={110} />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: '#0D0D14',
-                      border: '1px solid #2B2B3C',
+                      backgroundColor: '#FFFFFF',
+                      border: '1px solid #CBD5E1',
                       borderRadius: '0.75rem',
                       color: '#F4F4F6',
                       fontSize: '11px',
                     }}
                   />
-                  <Bar dataKey="score" fill="#8B5CF6" radius={[0, 4, 4, 0]} />
+                  <Bar dataKey="score" fill="#EF4444" radius={[0, 4, 4, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             )}
@@ -127,8 +127,8 @@ export const AnalyticsPage: React.FC = () => {
                 </Pie>
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#0D0D14',
-                    border: '1px solid #2B2B3C',
+                    backgroundColor: '#FFFFFF',
+                    border: '1px solid #CBD5E1',
                     borderRadius: '0.75rem',
                     color: '#F4F4F6',
                     fontSize: '11px',
@@ -162,22 +162,22 @@ export const AnalyticsPage: React.FC = () => {
               <AreaChart data={daily.length ? daily : stats.monthlyProgress.map((m) => ({ date: m.month, solved: m.solved, attempts: 0 }))}>
                 <defs>
                   <linearGradient id="colorSolved" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0.0} />
+                    <stop offset="5%" stopColor="#EF4444" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#EF4444" stopOpacity={0.0} />
                   </linearGradient>
                 </defs>
                 <XAxis dataKey="date" stroke="#5A5A6E" fontSize={10} tickLine={false} hide={daily.length > 14} />
                 <YAxis stroke="#5A5A6E" fontSize={11} tickLine={false} />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#0D0D14',
-                    border: '1px solid #2B2B3C',
+                    backgroundColor: '#FFFFFF',
+                    border: '1px solid #CBD5E1',
                     borderRadius: '0.75rem',
                     color: '#F4F4F6',
                     fontSize: '11px',
                   }}
                 />
-                <Area type="monotone" dataKey="solved" stroke="#8B5CF6" strokeWidth={2} fillOpacity={1} fill="url(#colorSolved)" />
+                <Area type="monotone" dataKey="solved" stroke="#EF4444" strokeWidth={2} fillOpacity={1} fill="url(#colorSolved)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>

@@ -30,10 +30,9 @@ export const TopPickHero: React.FC<TopPickHeroProps> = ({
   };
 
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#12121D] via-[#151522] to-[#0D0D14] border border-[#EF4444]/40 p-6 sm:p-8 shadow-xl shadow-[#8B5CF6]/5 glow-purple">
-      {/* Background glow & subtle tech grid */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-[#EF4444]/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
-      <div className="absolute inset-0 bg-tech-grid opacity-20 pointer-events-none" />
+    <div className="relative overflow-hidden rounded-2xl bg-white border border-[#EF4444]/30 p-6 sm:p-8 shadow-sm">
+      {/* Background glow */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-[#EF4444]/5 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
 
       <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
         <div className="space-y-4 max-w-3xl">
@@ -78,20 +77,20 @@ export const TopPickHero: React.FC<TopPickHeroProps> = ({
           </div>
 
           {/* Explanation rationale */}
-          <div className="p-4 rounded-xl bg-[#09090F]/70 border border-[#E2E8F0] space-y-2">
+          <div className="p-4 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-2">
             <div className="flex items-center gap-2 text-xs font-mono text-[#64748B]">
               <BrainCircuit className="w-3.5 h-3.5 text-[#EF4444]" />
               <span className="uppercase tracking-wider font-semibold">Pedagogical Rationale</span>
             </div>
-            <p className="text-xs sm:text-sm text-[#D4D4D8] leading-relaxed font-sans">
+            <p className="text-xs sm:text-sm text-[#475569] leading-relaxed font-sans">
               {recommendation.explanation}
             </p>
 
             {recommendation.learning_objective && (
-              <div className="pt-2 border-t border-[#E2E8F0]/80 flex items-start gap-2 text-xs text-[#64748B]">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+              <div className="pt-2 border-t border-[#E2E8F0] flex items-start gap-2 text-xs text-[#64748B]">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
                 <span>
-                  <strong className="text-white font-mono">Learning Goal:</strong>{' '}
+                  <strong className="text-[#0F172A] font-mono">Learning Goal:</strong>{' '}
                   {recommendation.learning_objective}
                 </span>
               </div>
@@ -104,7 +103,7 @@ export const TopPickHero: React.FC<TopPickHeroProps> = ({
           <Button
             variant="primary"
             size="lg"
-            className="w-full font-mono text-sm shadow-lg shadow-[#8B5CF6]/20"
+            className="w-full font-mono text-sm shadow-lg shadow-[#EF4444]/20"
             rightIcon={<Play className="w-4 h-4" />}
             onClick={handleStartPractice}
           >
@@ -126,7 +125,7 @@ export const TopPickHero: React.FC<TopPickHeroProps> = ({
           {onFeedbackClick && (
             <button
               onClick={() => onFeedbackClick(recommendation)}
-              className="text-[11px] font-mono text-[#64748B] hover:text-[#0F172A] text-center pt-1 transition-colors underline underline-offset-4 decoration-[#2D2D3E]"
+              className="text-[11px] font-mono text-[#64748B] hover:text-[#0F172A] text-center pt-1 transition-colors underline underline-offset-4 decoration-[#CBD5E1]"
             >
               Rate this suggestion
             </button>

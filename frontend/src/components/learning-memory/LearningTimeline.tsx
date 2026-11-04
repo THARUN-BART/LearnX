@@ -86,7 +86,7 @@ export const LearningTimeline: React.FC<Props> = ({ events, loading }) => {
               </span>
             </div>
             {e.concept_key && (
-              <span className="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-mono bg-[#161622] text-[#EF4444]">
+              <span className="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-mono bg-[#F1F5F9] text-[#EF4444]">
                 {e.concept_key}
               </span>
             )}

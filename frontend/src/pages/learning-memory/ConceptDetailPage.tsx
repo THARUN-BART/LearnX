@@ -67,7 +67,7 @@ export const ConceptDetailPage: React.FC = () => {
       {/* Header Profile */}
       <div className="p-6 rounded-3xl bg-white border border-[#E2E8F0] flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-start gap-4">
-          <div className="p-3 rounded-2xl bg-[#161622] text-[#EF4444]">
+          <div className="p-3 rounded-2xl bg-[#F1F5F9] text-[#EF4444]">
             <Brain className="w-6 h-6" />
           </div>
           <div>
@@ -160,7 +160,7 @@ export const ConceptDetailPage: React.FC = () => {
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-semibold text-[#0F172A]">{m.category}</span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#161622] text-[#64748B]">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#F1F5F9] text-[#64748B]">
                       {m.subtype}
                     </span>
                   </div>

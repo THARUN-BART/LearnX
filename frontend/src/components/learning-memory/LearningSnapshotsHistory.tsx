@@ -81,16 +81,16 @@ export const LearningSnapshotsHistory: React.FC<LearningSnapshotsHistoryProps> =
                   <stop offset="95%" stopColor="#10B981" stopOpacity={0.0} />
                 </linearGradient>
                 <linearGradient id="colorAssist" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.4} />
-                  <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0.0} />
+                  <stop offset="5%" stopColor="#EF4444" stopOpacity={0.4} />
+                  <stop offset="95%" stopColor="#EF4444" stopOpacity={0.0} />
                 </linearGradient>
               </defs>
-              <XAxis dataKey="date" stroke="#5A5A6E" fontSize={11} tickLine={false} axisLine={{ stroke: '#1C1C28' }} />
-              <YAxis stroke="#5A5A6E" fontSize={11} tickLine={false} axisLine={{ stroke: '#1C1C28' }} />
+              <XAxis dataKey="date" stroke="#5A5A6E" fontSize={11} tickLine={false} axisLine={{ stroke: '#E2E8F0' }} />
+              <YAxis stroke="#5A5A6E" fontSize={11} tickLine={false} axisLine={{ stroke: '#E2E8F0' }} />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#0D0D14',
-                  border: '1px solid #2B2B3C',
+                  backgroundColor: '#FFFFFF',
+                  border: '1px solid #CBD5E1',
                   borderRadius: '0.75rem',
                   color: '#F4F4F6',
                   fontSize: '11px',
@@ -109,7 +109,7 @@ export const LearningSnapshotsHistory: React.FC<LearningSnapshotsHistoryProps> =
                 type="monotone"
                 dataKey="assisted"
                 name="AI-Assisted Solves"
-                stroke="#8B5CF6"
+                stroke="#EF4444"
                 fillOpacity={1}
                 fill="url(#colorAssist)"
               />
@@ -117,7 +117,7 @@ export const LearningSnapshotsHistory: React.FC<LearningSnapshotsHistoryProps> =
           </ResponsiveContainer>
         </div>
       ) : (
-        <div className="p-8 text-center rounded-xl bg-[#F1F5F9] border border-dashed border-[#2A2A3C] text-xs text-[#64748B]">
+        <div className="p-8 text-center rounded-xl bg-[#F1F5F9] border border-dashed border-[#E2E8F0] text-xs text-[#64748B]">
           <Brain className="w-8 h-8 text-[#94A3B8] mx-auto mb-2" />
           <p>No snapshots logged yet. Solving problems logs your mastery milestones automatically.</p>
         </div>

@@ -156,7 +156,7 @@ export const OTPVerificationPage: React.FC = () => {
   return (
     <div className="w-full space-y-6">
       <div className="space-y-1.5 text-center">
-        <div className="w-12 h-12 rounded-2xl bg-[#EF4444]/15 border border-[#EF4444]/30 text-[#DC2626] flex items-center justify-center mx-auto mb-3 shadow-lg shadow-[#8B5CF6]/10">
+        <div className="w-12 h-12 rounded-2xl bg-[#EF4444]/15 border border-[#EF4444]/30 text-[#DC2626] flex items-center justify-center mx-auto mb-3 shadow-lg shadow-[#EF4444]/10">
           {isSuccess ? (
             <CheckCircle2 className="w-6 h-6 text-emerald-400" />
           ) : (
@@ -197,9 +197,9 @@ export const OTPVerificationPage: React.FC = () => {
               error
                 ? 'border-red-500 text-red-400'
                 : digit
-                ? 'border-[#EF4444] text-white bg-[#F8FAFC] shadow-sm shadow-[#8B5CF6]/20'
+                ? 'border-[#EF4444] text-white bg-[#F8FAFC] shadow-sm shadow-[#EF4444]/20'
                 : activeInput === idx
-                ? 'border-[#EF4444] ring-1 ring-[#8B5CF6]/50'
+                ? 'border-[#EF4444] ring-1 ring-[#EF4444]/50'
                 : 'border-[#E2E8F0] text-[#0F172A]'
             }`}
           />

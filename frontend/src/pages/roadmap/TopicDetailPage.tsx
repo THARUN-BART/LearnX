@@ -70,7 +70,7 @@ export const TopicDetailPage: React.FC = () => {
     <div
       key={prob.id}
       onClick={() => navigate(`/practice/${prob.id}`)}
-      className="p-4 rounded-xl bg-[#F8FAFC] hover:bg-[#1C1C2A] border border-[#E2E8F0] hover:border-[#EF4444]/50 transition-all flex items-center justify-between cursor-pointer group"
+      className="p-4 rounded-xl bg-[#F8FAFC] hover:bg-[#F8FAFC] border border-[#E2E8F0] hover:border-[#EF4444]/50 transition-all flex items-center justify-between cursor-pointer group"
     >
       <div className="space-y-1 min-w-0">
         <div className="text-sm font-bold text-[#0F172A] group-hover:text-[#DC2626] truncate">
@@ -110,7 +110,7 @@ export const TopicDetailPage: React.FC = () => {
         Back to Roadmap
       </Link>
 
-      <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-[#171722] via-[#1A1A28] to-[#101019] border border-[#E2E8F0] space-y-4">
+      <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-[#F8FAFC] via-[#F8FAFC] to-white border border-[#E2E8F0] space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <Badge variant={topic.difficulty === 'Easy' ? 'easy' : topic.difficulty === 'Hard' ? 'hard' : 'medium'}>

@@ -90,9 +90,9 @@ export const DataStructureCanvas: React.FC<DataStructureCanvasProps> = ({
                         key={cIdx}
                         className={`w-11 h-10 flex items-center justify-center rounded-lg text-xs font-bold border transition-all ${
                           isActive
-                            ? 'bg-[#EF4444] text-white border-white scale-110 shadow-lg shadow-[#8B5CF6]/50 z-10'
+                            ? 'bg-[#EF4444] text-white border-white scale-110 shadow-lg shadow-[#EF4444]/50 z-10'
                             : cell !== 0
-                            ? 'bg-[#181824] text-[#E2E8F0] border-[#EF4444]/40'
+                            ? 'bg-[#E2E8F0] text-[#E2E8F0] border-[#EF4444]/40'
                             : 'bg-[#F1F5F9] text-[#94A3B8] border-[#E2E8F0]'
                         }`}
                       >
@@ -167,7 +167,7 @@ export const DataStructureCanvas: React.FC<DataStructureCanvasProps> = ({
               const heightPct = Math.max(25, Math.round((Math.abs(val) / maxVal) * 90));
 
               // Determine bar color
-              let barBg = 'bg-[#181824] border-[#E2E8F0] text-[#E2E8F0]';
+              let barBg = 'bg-[#E2E8F0] border-[#E2E8F0] text-[#E2E8F0]';
               if (is_complete) {
                 barBg = 'bg-emerald-500/20 border-emerald-500 text-emerald-300';
               } else if (isSwapping) {
@@ -175,7 +175,7 @@ export const DataStructureCanvas: React.FC<DataStructureCanvasProps> = ({
               } else if (isComparing) {
                 barBg = 'bg-amber-500/30 border-amber-500 text-amber-300 scale-105 shadow-lg shadow-amber-500/20';
               } else if (isHighlight) {
-                barBg = 'bg-[#EF4444]/30 border-[#EF4444] text-white shadow-lg shadow-[#8B5CF6]/30';
+                barBg = 'bg-[#EF4444]/30 border-[#EF4444] text-white shadow-lg shadow-[#EF4444]/30';
               }
 
               return (

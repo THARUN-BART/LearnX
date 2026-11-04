@@ -88,7 +88,7 @@ export const LearningPathPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#E2E8F0]">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#EF4444] to-[#B91C1C] flex items-center justify-center shadow-md shadow-[#8B5CF6]/30">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#EF4444] to-[#B91C1C] flex items-center justify-center shadow-md shadow-[#EF4444]/30">
               <Compass className="w-4 h-4 text-white" />
             </div>
             <h1 className="text-2xl font-bold tracking-tight text-[#0F172A]">
@@ -103,7 +103,7 @@ export const LearningPathPage: React.FC = () => {
         <button
           onClick={handleRecalculate}
           disabled={recalculating}
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#F1F5F9] hover:bg-[#252538] border border-[#2B2B3E] text-xs font-semibold text-[#0F172A] transition-all disabled:opacity-50"
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#F1F5F9] hover:bg-[#E2E8F0] border border-[#E2E8F0] text-xs font-semibold text-[#0F172A] transition-all disabled:opacity-50"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${recalculating ? 'animate-spin text-[#EF4444]' : ''}`} />
           <span>{recalculating ? 'Evaluating Evidence...' : 'Re-evaluate Path'}</span>

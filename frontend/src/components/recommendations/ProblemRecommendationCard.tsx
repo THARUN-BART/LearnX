@@ -79,7 +79,7 @@ export const ProblemRecommendationCard: React.FC<ProblemRecommendationCardProps>
   const meta = getCategoryMeta(recommendation.category);
 
   return (
-    <div className="p-5 sm:p-6 rounded-2xl bg-white hover:bg-[#12121D] border border-[#E2E8F0] hover:border-[#EF4444]/40 transition-all duration-200 flex flex-col justify-between group relative overflow-hidden">
+    <div className="p-5 sm:p-6 rounded-2xl bg-white hover:bg-[#F1F5F9] border border-[#E2E8F0] hover:border-[#EF4444]/40 transition-all duration-200 flex flex-col justify-between group relative overflow-hidden">
       <div className="space-y-4">
         {/* Header tags */}
         <div className="flex items-center justify-between gap-2 flex-wrap">
@@ -124,7 +124,7 @@ export const ProblemRecommendationCard: React.FC<ProblemRecommendationCardProps>
         </div>
 
         {/* Pedagogical Explanation */}
-        <div className="p-3.5 rounded-xl bg-[#08080E] border border-[#181824] space-y-2">
+        <div className="p-3.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-2">
           <div className="flex items-center gap-1.5 text-[10px] font-mono text-[#94A3B8] uppercase tracking-wider font-semibold">
             <BrainCircuit className="w-3 h-3 text-[#EF4444]" />
             <span>Why this problem</span>
@@ -134,7 +134,7 @@ export const ProblemRecommendationCard: React.FC<ProblemRecommendationCardProps>
           </p>
 
           {recommendation.learning_objective && (
-            <div className="pt-2 border-t border-[#181824] flex items-start gap-1.5 text-[11px] text-[#64748B]">
+            <div className="pt-2 border-t border-[#E2E8F0] flex items-start gap-1.5 text-[11px] text-[#64748B]">
               <CheckCircle2 className="w-3 h-3 text-emerald-400 shrink-0 mt-0.5" />
               <span className="line-clamp-2">{recommendation.learning_objective}</span>
             </div>
@@ -143,13 +143,13 @@ export const ProblemRecommendationCard: React.FC<ProblemRecommendationCardProps>
 
         {/* Concept pills */}
         <div className="flex flex-wrap gap-1.5 pt-1">
-          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#161622] text-[#DC2626] border border-[#EF4444]/20">
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#F1F5F9] text-[#DC2626] border border-[#EF4444]/20">
             {recommendation.primary_concept}
           </span>
           {(recommendation.related_concepts || []).slice(0, 2).map((c, i) => (
             <span
               key={i}
-              className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#101018] text-[#64748B] border border-[#E2E8F0]"
+              className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#F1F5F9] text-[#64748B] border border-[#E2E8F0]"
             >
               {c}
             </span>
@@ -167,7 +167,7 @@ export const ProblemRecommendationCard: React.FC<ProblemRecommendationCardProps>
             className={`p-1.5 rounded-lg border transition-all text-xs ${
               rated === 'helpful'
                 ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40'
-                : 'bg-[#12121A] text-[#94A3B8] hover:text-[#0F172A] border-[#E2E8F0]'
+                : 'bg-[#F1F5F9] text-[#94A3B8] hover:text-[#0F172A] border-[#E2E8F0]'
             }`}
           >
             <ThumbsUp className="w-3 h-3" />
@@ -178,7 +178,7 @@ export const ProblemRecommendationCard: React.FC<ProblemRecommendationCardProps>
             className={`p-1.5 rounded-lg border transition-all text-xs ${
               rated === 'too_easy'
                 ? 'bg-amber-500/20 text-amber-400 border-amber-500/40'
-                : 'bg-[#12121A] text-[#94A3B8] hover:text-[#0F172A] border-[#E2E8F0]'
+                : 'bg-[#F1F5F9] text-[#94A3B8] hover:text-[#0F172A] border-[#E2E8F0]'
             }`}
           >
             <Zap className="w-3 h-3" />
@@ -189,7 +189,7 @@ export const ProblemRecommendationCard: React.FC<ProblemRecommendationCardProps>
             className={`p-1.5 rounded-lg border transition-all text-xs ${
               rated === 'too_difficult'
                 ? 'bg-rose-500/20 text-rose-400 border-rose-500/40'
-                : 'bg-[#12121A] text-[#94A3B8] hover:text-[#0F172A] border-[#E2E8F0]'
+                : 'bg-[#F1F5F9] text-[#94A3B8] hover:text-[#0F172A] border-[#E2E8F0]'
             }`}
           >
             <Flame className="w-3 h-3" />

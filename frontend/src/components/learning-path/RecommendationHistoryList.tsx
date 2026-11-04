@@ -37,7 +37,7 @@ export const RecommendationHistoryList: React.FC<RecommendationHistoryListProps>
     return (
       <div className="rounded-2xl border border-[#E2E8F0] bg-white p-5 space-y-3 animate-pulse">
         {[...Array(3)].map((_, i) => (
-          <div key={i} className="h-16 bg-[#161622] rounded-xl" />
+          <div key={i} className="h-16 bg-[#F1F5F9] rounded-xl" />
         ))}
       </div>
     );
@@ -75,7 +75,7 @@ export const RecommendationHistoryList: React.FC<RecommendationHistoryListProps>
           return (
             <div
               key={item.id}
-              className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-[#141420] border border-[#E2E8F0] hover:border-[#252538] transition-colors"
+              className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-[#141420] border border-[#E2E8F0] hover:border-[#E2E8F0] transition-colors"
             >
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
@@ -104,7 +104,7 @@ export const RecommendationHistoryList: React.FC<RecommendationHistoryListProps>
               {item.problem_id && (
                 <button
                   onClick={() => navigate(`/practice/${item.problem_id}`)}
-                  className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#F1F5F9] hover:bg-[#252538] text-xs font-mono text-[#C4C4D4] hover:text-[#0F172A] transition-colors"
+                  className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#F1F5F9] hover:bg-[#E2E8F0] text-xs font-mono text-[#475569] hover:text-[#0F172A] transition-colors"
                 >
                   <span>Solve</span>
                   <ArrowRight className="w-3 h-3" />

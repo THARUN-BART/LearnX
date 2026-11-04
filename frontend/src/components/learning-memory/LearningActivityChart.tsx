@@ -46,7 +46,7 @@ export const LearningActivityChart: React.FC<Props> = ({ data }) => {
                 <stop offset="95%" stopColor="#3B82F6" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#1C1C28" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" vertical={false} />
             <XAxis
               dataKey="date"
               stroke="#5A5A6E"
@@ -56,8 +56,8 @@ export const LearningActivityChart: React.FC<Props> = ({ data }) => {
             <YAxis stroke="#5A5A6E" tick={{ fontSize: 10, fill: '#8E8EA0' }} allowDecimals={false} />
             <Tooltip
               contentStyle={{
-                backgroundColor: '#12121B',
-                borderColor: '#1C1C28',
+                backgroundColor: '#F1F5F9',
+                borderColor: '#E2E8F0',
                 borderRadius: '0.75rem',
                 fontSize: '11px',
                 color: '#F4F4F6',

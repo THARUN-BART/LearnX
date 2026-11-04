@@ -78,7 +78,7 @@ export const IssueList: React.FC<IssueListProps> = ({ issues }) => {
                         {iss.title}
                       </span>
                       {iss.line_number > 0 && (
-                        <span className="text-[10px] text-[#64748B] bg-[#181824] px-1.5 py-0.2 rounded border border-[#E2E8F0]">
+                        <span className="text-[10px] text-[#64748B] bg-[#E2E8F0] px-1.5 py-0.2 rounded border border-[#E2E8F0]">
                           Line {iss.line_number}
                         </span>
                       )}

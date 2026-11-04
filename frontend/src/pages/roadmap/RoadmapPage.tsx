@@ -111,7 +111,7 @@ export const RoadmapPage: React.FC = () => {
               onClick={() => {
                 navigate(`/roadmap/${topic.slug || topic.id}`);
               }}
-              className={`p-6 flex flex-col justify-between transition-all duration-200 hover:border-[#EF4444]/50 hover:bg-[#1A1A28] cursor-pointer ${
+              className={`p-6 flex flex-col justify-between transition-all duration-200 hover:border-[#EF4444]/50 hover:bg-[#F8FAFC] cursor-pointer ${
                 isInProgress ? 'border-[#EF4444]/40 glow-purple' : ''
               }`}
             >

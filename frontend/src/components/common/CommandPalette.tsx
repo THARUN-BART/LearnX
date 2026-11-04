@@ -134,7 +134,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
       />
 
       {/* Palette Container */}
-      <div className="relative w-full max-w-xl bg-white border border-[#2B2B3C] rounded-2xl shadow-2xl shadow-black overflow-hidden z-10 animate-in zoom-in-95 duration-150">
+      <div className="relative w-full max-w-xl bg-white border border-[#CBD5E1] rounded-2xl shadow-2xl shadow-black overflow-hidden z-10 animate-in zoom-in-95 duration-150">
         {/* Search Input Bar */}
         <div className="flex items-center px-4 py-3.5 border-b border-[#E2E8F0] gap-3">
           <Search className="w-4 h-4 text-[#EF4444] shrink-0" />
@@ -144,7 +144,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Type a command, problem title, or DSA topic..."
-            className="flex-1 bg-transparent text-sm text-[#0F172A] placeholder-[#5A5A6E] outline-none font-mono"
+            className="flex-1 bg-transparent text-sm text-[#0F172A] placeholder-[#94A3B8] outline-none font-mono"
           />
           <button
             onClick={onClose}
@@ -173,8 +173,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
                   }}
                   className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl cursor-pointer transition-all ${
                     isSelected
-                      ? 'bg-[#1C1C2B] text-white border border-[#EF4444]/40'
-                      : 'text-[#64748B] hover:bg-[#14141E] border border-transparent'
+                      ? 'bg-[#F1F5F9] text-white border border-[#EF4444]/40'
+                      : 'text-[#64748B] hover:bg-[#F8FAFC] border border-transparent'
                   }`}
                 >
                   <div className="flex items-center gap-3">
@@ -182,7 +182,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
                       className={`w-6 h-6 rounded-lg flex items-center justify-center ${
                         isSelected
                           ? 'bg-[#EF4444] text-white'
-                          : 'bg-[#181824] text-[#64748B]'
+                          : 'bg-[#E2E8F0] text-[#64748B]'
                       }`}
                     >
                       <Icon className="w-3.5 h-3.5" />

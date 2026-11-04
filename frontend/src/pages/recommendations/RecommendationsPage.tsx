@@ -123,7 +123,7 @@ export const RecommendationsPage: React.FC = () => {
   return (
     <div className="space-y-8 pb-16">
       {/* Top Banner Header */}
-      <div className="relative overflow-hidden rounded-2xl border border-[#E2E8F0] bg-gradient-to-r from-[#12121B] via-[#101019] to-[#12121B] p-6 lg:p-8">
+      <div className="relative overflow-hidden rounded-2xl border border-[#E2E8F0] bg-gradient-to-r from-[#F1F5F9] via-[#F1F5F9] to-[#F1F5F9] p-6 lg:p-8">
         <div className="absolute top-0 right-0 w-96 h-96 bg-[#EF4444]/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-2xl">
@@ -143,7 +143,7 @@ export const RecommendationsPage: React.FC = () => {
           <div className="flex items-center gap-3">
             <button
               onClick={() => setHistoryOpen(true)}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[#2A2A3C] bg-[#161622] text-[#0F172A] text-xs font-medium hover:bg-[#1E1E30] transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[#E2E8F0] bg-[#F1F5F9] text-[#0F172A] text-xs font-medium hover:bg-[#F1F5F9] transition-colors"
             >
               <History className="w-4 h-4 text-[#64748B]" />
               <span>History</span>
@@ -152,7 +152,7 @@ export const RecommendationsPage: React.FC = () => {
             <button
               onClick={handleRefresh}
               disabled={refreshing || loading}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#EF4444] to-[#B91C1C] text-white text-xs font-medium font-mono hover:opacity-95 transition-opacity disabled:opacity-50 shadow-lg shadow-[#8B5CF6]/20"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#EF4444] to-[#B91C1C] text-white text-xs font-medium font-mono hover:opacity-95 transition-opacity disabled:opacity-50 shadow-lg shadow-[#EF4444]/20"
             >
               <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
               <span>{refreshing ? 'Re-scoring...' : 'Recalculate'}</span>
@@ -271,7 +271,7 @@ export const RecommendationsPage: React.FC = () => {
                 ))}
               </div>
             ) : (
-              <div className="rounded-2xl border border-dashed border-[#2A2A3C] bg-[#F1F5F9]/50 p-12 text-center">
+              <div className="rounded-2xl border border-dashed border-[#E2E8F0] bg-[#F1F5F9]/50 p-12 text-center">
                 <FolderOpen className="w-10 h-10 text-[#94A3B8] mx-auto mb-3" />
                 <h3 className="text-sm font-semibold text-[#0F172A] mb-1">
                   No problems queued in this workstream
@@ -281,7 +281,7 @@ export const RecommendationsPage: React.FC = () => {
                 </p>
                 <button
                   onClick={() => setActiveTab('recommended_for_you')}
-                  className="px-4 py-2 rounded-xl bg-[#F1F5F9] text-xs text-[#0F172A] hover:bg-[#2A2A3C] transition-colors"
+                  className="px-4 py-2 rounded-xl bg-[#F1F5F9] text-xs text-[#0F172A] hover:bg-[#E2E8F0] transition-colors"
                 >
                   View All Recommended
                 </button>
@@ -298,7 +298,7 @@ export const RecommendationsPage: React.FC = () => {
           </p>
           <button
             onClick={loadData}
-            className="px-4 py-2 bg-[#EF4444] text-white rounded-xl text-xs font-medium hover:bg-[#7C3AED]"
+            className="px-4 py-2 bg-[#EF4444] text-white rounded-xl text-xs font-medium hover:bg-[#EF4444]"
           >
             Retry Connection
           </button>

@@ -244,9 +244,9 @@ export const DashboardPage: React.FC = () => {
         <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] space-y-1 font-mono">
           <div className="flex items-center justify-between text-xs text-[#94A3B8]">
             <span>ACTIVE_RUNTIME</span>
-            <Clock className="w-4 h-4 text-[#818CF8]" />
+            <Clock className="w-4 h-4 text-[#DC2626]" />
           </div>
-          <div className="text-2xl sm:text-3xl font-bold text-[#818CF8]">{analytics?.hoursSpent ?? 0}h</div>
+          <div className="text-2xl sm:text-3xl font-bold text-[#DC2626]">{analytics?.hoursSpent ?? 0}h</div>
           <span className="text-[11px] text-[#64748B] block">Estimated practice time</span>
         </div>
         <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] space-y-1 font-mono">
@@ -285,7 +285,7 @@ export const DashboardPage: React.FC = () => {
                         ? 'bg-[#EF4444]'
                         : cell.level === 1
                         ? 'bg-[#EF4444]/30'
-                        : 'bg-[#181824]'
+                        : 'bg-[#E2E8F0]'
                     }`}
                   />
                 ))}
@@ -305,12 +305,12 @@ export const DashboardPage: React.FC = () => {
             <div className="h-56 w-full pt-2">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={analytics?.weeklyActivity || []}>
-                  <XAxis dataKey="day" stroke="#5A5A6E" fontSize={11} tickLine={false} axisLine={{ stroke: '#1C1C28' }} />
-                  <YAxis stroke="#5A5A6E" fontSize={11} tickLine={false} axisLine={{ stroke: '#1C1C28' }} />
+                  <XAxis dataKey="day" stroke="#5A5A6E" fontSize={11} tickLine={false} axisLine={{ stroke: '#E2E8F0' }} />
+                  <YAxis stroke="#5A5A6E" fontSize={11} tickLine={false} axisLine={{ stroke: '#E2E8F0' }} />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: '#0D0D14',
-                      border: '1px solid #2B2B3C',
+                      backgroundColor: '#FFFFFF',
+                      border: '1px solid #CBD5E1',
                       borderRadius: '0.75rem',
                       color: '#F4F4F6',
                       fontSize: '11px',
@@ -318,7 +318,7 @@ export const DashboardPage: React.FC = () => {
                     }}
                     cursor={{ fill: 'rgba(139, 92, 246, 0.05)' }}
                   />
-                  <Bar dataKey="solved" fill="#8B5CF6" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="solved" fill="#EF4444" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -348,7 +348,7 @@ export const DashboardPage: React.FC = () => {
                   {Math.round(((activeTopic?.completedProblems || 0) / Math.max(1, activeTopic?.totalProblems || 1)) * 100)}%)
                 </span>
               </div>
-              <div className="w-full bg-[#181824] h-2 rounded-full overflow-hidden border border-[#E2E8F0]">
+              <div className="w-full bg-[#E2E8F0] h-2 rounded-full overflow-hidden border border-[#E2E8F0]">
                 <div
                   className="bg-[#EF4444] h-full rounded-full"
                   style={{
@@ -361,7 +361,7 @@ export const DashboardPage: React.FC = () => {
         </div>
 
         <div className="lg:col-span-4 space-y-6">
-          <div className="p-5 rounded-2xl bg-[#12121E] border border-[#EF4444]/30 space-y-3 glow-purple">
+          <div className="p-5 rounded-2xl bg-[#F1F5F9] border border-[#EF4444]/30 space-y-3 glow-purple">
             <div className="flex items-center justify-between text-xs font-mono text-[#DC2626]">
               <span className="flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-[#EF4444]" />
@@ -415,7 +415,7 @@ export const DashboardPage: React.FC = () => {
                         }
                       })
                     }
-                    className="p-3.5 rounded-xl bg-white hover:bg-[#14141E] border border-[#E2E8F0] hover:border-[#EF4444]/40 cursor-pointer transition-all flex items-center justify-between group"
+                    className="p-3.5 rounded-xl bg-white hover:bg-[#F8FAFC] border border-[#E2E8F0] hover:border-[#EF4444]/40 cursor-pointer transition-all flex items-center justify-between group"
                   >
                     <div className="space-y-1 min-w-0 pr-2">
                       <div className="text-xs font-bold text-[#0F172A] group-hover:text-[#DC2626] truncate font-mono">
@@ -449,7 +449,7 @@ export const DashboardPage: React.FC = () => {
                   <div
                     key={prob.id}
                     onClick={() => navigate(`/practice/${prob.id}`)}
-                    className="p-3.5 rounded-xl bg-white hover:bg-[#14141E] border border-[#E2E8F0] hover:border-[#2D2D3E] cursor-pointer transition-all flex items-center justify-between group"
+                    className="p-3.5 rounded-xl bg-white hover:bg-[#F8FAFC] border border-[#E2E8F0] hover:border-[#2D2D3E] cursor-pointer transition-all flex items-center justify-between group"
                   >
                     <div className="space-y-1 min-w-0">
                       <div className="text-xs font-bold text-[#0F172A] group-hover:text-[#DC2626] truncate font-mono">

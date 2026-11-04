@@ -77,8 +77,8 @@ export const RecommendationCategoryTabs: React.FC<RecommendationCategoryTabsProp
             onClick={() => onTabChange(tab.id)}
             className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl font-mono text-xs whitespace-nowrap transition-all duration-150 cursor-pointer ${
               isActive
-                ? 'bg-[#1C1C2B] text-[#DC2626] border border-[#EF4444]/40 shadow-sm shadow-[#8B5CF6]/10'
-                : 'bg-white text-[#64748B] hover:text-[#0F172A] hover:bg-[#14141E] border border-[#E2E8F0]'
+                ? 'bg-[#F1F5F9] text-[#DC2626] border border-[#EF4444]/40 shadow-sm shadow-[#EF4444]/10'
+                : 'bg-white text-[#64748B] hover:text-[#0F172A] hover:bg-[#F8FAFC] border border-[#E2E8F0]'
             }`}
           >
             <span className={isActive ? 'text-[#EF4444]' : 'text-[#94A3B8]'}>{tab.icon}</span>
@@ -86,7 +86,7 @@ export const RecommendationCategoryTabs: React.FC<RecommendationCategoryTabsProp
             {tab.count !== undefined && tab.count > 0 && (
               <span
                 className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-                  isActive ? 'bg-[#EF4444]/20 text-[#DC2626]' : 'bg-[#181824] text-[#94A3B8]'
+                  isActive ? 'bg-[#EF4444]/20 text-[#DC2626]' : 'bg-[#E2E8F0] text-[#94A3B8]'
                 }`}
               >
                 {tab.count}

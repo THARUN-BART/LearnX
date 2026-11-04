@@ -17,8 +17,8 @@ export const App: React.FC = () => {
             richColors
             toastOptions={{
               style: {
-                background: '#171722',
-                border: '1px solid #232336',
+                background: '#F8FAFC',
+                border: '1px solid #E2E8F0',
                 color: '#F5F5F7',
                 fontFamily: 'Inter, sans-serif'
               }

@@ -72,8 +72,8 @@ export const MistakeAnalysisPage: React.FC = () => {
   const rawChartData = [
     { name: 'Edge Cases', value: edgeCount, color: '#F59E0B' },
     { name: 'Time Complexity', value: timeCount, color: '#EF4444' },
-    { name: 'Logical Flow', value: logicCount, color: '#8B5CF6' },
-    { name: 'Algorithm Choice', value: algoCount, color: '#6366F1' },
+    { name: 'Logical Flow', value: logicCount, color: '#EF4444' },
+    { name: 'Algorithm Choice', value: algoCount, color: '#DC2626' },
   ].filter((item) => item.value > 0);
 
   const categoryChartData =
@@ -232,7 +232,7 @@ export const MistakeAnalysisPage: React.FC = () => {
               </div>
 
               {record.failedCodeSnippet && (
-                <div className="bg-[#09090E] rounded-xl border border-[#E2E8F0] overflow-hidden text-xs">
+                <div className="bg-[#F8FAFC] rounded-xl border border-[#E2E8F0] overflow-hidden text-xs">
                   <div className="px-3.5 py-1.5 bg-white border-b border-[#E2E8F0] flex items-center gap-1.5 text-[11px] text-[#94A3B8]">
                     <FileCode className="w-3.5 h-3.5 text-red-400" />
                     Submission excerpt

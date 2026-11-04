@@ -100,7 +100,7 @@ export const CodeReviewPage: React.FC = () => {
   return (
     <div className="flex flex-col gap-6 font-mono text-[#0F172A] pb-12">
       {/* Hero Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 bg-gradient-to-r from-[#12121B] via-[#0D0D14] to-[#12121B] border border-[#E2E8F0] rounded-2xl relative overflow-hidden">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 bg-gradient-to-r from-[#F1F5F9] via-[#FFFFFF] to-[#F1F5F9] border border-[#E2E8F0] rounded-2xl relative overflow-hidden">
         <div className="space-y-1 relative z-10">
           <div className="flex items-center gap-2">
             <span className="text-[10px] uppercase font-bold tracking-widest text-[#EF4444] bg-[#EF4444]/10 px-2 py-0.5 rounded border border-[#EF4444]/20">
@@ -172,7 +172,7 @@ export const CodeReviewPage: React.FC = () => {
               onClick={handleReviewCode}
               isLoading={loading}
               leftIcon={<Sparkles className="w-3.5 h-3.5" />}
-              className="text-xs shadow-md shadow-[#8B5CF6]/30"
+              className="text-xs shadow-md shadow-[#EF4444]/30"
             >
               Review My Code
             </Button>
@@ -197,9 +197,9 @@ export const CodeReviewPage: React.FC = () => {
 
           {/* Cross-Feature Recommendation to Algorithm Visualizer */}
           {reviewResult.recommended_visualizer_algo_id && (
-            <div className="p-4 rounded-2xl bg-gradient-to-r from-[#EF4444]/15 via-[#6366F1]/10 to-[#8B5CF6]/15 border border-[#EF4444]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg shadow-[#8B5CF6]/10">
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-[#EF4444]/15 via-[#DC2626]/10 to-[#B91C1C]/15 border border-[#EF4444]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg shadow-[#EF4444]/10">
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-xl bg-[#EF4444] text-white flex items-center justify-center shrink-0 shadow-md shadow-[#8B5CF6]/30">
+                <div className="w-8 h-8 rounded-xl bg-[#EF4444] text-white flex items-center justify-center shrink-0 shadow-md shadow-[#EF4444]/30">
                   <Eye className="w-4 h-4" />
                 </div>
                 <div>
@@ -218,7 +218,7 @@ export const CodeReviewPage: React.FC = () => {
                 onClick={() =>
                   navigate(`/visualizer?algo=${reviewResult.recommended_visualizer_algo_id}`)
                 }
-                className="px-4 py-2 bg-[#EF4444] hover:bg-[#7C3AED] text-white rounded-xl text-xs font-bold font-sans flex items-center gap-2 shrink-0 shadow-md shadow-[#8B5CF6]/30 transition-all"
+                className="px-4 py-2 bg-[#EF4444] hover:bg-[#EF4444] text-white rounded-xl text-xs font-bold font-sans flex items-center gap-2 shrink-0 shadow-md shadow-[#EF4444]/30 transition-all"
               >
                 Explore Visualizer <ArrowRight className="w-3.5 h-3.5" />
               </button>

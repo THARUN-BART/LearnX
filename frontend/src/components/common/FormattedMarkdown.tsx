@@ -56,7 +56,7 @@ export const FormattedMarkdown: React.FC<FormattedMarkdownProps> = ({ content, c
         return (
           <code
             key={pIdx}
-            className="px-1.5 py-0.5 mx-0.5 text-[11px] font-mono bg-[#161626] text-emerald-400 border border-[#27273F] rounded-md font-medium"
+            className="px-1.5 py-0.5 mx-0.5 text-[11px] font-mono bg-[#F1F5F9] text-emerald-400 border border-[#E2E8F0] rounded-md font-medium"
           >
             {part.slice(1, -1)}
           </code>
@@ -191,7 +191,7 @@ export const FormattedMarkdown: React.FC<FormattedMarkdownProps> = ({ content, c
         elements.push(
           <blockquote
             key={`quote-${lIdx}`}
-            className="my-2 pl-3 py-1.5 border-l-2 border-[#EF4444] bg-[#12121C] rounded-r-lg text-xs text-[#CBD5E1] italic"
+            className="my-2 pl-3 py-1.5 border-l-2 border-[#EF4444] bg-[#F1F5F9] rounded-r-lg text-xs text-[#CBD5E1] italic"
           >
             {renderInline(trimmed.replace(/^>\s*/, ''))}
           </blockquote>
@@ -247,10 +247,10 @@ export const FormattedMarkdown: React.FC<FormattedMarkdownProps> = ({ content, c
           return (
             <div
               key={idx}
-              className="my-3 rounded-xl overflow-hidden border border-[#232338] bg-[#0A0A10] shadow-sm font-mono text-xs"
+              className="my-3 rounded-xl overflow-hidden border border-[#E2E8F0] bg-[#0A0A10] shadow-sm font-mono text-xs"
             >
               {/* Code Header Bar */}
-              <div className="flex items-center justify-between px-3.5 py-1.5 bg-[#12121D] border-b border-[#232338] text-[11px] text-[#64748B]">
+              <div className="flex items-center justify-between px-3.5 py-1.5 bg-[#F1F5F9] border-b border-[#E2E8F0] text-[11px] text-[#64748B]">
                 <div className="flex items-center gap-2">
                   <Terminal className="w-3.5 h-3.5 text-[#EF4444]" />
                   <span className="font-semibold uppercase tracking-wider text-[10px] text-[#DC2626]">
@@ -260,7 +260,7 @@ export const FormattedMarkdown: React.FC<FormattedMarkdownProps> = ({ content, c
                 <button
                   type="button"
                   onClick={() => handleCopy(part.content, idx)}
-                  className="flex items-center gap-1.5 px-2 py-0.5 rounded-md hover:bg-[#1C1C2C] text-[#64748B] hover:text-[#0F172A] transition-colors cursor-pointer"
+                  className="flex items-center gap-1.5 px-2 py-0.5 rounded-md hover:bg-[#F1F5F9] text-[#64748B] hover:text-[#0F172A] transition-colors cursor-pointer"
                 >
                   {isCopied ? (
                     <>

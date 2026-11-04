@@ -90,7 +90,7 @@ export const OnboardingPage: React.FC = () => {
       <div className="w-full max-w-2xl mb-8 space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-xl bg-gradient-to-tr from-[#EF4444] to-[#B91C1C] flex items-center justify-center shadow-md shadow-[#8B5CF6]/30">
+            <div className="w-7 h-7 rounded-xl bg-gradient-to-tr from-[#EF4444] to-[#B91C1C] flex items-center justify-center shadow-md shadow-[#EF4444]/30">
               <Sparkles className="w-3.5 h-3.5 text-white" />
             </div>
             <span className="font-bold text-lg text-[#0F172A] tracking-tight font-mono">
@@ -233,7 +233,7 @@ export const OnboardingPage: React.FC = () => {
                         }
                         className={`p-3 rounded-xl border text-center transition-all cursor-pointer ${
                           isSelected
-                            ? 'bg-[#EF4444]/20 border-[#EF4444] text-white shadow-md shadow-[#8B5CF6]/20'
+                            ? 'bg-[#EF4444]/20 border-[#EF4444] text-white shadow-md shadow-[#EF4444]/20'
                             : 'bg-[#F1F5F9] border-[#E2E8F0] text-[#64748B] hover:border-[#2D2D3E]'
                         }`}
                       >

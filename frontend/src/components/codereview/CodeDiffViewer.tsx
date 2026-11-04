@@ -51,13 +51,13 @@ export const CodeDiffViewer: React.FC<CodeDiffViewerProps> = ({
         <div className="flex items-center gap-2">
           <button
             onClick={handleCopyOptimized}
-            className="text-xs text-[#64748B] hover:text-[#0F172A] flex items-center gap-1.5 bg-[#F1F5F9] hover:bg-[#181824] border border-[#E2E8F0] px-3 py-1.5 rounded-lg transition-colors"
+            className="text-xs text-[#64748B] hover:text-[#0F172A] flex items-center gap-1.5 bg-[#F1F5F9] hover:bg-[#E2E8F0] border border-[#E2E8F0] px-3 py-1.5 rounded-lg transition-colors"
           >
             <Copy className="w-3.5 h-3.5" /> Copy Optimized
           </button>
           <button
             onClick={handleLoadIntoEditor}
-            className="text-xs text-white font-bold flex items-center gap-1.5 bg-[#EF4444] hover:bg-[#7C3AED] px-3.5 py-1.5 rounded-lg shadow-md shadow-[#8B5CF6]/30 transition-all font-sans"
+            className="text-xs text-white font-bold flex items-center gap-1.5 bg-[#EF4444] hover:bg-[#EF4444] px-3.5 py-1.5 rounded-lg shadow-md shadow-[#EF4444]/30 transition-all font-sans"
           >
             Load in Practice Arena <ArrowRight className="w-3.5 h-3.5" />
           </button>

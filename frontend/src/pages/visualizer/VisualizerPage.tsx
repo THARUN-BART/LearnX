@@ -184,7 +184,7 @@ export const VisualizerPage: React.FC = () => {
   return (
     <div className="flex flex-col gap-6 font-mono text-[#0F172A] pb-12">
       {/* Top Banner / Hero */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 bg-gradient-to-r from-[#12121B] via-[#0D0D14] to-[#12121B] border border-[#E2E8F0] rounded-2xl relative overflow-hidden">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 bg-gradient-to-r from-[#F1F5F9] via-[#FFFFFF] to-[#F1F5F9] border border-[#E2E8F0] rounded-2xl relative overflow-hidden">
         <div className="space-y-1 relative z-10">
           <div className="flex items-center gap-2">
             <span className="text-[10px] uppercase font-bold tracking-widest text-[#EF4444] bg-[#EF4444]/10 px-2 py-0.5 rounded border border-[#EF4444]/20">
@@ -225,7 +225,7 @@ export const VisualizerPage: React.FC = () => {
               onClick={() => setSelectedCategory(cat)}
               className={`text-xs px-3 py-1.5 rounded-xl whitespace-nowrap transition-all font-sans font-medium ${
                 selectedCategory === cat
-                  ? 'bg-[#EF4444] text-white shadow-md shadow-[#8B5CF6]/30 font-bold'
+                  ? 'bg-[#EF4444] text-white shadow-md shadow-[#EF4444]/30 font-bold'
                   : 'bg-white text-[#64748B] hover:text-[#0F172A] border border-[#E2E8F0]'
               }`}
             >
@@ -254,7 +254,7 @@ export const VisualizerPage: React.FC = () => {
                   onClick={() => handleSelectAlgo(algo)}
                   className={`w-full text-left p-3 rounded-xl border transition-all flex flex-col gap-1.5 ${
                     isSelected
-                      ? 'bg-[#EF4444]/15 border-[#EF4444] text-white shadow-md shadow-[#8B5CF6]/20'
+                      ? 'bg-[#EF4444]/15 border-[#EF4444] text-white shadow-md shadow-[#EF4444]/20'
                       : 'bg-[#F1F5F9] border-[#E2E8F0] text-[#64748B] hover:border-[#EF4444]/40 hover:text-[#0F172A]'
                   }`}
                 >

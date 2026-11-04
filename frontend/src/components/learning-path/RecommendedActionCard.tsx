@@ -90,7 +90,7 @@ export const RecommendedActionCard: React.FC<RecommendedActionCardProps> = ({
 
   if (loading) {
     return (
-      <div className="rounded-2xl border border-[#E2E8F0] bg-gradient-to-br from-[#0D0D14] to-[#12121B] p-6 animate-pulse">
+      <div className="rounded-2xl border border-[#E2E8F0] bg-gradient-to-br from-white to-[#F1F5F9] p-6 animate-pulse">
         <div className="h-6 w-48 bg-[#F1F5F9] rounded mb-4" />
         <div className="h-8 w-3/4 bg-[#F1F5F9] rounded mb-3" />
         <div className="h-4 w-full bg-[#F1F5F9] rounded mb-6" />
@@ -110,7 +110,7 @@ export const RecommendedActionCard: React.FC<RecommendedActionCardProps> = ({
         {onRefresh && (
           <button
             onClick={onRefresh}
-            className="mt-4 px-4 py-2 rounded-xl bg-[#F1F5F9] hover:bg-[#252538] text-xs font-medium text-[#0F172A] transition-colors"
+            className="mt-4 px-4 py-2 rounded-xl bg-[#F1F5F9] hover:bg-[#E2E8F0] text-xs font-medium text-[#0F172A] transition-colors"
           >
             Recalculate Path
           </button>
@@ -134,7 +134,7 @@ export const RecommendedActionCard: React.FC<RecommendedActionCardProps> = ({
   };
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-[#EF4444]/30 bg-gradient-to-br from-[#0D0D14] via-[#12121E] to-[#161226] p-6 shadow-xl shadow-[#8B5CF6]/5 group">
+    <div className="relative overflow-hidden rounded-2xl border border-[#EF4444]/30 bg-gradient-to-br from-white via-[#F1F5F9] to-[#F8FAFC] p-6 shadow-xl shadow-[#EF4444]/5 group">
       {/* Glow accent */}
       <div className="absolute -top-24 -right-24 w-60 h-60 bg-[#EF4444]/15 rounded-full blur-3xl pointer-events-none group-hover:bg-[#EF4444]/20 transition-all duration-500" />
 
@@ -159,7 +159,7 @@ export const RecommendedActionCard: React.FC<RecommendedActionCardProps> = ({
           <button
             onClick={onRefresh}
             title="Re-evaluate learning path"
-            className="flex items-center gap-1.5 text-xs text-[#64748B] hover:text-[#0F172A] transition-colors bg-[#F1F5F9]/60 hover:bg-[#F1F5F9] px-2.5 py-1 rounded-lg border border-[#252538]"
+            className="flex items-center gap-1.5 text-xs text-[#64748B] hover:text-[#0F172A] transition-colors bg-[#F1F5F9]/60 hover:bg-[#F1F5F9] px-2.5 py-1 rounded-lg border border-[#E2E8F0]"
           >
             <RefreshCw className="w-3 h-3" />
             <span>Recalculate</span>
@@ -184,7 +184,7 @@ export const RecommendedActionCard: React.FC<RecommendedActionCardProps> = ({
       </div>
 
       {/* Pedagogical Explanation */}
-      <div className="relative z-10 bg-[#09090F]/70 rounded-xl p-3.5 border border-[#E2E8F0] mb-4 text-sm text-[#C4C4D4] leading-relaxed">
+      <div className="relative z-10 bg-[#FFFFFF]/70 rounded-xl p-3.5 border border-[#E2E8F0] mb-4 text-sm text-[#475569] leading-relaxed">
         <p className="text-xs text-[#64748B] uppercase tracking-wider font-semibold font-mono mb-1">
           Why this recommendation?
         </p>
@@ -205,7 +205,7 @@ export const RecommendedActionCard: React.FC<RecommendedActionCardProps> = ({
       <div className="relative z-10 flex items-center justify-between pt-2">
         <button
           onClick={handleAction}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#EF4444] to-[#7C3AED] hover:from-[#7C3AED] hover:to-[#6D28D9] text-white font-medium text-sm shadow-lg shadow-[#8B5CF6]/25 hover:shadow-[#8B5CF6]/40 transition-all active:scale-[0.98]"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#EF4444] to-[#EF4444] hover:from-[#EF4444] hover:to-[#6D28D9] text-white font-medium text-sm shadow-lg shadow-[#EF4444]/25 hover:shadow-[#EF4444]/40 transition-all active:scale-[0.98]"
         >
           <span>
             {recommendation.problem_id

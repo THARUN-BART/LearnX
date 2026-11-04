@@ -156,9 +156,9 @@ export const ProfilePage: React.FC = () => {
   return (
     <div className="space-y-8 max-w-5xl mx-auto pb-16">
       {/* Header Banner */}
-      <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-[#171722] via-[#1A1A28] to-[#101019] border border-[#E2E8F0] flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div className="p-6 sm:p-8 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm flex flex-col sm:flex-row items-center justify-between gap-6">
         <div className="flex items-center gap-5">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#6366F1] to-[#8B5CF6] flex items-center justify-center text-white font-bold text-2xl shadow-xl shadow-[#8B5CF6]/20">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#EF4444] to-[#B91C1C] flex items-center justify-center text-white font-bold text-2xl shadow-xl shadow-[#EF4444]/20">
             {formData.full_name?.charAt(0) || 'S'}
           </div>
           <div>
@@ -202,7 +202,7 @@ export const ProfilePage: React.FC = () => {
           onClick={() => setActiveTab('profile')}
           className={`px-4 py-2 rounded-xl transition-all flex items-center gap-2 ${
             activeTab === 'profile'
-              ? 'bg-[#F1F5F9] text-[#0F172A] font-semibold border border-[#2A2A3C]'
+              ? 'bg-[#F1F5F9] text-[#0F172A] font-semibold border border-[#E2E8F0]'
               : 'text-[#64748B] hover:text-[#0F172A]'
           }`}
         >
@@ -214,7 +214,7 @@ export const ProfilePage: React.FC = () => {
           onClick={() => setActiveTab('submissions')}
           className={`px-4 py-2 rounded-xl transition-all flex items-center gap-2 ${
             activeTab === 'submissions'
-              ? 'bg-[#F1F5F9] text-[#0F172A] font-semibold border border-[#2A2A3C]'
+              ? 'bg-[#F1F5F9] text-[#0F172A] font-semibold border border-[#E2E8F0]'
               : 'text-[#64748B] hover:text-[#0F172A]'
           }`}
         >
@@ -226,7 +226,7 @@ export const ProfilePage: React.FC = () => {
           onClick={() => setActiveTab('performance')}
           className={`px-4 py-2 rounded-xl transition-all flex items-center gap-2 ${
             activeTab === 'performance'
-              ? 'bg-[#F1F5F9] text-[#0F172A] font-semibold border border-[#2A2A3C]'
+              ? 'bg-[#F1F5F9] text-[#0F172A] font-semibold border border-[#E2E8F0]'
               : 'text-[#64748B] hover:text-[#0F172A]'
           }`}
         >
@@ -433,7 +433,7 @@ export const ProfilePage: React.FC = () => {
                       <th className="px-4 py-3 text-right">Action</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#1C1C28]">
+                  <tbody className="divide-y divide-[#E2E8F0]">
                     {submissions.map((sub) => (
                       <tr key={sub.id || sub.submission_id} className="hover:bg-[#F1F5F9]/60 transition-colors">
                         <td className="px-4 py-3 text-[#0F172A] font-semibold">
@@ -470,7 +470,7 @@ export const ProfilePage: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="p-12 text-center rounded-xl bg-white border border-dashed border-[#2A2A3C] text-xs text-[#64748B] space-y-2">
+            <div className="p-12 text-center rounded-xl bg-white border border-dashed border-[#E2E8F0] text-xs text-[#64748B] space-y-2">
               <Code2 className="w-8 h-8 text-[#94A3B8] mx-auto mb-2" />
               <p>No submissions recorded for this filter.</p>
               <Button size="sm" variant="outline" onClick={() => navigate('/practice')}>
@@ -516,9 +516,9 @@ export const ProfilePage: React.FC = () => {
                 <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] space-y-1">
                   <div className="flex items-center justify-between text-xs text-[#94A3B8]">
                     <span>HOURS_INVESTED</span>
-                    <Clock className="w-4 h-4 text-[#818CF8]" />
+                    <Clock className="w-4 h-4 text-[#DC2626]" />
                   </div>
-                  <div className="text-3xl font-bold text-[#818CF8]">{analytics.hoursSpent}h</div>
+                  <div className="text-3xl font-bold text-[#DC2626]">{analytics.hoursSpent}h</div>
                   <span className="text-[11px] text-[#64748B]">{analytics.attemptedProblems} total attempts</span>
                 </div>
 

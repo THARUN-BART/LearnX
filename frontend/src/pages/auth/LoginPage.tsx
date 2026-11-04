@@ -84,7 +84,7 @@ export const LoginPage: React.FC = () => {
             <label className="flex items-center gap-2 cursor-pointer select-none text-xs text-[#64748B]">
               <input
                 type="checkbox"
-                className="w-3.5 h-3.5 rounded bg-white border-[#E2E8F0] text-[#EF4444] focus:ring-0 focus:ring-offset-0 accent-[#8B5CF6]"
+                className="w-3.5 h-3.5 rounded bg-white border-[#E2E8F0] text-[#EF4444] focus:ring-0 focus:ring-offset-0 accent-[#EF4444]"
                 {...register('rememberMe')}
               />
               <span>Remember me</span>

@@ -36,7 +36,7 @@ export const ExplanationPanel: React.FC<ExplanationPanelProps> = ({
           <div className="flex items-center gap-1.5">
             <button
               onClick={onOpenQuiz}
-              className="text-[11px] text-[#DC2626] hover:text-[#0F172A] flex items-center gap-1 bg-[#F1F5F9] hover:bg-[#181824] border border-[#E2E8F0] px-2.5 py-1 rounded-lg transition-colors"
+              className="text-[11px] text-[#DC2626] hover:text-[#0F172A] flex items-center gap-1 bg-[#F1F5F9] hover:bg-[#E2E8F0] border border-[#E2E8F0] px-2.5 py-1 rounded-lg transition-colors"
             >
               <BrainCircuit className="w-3.5 h-3.5" /> Practice Quiz
             </button>

@@ -57,14 +57,14 @@ export const RecommendationHistoryDrawer: React.FC<RecommendationHistoryDrawerPr
           <div className="flex items-center gap-2 font-mono">
             <History className="w-4 h-4 text-[#EF4444]" />
             <h3 className="text-sm font-bold text-[#0F172A]">Recommendation Log</h3>
-            <span className="text-[10px] text-[#94A3B8] px-2 py-0.5 rounded bg-[#161622] border border-[#E2E8F0]">
+            <span className="text-[10px] text-[#94A3B8] px-2 py-0.5 rounded bg-[#F1F5F9] border border-[#E2E8F0]">
               {total} Total
             </span>
           </div>
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-[#64748B] hover:text-[#0F172A] hover:bg-[#14141E] transition-colors"
+            className="p-1.5 rounded-lg text-[#64748B] hover:text-[#0F172A] hover:bg-[#F8FAFC] transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -78,7 +78,7 @@ export const RecommendationHistoryDrawer: React.FC<RecommendationHistoryDrawerPr
             </div>
           ) : history.length === 0 ? (
             <div className="py-20 text-center space-y-2">
-              <History className="w-8 h-8 text-[#2B2B3C] mx-auto" />
+              <History className="w-8 h-8 text-[#CBD5E1] mx-auto" />
               <p className="text-xs text-[#94A3B8]">No recommendation history logged yet.</p>
               <p className="text-[11px] text-[#4A4A5E]">
                 As you receive and practice problem picks, your history will populate here.
@@ -90,7 +90,7 @@ export const RecommendationHistoryDrawer: React.FC<RecommendationHistoryDrawerPr
               return (
                 <div
                   key={rec.id}
-                  className="p-4 rounded-xl bg-[#12121A] border border-[#E2E8F0] space-y-2 hover:border-[#2B2B3C] transition-all"
+                  className="p-4 rounded-xl bg-[#F1F5F9] border border-[#E2E8F0] space-y-2 hover:border-[#CBD5E1] transition-all"
                 >
                   <div className="flex items-center justify-between text-xs">
                     <span className="text-[10px] uppercase tracking-wider text-[#DC2626] bg-[#EF4444]/15 px-2 py-0.5 rounded border border-[#EF4444]/20">
@@ -123,7 +123,7 @@ export const RecommendationHistoryDrawer: React.FC<RecommendationHistoryDrawerPr
                         className={`text-[10px] px-2 py-0.5 rounded flex items-center gap-1 ${
                           isCompleted
                             ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                            : 'bg-[#181824] text-[#94A3B8]'
+                            : 'bg-[#E2E8F0] text-[#94A3B8]'
                         }`}
                       >
                         {isCompleted ? (

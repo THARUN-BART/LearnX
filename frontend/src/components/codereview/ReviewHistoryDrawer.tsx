@@ -59,7 +59,7 @@ export const ReviewHistoryDrawer: React.FC<ReviewHistoryDrawerProps> = ({
                   onSelectReview(r.id);
                   onClose();
                 }}
-                className="w-full text-left p-3.5 bg-[#F1F5F9] hover:bg-[#181824] border border-[#E2E8F0] hover:border-[#EF4444]/50 rounded-xl transition-all flex items-center justify-between group"
+                className="w-full text-left p-3.5 bg-[#F1F5F9] hover:bg-[#E2E8F0] border border-[#E2E8F0] hover:border-[#EF4444]/50 rounded-xl transition-all flex items-center justify-between group"
               >
                 <div>
                   <div className="text-xs font-bold text-[#0F172A] font-sans group-hover:text-[#DC2626] transition-colors">
